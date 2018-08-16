@@ -72,76 +72,36 @@ writeCWL <- function(cwl, prefix, ...){
 }
 
 as.listInputs <- function(Inputs){
-    ## alist <- lapply(Inputs, function(x){
-    ##     mapply(function(y) slot(x, y),
-    ##     slotNames(class(x)),
-    ##     SIMPLIFY = FALSE)
-    ## })
     alist <- lapply(Inputs, .slot2list)
+
     for(i in seq(alist)){
-        ##alist[[i]][alist[[i]] == ""] <- NULL
+        if(is(alist[[i]]$type, "InputArrayParam")){
+            atype <- .slot2list(alist[[i]]$type)
+            atype <- .removeEmpty(atype)
+            atype$inputBinding <- .removeEmpty(atype$inputBinding)
+            alist[[i]]$type <- atype
+        }
+        
         if(alist[[i]]$inputBinding$position == 0){
             alist[[i]]$inputBinding$position <- NULL
         }
-        ## if(alist[[i]]$inputBinding$prefix == ""){
-        ##     alist[[i]]$inputBinding$prefix <- NULL
-        ##     ##alist[[i]]$inputBinding$separate <- NULL
-        ## }
-        ## alist[[i]]$inputBinding <- alist[[i]]$inputBinding[lengths(alist[[i]]$inputBinding) > 0]
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
         alist[[i]] <- .removeEmpty(alist[[i]])
-        ##alist[[i]] <- alist[[i]][lengths(alist[[i]]) > 0]
     }
     return(alist)
 }
 
-## as.listOutputs <- function(Outputs){
-##     olist <- mapply(function(x) slot(Outputs, x),
-##                     slotNames(class(Outputs)),
-##                     SIMPLIFY = FALSE)
-##     id <- olist$id
-##     olist[olist == ""] <- NULL
-
-##     olist$id <- NULL
-##     if(olist$streamable == "false") {
-##         olist$streamable <- NULL
-##     }
-    
-##     if(olist$type == "stdout"){
-##         olist$id <- NULL
-##         olist$streamable <- NULL
-##         olist$outputBinding <- NULL
-##     }
-##     olist <- list(olist)
-##     names(olist) <- id
-##     return(olist)
-## }
-
 as.listOutputs <- function(Outputs){
-    ## olist <- lapply(Outputs, function(x){
-    ##     mapply(function(y) slot(x, y),
-    ##     slotNames(class(x)),
-    ##     SIMPLIFY = FALSE)
-    ## })
     olist <- lapply(Outputs, .slot2list)
     for(i in seq(olist)){
-        ##olist[[i]][olist[[i]] == ""] <- NULL
         olist[[i]]$id <- NULL
-
-        if(olist[[i]]$streamable == "false") {
-            olist[[i]]$streamable <- NULL
+        if(is(olist[[i]]$type, "OutputArrayParam")){
+            otype <- .removeEmpty(.slot2list(olist[[i]]$type))
+            otype$outputBinding <- .removeEmpty(otype$outputBinding)
+            olist[[i]]$type <- otype
         }
-        
-        if(olist[[i]]$type == "stdout"){
-            olist[[i]]$streamable <- NULL
-            olist[[i]]$outputBinding <- NULL
-        }
-
-        ## if(olist[[i]]$outputBinding$glob == "") {
-        ##     olist[[i]]$outputBinding <- NULL
-        ## }
         olist[[i]]$outputBinding <- .removeEmpty(olist[[i]]$outputBinding)
         olist[[i]] <- .removeEmpty(olist[[i]])        
     }

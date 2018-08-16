@@ -21,8 +21,23 @@ testrun <- runOSCommand("/home/qhu/.local/bin/cwl-runner", "../cwl/test.cwl ../c
 testrun <- system2("/home/qhu/.local/bin/cwl-runner", "../cwl/test.cwl ../cwl/test.yml")
 runCWL(c2)
 
-## 
+## Input array
+a <- InputParam(id = "a", type = "int[]", prefix = "-i", label = "test")
+b <- InputParam(id = "b",
+                type = InputArrayParam(type="array", items = "string", prefix="-B=", separate = FALSE))
+d <- InputParam(id = "d", type = "string[]", prefix = "-C=", itemSeparator = ",", separate = FALSE)
+c3 <- cwlParam(baseCommand = "echo", inputs = InputParamList(a, b, d), stdout = "output.txt")
+c3$a <- 1:3
+c3$b <- c("A", "B", "C")
+c3$d <- letters[1:3]
+c3res <- runCWL(c3)
 
+## Output array
+a <- InputParam(id = "a", type = InputArrayParam(type = "array", items = "string"))
+b <- OutputParam(id = "b", type = OutputArrayParam(type = "array", items = "File", glob = "*.txt"))
+c4 <- cwlParam(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
+c4$a <- c("a.txt", "b.gz", "c.txt")
+c4res <- runCWL(c4)
 
 ## SGE
 library(BiocParallel)
