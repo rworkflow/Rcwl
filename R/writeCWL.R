@@ -15,11 +15,13 @@ cwlToList <- function(cwl){
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps@steps)))
     }
+    if(is.null(CL$outputs)) CL$outputs <- list()
     return(CL)
 }
 
 #' write cwlParam to cwl and yml
 #' @importFrom yaml write_yaml
+#' @export
 writeCWL <- function(cwl, prefix, ...){
     stopifnot(is(cwl, "cwlParam"))
     ## logical to true/false
@@ -30,7 +32,17 @@ writeCWL <- function(cwl, prefix, ...){
             return(result)
         }
     )
-    yml <- lapply(inputs(cwl), function(x) x@value)
+    yml <- lapply(inputs(cwl), function(x) {
+        if(length(x@value) > 0) {
+            v <- x@value
+        }else {
+            v <- x@default
+        }
+        if(x@type == "int"){
+            v <- as.integer(v)
+        }
+        v
+    })
 
     if(cwlClass(cwl) == "Workflow") {
         Steps <- cwl@steps@steps
@@ -88,6 +100,7 @@ as.listInputs <- function(Inputs){
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
+        alist[[i]]$default <- NULL
         alist[[i]] <- .removeEmpty(alist[[i]])
     }
     return(alist)
