@@ -1,5 +1,5 @@
 library(testthat)
-library(RPipe)
+library(Rcwl)
 library(S4Vectors)
 library(yaml)
-test_check("RPipe")
+test_check("Rcwl")

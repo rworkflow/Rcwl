@@ -28,7 +28,7 @@ cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
 
 \item{stdout}{Capture the command's standard output stream to a file written to the designated output directory.}
 
-\item{A}{list of `stepParamList`.}
+\item{steps}{A list of `stepParamList`.}
 }
 \description{
 cwlStepParam

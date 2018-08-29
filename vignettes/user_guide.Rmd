@@ -1,5 +1,5 @@
 ---
-title: "RPipe User Guide"
+title: "Rcwl User Guide"
 author: "Qiang Hu"
 date: "`r Sys.Date()`"
 output:
@@ -23,13 +23,14 @@ vignette: >
 knitr::opts_knit$set(root.dir = tempdir())
 ```
 
-The `Rpipe` package is aimed to be a simple and user-friendly way to manage command line tools in R and build data analysis pipelines using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
+The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools in R and build data analysis pipelines using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
 
 # First Example
 The main class and constructor function is `cwlParam`, which wrap a command line tool and its parameters in a `cwlParam` object. Let's start with a simple example, `echo hello world`.
 
-First, we need to define the input parameter for "echo", a string without a prefix. Just an `id` option required.
+First, we load the package and then define the input parameter for "echo", a string without a prefix. Just an `id` option required.
 ```{r}
+library(Rcwl)
 input1 <- InputParam(id = "sth")
 ```
 
@@ -215,7 +216,7 @@ template <- system.file(
 param1 <- MulticoreParam(4)
 results <- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
 
-regArgs <- batchtoolsRegistryargs(packages = "RPipe")
+regArgs <- batchtoolsRegistryargs(packages = "Rcwl")
 param <- BatchtoolsParam(workers=5, cluster="sge", template=template, registryargs = regArgs)
 results <- bplapply(letters[1:4], testRun, BPPARAM = param, cwl=echo)
 results <- bplapply(letters[1:4], test, BPPARAM = param)

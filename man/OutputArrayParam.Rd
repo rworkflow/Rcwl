@@ -15,13 +15,13 @@ OutputArrayParam(label = character(), type = "array",
 
 \item{type}{Must be "array".}
 
+\item{items}{Defines the type of the array elements.}
+
 \item{glob}{Pattern to find files relative to the output directory.}
 
 \item{loadContents}{Read text from globbed file.}
 
 \item{outputEval}{Evaluate an expression to generate the output value.}
-
-\item{item}{Defines the type of the array elements.}
 }
 \description{
 Output array parameters

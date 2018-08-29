@@ -1,4 +1,3 @@
-#' Write CWL
 cwlToList <- function(cwl){
     stopifnot(is(cwl, "cwlParam"))
     
@@ -77,7 +76,6 @@ writeCWL <- function(cwl, prefix, ...){
 }
 
 
-#' convert Inputs/Outputs to a list
 .slot2list <- function(x) {
     mapply(function(y) slot(x, y),
            slotNames(class(x)),

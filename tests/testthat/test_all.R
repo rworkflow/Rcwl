@@ -1,32 +1,32 @@
 
-## test echo
-a <- InputParam(id = "a", prefix = "-i", value = 1)
-b <- InputParam(id = "b", value = "b")
-c1 <- cwlParam(inputs = InputParamList(a, b))
+## ## test echo
+## a <- InputParam(id = "a", prefix = "-i", value = 1)
+## b <- InputParam(id = "b", value = "b")
+## c1 <- cwlParam(inputs = InputParamList(a, b))
 
-a <- InputParam(id = "a", type = "File", prefix = "-i=", label = "test", separate = FALSE)
-b <- InputParam(id = "b", type = "int", prefix = "-b")
-c2 <- cwlParam(baseCommand = "echo", inputs = InputParamList(a, b))
-c2$a <- "../cwl/test"
-c2$b <- 1
+## a <- InputParam(id = "a", type = "File", prefix = "-i=", label = "test", separate = FALSE)
+## b <- InputParam(id = "b", type = "int", prefix = "-b")
+## c2 <- cwlParam(baseCommand = "echo", inputs = InputParamList(a, b))
+## c2$a <- "../cwl/test"
+## c2$b <- 1
 
-writeCWL(c2, "../cwl/test")
-c2res <- runCWL(c2)
-test_that("simple echo", {
-    expect_equal(tail(c2res$logs, 1), "Final process status is success")})
+## writeCWL(c2, "../cwl/test")
+## c2res <- runCWL(c2)
+## test_that("simple echo", {
+##     expect_equal(tail(c2res$logs, 1), "Final process status is success")})
 
-## Input array
-a <- InputParam(id = "a", type = "int[]", prefix = "-i", label = "test")
-b <- InputParam(id = "b",
-                type = InputArrayParam(type="array", items = "string", prefix="-B=", separate = FALSE))
-d <- InputParam(id = "d", type = "string[]", prefix = "-C=", itemSeparator = ",", separate = FALSE)
-c3 <- cwlParam(baseCommand = "echo", inputs = InputParamList(a, b, d), stdout = "output.txt")
-c3$a <- 1:3
-c3$b <- c("A", "B", "C")
-c3$d <- letters[1:3]
-c3res <- runCWL(c3)
-test_that("Input array", {
-    expect_equal(tail(c3res$logs, 1), "Final process status is success")})
+## ## Input array
+## a <- InputParam(id = "a", type = "int[]", prefix = "-i", label = "test")
+## b <- InputParam(id = "b",
+##                 type = InputArrayParam(type="array", items = "string", prefix="-B=", separate = FALSE))
+## d <- InputParam(id = "d", type = "string[]", prefix = "-C=", itemSeparator = ",", separate = FALSE)
+## c3 <- cwlParam(baseCommand = "echo", inputs = InputParamList(a, b, d), stdout = "output.txt")
+## c3$a <- 1:3
+## c3$b <- c("A", "B", "C")
+## c3$d <- letters[1:3]
+## c3res <- runCWL(c3)
+## test_that("Input array", {
+##     expect_equal(tail(c3res$logs, 1), "Final process status is success")})
 
 ## ## Output array
 ## a <- InputParam(id = "a", type = InputArrayParam(type = "array", items = "string"))
@@ -53,7 +53,7 @@ test_that("Input array", {
 ## param1 <- MulticoreParam(4)
 ## results <- bplapply(1:10, testRun, BPPARAM = param1, cwl=c2)
 
-## regArgs <- batchtoolsRegistryargs(packages = "RPipe")
+## regArgs <- batchtoolsRegistryargs(packages = "Rcwl")
 ## param <- BatchtoolsParam(workers=4, cluster="sge", template=template, registryargs = regArgs)
 ## results <- bplapply(1:4, testRun, BPPARAM = param, cwl=c2)
 

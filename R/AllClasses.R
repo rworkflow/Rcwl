@@ -26,7 +26,7 @@ setClass("InputArrayParam",
 #' @rdname InputArrayParam
 #' @param label A short description for this object
 #' @param type Must be "array".
-#' @param item Defines the type of the array elements.
+#' @param items Defines the type of the array elements.
 #' @param prefix Command line prefix to add before the value.
 #' @param separate If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.
 #' @param itemSeparator Join the array elements into a single string with separator.
@@ -140,7 +140,7 @@ setClass("OutputArrayParam",
 #' @rdname OutputArrayParam
 #' @param label A short, human-readable label of this object.
 #' @param type Must be "array".
-#' @param item Defines the type of the array elements.
+#' @param items Defines the type of the array elements.
 #' @param glob Pattern to find files relative to the output directory.
 #' @param loadContents Read text from globbed file.
 #' @param outputEval Evaluate an expression to generate the output value.
@@ -234,8 +234,6 @@ OutputParamList <- function(out = OutputParam(), ...){
 
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))
 
-
-#' Parameters for CWL
 #' @rdname cwlParam
 #' @export
 setClass("cwlParam",
@@ -265,6 +263,8 @@ setClass("cwlParam",
 #' The main CWL parameter class and constructor for command tools. More details: https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @rdname cwlParam
 #' @importFrom S4Vectors SimpleList
+#' @import methods
+#' @import utils
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
 #' @param baseCommand Specifies the program to execute
@@ -386,7 +386,7 @@ setClass("cwlStepParam",
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a file written to the designated output directory.
-#' @param A list of `stepParamList`.
+#' @param steps A list of `stepParamList`.
 #' @rdname cwlStepParam
 #' @export
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
