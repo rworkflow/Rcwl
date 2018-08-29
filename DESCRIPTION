@@ -1,13 +1,14 @@
 Package: RPipe
-Title: What the Package Does (one line, title case)
+Title: Wrap Command Tools and Pipelines Using CWL
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: person("Qiang", "Hu", email = "qiang.hu@roswellpark.org", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.5.1), yaml, S4Vectors
-License: What license is it under?
+License: GPL
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 6.1.0

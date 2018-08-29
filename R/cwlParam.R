@@ -1,73 +1,56 @@
 
 #' cwlVersion
+#' @rdname cwlVersion
 #' @export
 cwlVersion <- function(cwl) cwl@cwlVersion
+
+#' cwlVersion
+#' CWL document version
 #' @export
+#' @param cwl A cwlParam object.
+#' @param value CWL document version.
+#' @rdname cwlVersion
 "cwlVersion<-" <- function(cwl, value){
     cwl@cwlVersion  <- value
     cwl
 }
-## setGeneric("cwlVersion<-")
-## setReplaceMethod("cwlVersion", "cwlParam", function(cwl, value){
-##     cwl@cwlVersion <- value
-##     cwl
-## })
 
 #' cwlClass
+#' @rdname cwlClass
 #' @export
 cwlClass <- function(cwl) cwl@cwlClass
+#' cwlClass
+#' @rdname cwlClass
+#' @param cwl A cwlParam object
+#' @param value The cwlParam class.
 #' @export
 "cwlClass<-" <- function(cwl, value){
     cwl@cwlClass <- value
     cwl
 }
 
-## setGeneric("cwlClass<-")
-## setReplaceMethod("cwlClass", "cwlParam", function(cwl, value){
-##     cwl@cwlClass <- value
-##     cwl
-## })
-
 #' baseCommand
+#' @rdname baseCommand
 #' @export
 baseCommand <- function(object) object@baseCommand
+#' baseCommand
+#' @rdname baseCommand
+#' @param cwl A cwlParam object
+#' @param value Specifies the program to execute.
 #' @export
 "baseCommand<-" <- function(cwl, value){
     cwl@baseCommand <- value
     cwl
 }
 
-## "baseCommand<-" <- function(cwl, value){cwl}
-## setGeneric("baseCommand<-")
-## setReplaceMethod("baseCommand", "cwlParam", function(object, value){
-##     object@baseCommand <- value
-##     object
-## })
-
 #' inputs
+#' @param cwl A cwlParam object
 #' @export
 inputs <- function(cwl) cwl@inputs@inputs
 
-## #' Assign values to input params
-## ## #' @param names list
-## ## #' @param values list
-## assignInputs <- function(cwl, names, values){
-##     for(i in 1:length(names)){
-##         itype <- inputs(cwl)[[names[[i]]]]@type
-##         if(itype == "int"){
-##             v <- as.integer(values[[i]])
-##         }else if(itype %in% c("File", "Directory")){
-##             v <- list(class = "File", path = normalizePath(values[[i]]))
-##         }else{
-##             v <- values[[i]]
-##         }
-##         cwl@inputs@inputs[[names[[i]]]]@value <- v
-##     }
-##     cwl
-## }
-
 #' assign value to each input list
 .assignInput <- function(x, name, value){
+    stopifnot(name %in% names(inputs(x)))
     itype <- inputs(x)[[name]]@type
     if(is(itype, "InputArrayParam")){
         v <- value
@@ -85,18 +68,28 @@ inputs <- function(cwl) cwl@inputs@inputs
     x
 }
 
+#' Extract input values by name
+#' @param name One name of input list
+#' @rdname cwlParam
 #' @export
 setMethod("$", "cwlParam", function(x, name){
     inputs(x)[[name]]@value
 })
 
+#' Set input values by name
+#' @param name One one of input list
+#' @param value Set the value to the input list by name
 #' @export
+#' @rdname cwlParam
 setReplaceMethod("$", "cwlParam", function(x, name, value){
     .assignInput(x, name, value)
 })
 
+setGeneric("$")
 
 #' outputs
+#' The outputs of a cwlParam object
+#' @param cwl A cwlParam object
 #' @export
 outputs <- function(cwl) {
     if(is(cwl@outputs, "list")) {
@@ -206,4 +199,3 @@ setMethod(show, "cwlParam", function(object){
         show(object@steps)
     }
 })
-

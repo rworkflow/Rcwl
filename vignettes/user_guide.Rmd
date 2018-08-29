@@ -1,0 +1,276 @@
+---
+title: "RPipe User Guide"
+author: "Qiang Hu"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- ```{r setup, include = FALSE} -->
+<!-- knitr::opts_chunk$set( -->
+<!--   collapse = TRUE, -->
+<!--   comment = "#>" -->
+<!-- ) -->
+<!-- ``` -->
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = tempdir())
+```
+
+The `Rpipe` package is aimed to be a simple and user-friendly way to manage command line tools in R and build data analysis pipelines using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
+
+# First Example
+The main class and constructor function is `cwlParam`, which wrap a command line tool and its parameters in a `cwlParam` object. Let's start with a simple example, `echo hello world`.
+
+First, we need to define the input parameter for "echo", a string without a prefix. Just an `id` option required.
+```{r}
+input1 <- InputParam(id = "sth")
+```
+
+Second, create a `cwlParam` object with `baseCommand` for the command to execute and `InputParamList` for the input parameters.
+```{r}
+echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+```
+
+Now we have a command object to run. Let's send a string "Hello World!" to the object. Without defining the outputs, it will stream standard output to a temporary file by default.
+```{r}
+echo$sth <- "Hello World!"
+echo
+```
+
+Let's run it. A list including the command executed, temporary output and logs. All standard out and standard error stream can also be printed by setting `stderr = ""`.
+```{r}
+r1 <- runCWL(echo)
+r1
+readLines(r1$output)
+```
+
+The `writeCWL` function will write the cwlParam object to a CWL file for the command and YML for the inputs. Then it will invoke `cwl-runner` by default to execute the two files. Thus the command tool `cwl-runner` is required to be installed and available in the system path.
+
+# Input Parameters
+## Essential Input parameters
+For the input parameters, three options need to be defined usually, *id*, *type*, and *prefix*. The type can be *string*, *int*, *long*, *float*, *double*, and so on. More detail can be found at: [https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType]().
+
+Here is an example from [CWL user guide](http://www.commonwl.org/user_guide/03-input/). Here we defined an `echo` with different type of input parameters by `InputParam`. The `stdout` option can be used to caputre the standard output stream to a file.
+```{r}
+e1 <- InputParam(id = "flag", type = "boolean", prefix = "-f")
+e2 <- InputParam(id = "string", type = "string", prefix = "-s")
+e3 <- InputParam(id = "int", type = "int", prefix = "-i")
+e4 <- InputParam(id = "file", type = "File", prefix = "--file=", separate = FALSE)
+echoA <- cwlParam(baseCommand = "echo",
+                  inputs = InputParamList(e1, e2, e3, e4),
+                  stdout = "output.txt")
+```
+
+Then we give it a try by setting values for the inputs.
+```{r}
+echoA$flag <- TRUE
+echoA$string <- "Hello"
+echoA$int <- 1
+
+tmpfile <- tempfile()
+write("World", tmpfile)
+echoA$file <- tmpfile
+
+r2 <- runCWL(echoA)
+r2$command
+```
+
+## Array Inputs
+A similar example to CWL user guide. We can define three different type of array as inputs. 
+```{r}
+a1 <- InputParam(id = "A", type = "string[]", prefix = "-A")
+a2 <- InputParam(id = "B",
+                 type = InputArrayParam(items = "string",
+                                        prefix="-B=", separate = FALSE))
+a3 <- InputParam(id = "C", type = "string[]", prefix = "-C=",
+                 itemSeparator = ",", separate = FALSE)
+echo <- cwlParam(baseCommand = "echo",
+                 inputs = InputParamList(a1, a2, a3))
+```
+
+Then set values for the three inputs.
+```{r}
+echo$A <- letters[1:3]
+echo$B <- letters[4:6]
+echo$C <- letters[7:9]
+echo
+```
+
+Now we can check whether the command behaves as we expected.
+```{r}
+r3 <- runCWL(echo)
+r3$command
+```
+
+# Output Parameters
+## Capturing Output
+The outputs, similar to the inputs, is a list of output parameters. Three options *id*, *type* and *glob* can be defined. The glob option is used to define a pattern to find files relative to the output directory.
+
+Here is an example to uzip a compressed `gz` file. First, we generate a compressed R script file.
+```{r}
+zzfil <- file.path(tempdir(), "sample.R.gz")
+zz <- gzfile(zzfil, "w")
+cat("sample(1:10, 5)", file = zz, sep = "\n")
+close(zz)
+```
+
+We define a `cwlParam` object to use "gzip" to uncompress a input file.
+```{r}
+ofile <- "sample.R"
+z1 <- InputParam(id = "uncomp", type = "boolean", prefix = "-d")
+z2 <- InputParam(id = "out", type = "boolean", prefix = "-c")
+z3 <- InputParam(id = "zfile", type = "File")
+o1 <- OutputParam(id = "rfile", type = "File", glob = ofile)
+gz <- cwlParam(baseCommand = "gzip",
+               inputs = InputParamList(z1, z2, z3),
+               outputs = OutputParamList(o1),
+               stdout = ofile)
+```
+
+Now the `gz` object can be used to uncompress the previous generated compressed file.
+```{r}
+gz$uncomp <- TRUE
+gz$out <- TRUE
+gz$zfile <- zzfil
+r4 <- runCWL(gz)
+r4$output
+```
+
+Or we can use `arguments` to set some default parameters.
+```{r}
+z1 <- InputParam(id = "zfile", type = "File")
+o1 <- OutputParam(id = "rfile", type = "File", glob = ofile)
+Gz <- cwlParam(baseCommand = "gzip",
+               arguments = list("-d", "-c"),
+               inputs = InputParamList(z1),
+               outputs = OutputParamList(o1),
+               stdout = ofile)
+Gz
+Gz$zfile <- zzfil
+r4a <- runCWL(Gz)
+```
+
+To make it for general usage, we can define a pattern with javascript to glob the output, which require `node` to be installed in your system PATH.
+```{r}
+pfile <- "$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))"
+o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
+GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
+               requirements = list(class = "InlineJavascriptRequirement"),
+               inputs = InputParamList(z1),
+               outputs = OutputParamList(o2),
+               stdout = pfile)
+GZ$zfile <- zzfil
+r4b <- runCWL(GZ)
+```
+
+## Array Outputs
+
+We can also capture multiple output files with `glob` pattern.
+```{r}
+a <- InputParam(id = "a", type = InputArrayParam(items = "string"))
+b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
+touch <- cwlParam(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
+touch$a <- c("a.txt", "b.gz", "c.txt")
+r5 <- runCWL(touch)
+r5$output
+```
+
+# Running Tools in Docker
+The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` option.
+```{r, eval=FALSE}
+d1 <- InputParam(id = "rfile", type = "File")
+doc <- cwlParam(baseCommand = "Rscript",
+                inputs = InputParamList(d1),
+                stdout = "output.txt",
+                hints = list(DockerRequirement = list(dockerPull = "r-base")))
+doc$rfile <- r4$output
+r6 <- runCWL(doc)
+```
+
+# Running Tools in Cluster server
+The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with SGE.
+
+```{r, eval=FALSE}
+library(BiocParallel)
+
+testRun <- function(n, cwl) {
+    cwl$sth  <- n
+    readLines(runCWL(cwl)$output)
+}
+
+test <- function(n)n
+
+template <- system.file(
+    package = "BiocParallel",
+    "unitTests", "test_script", "test-sge-template.tmpl"
+)
+
+param1 <- MulticoreParam(4)
+results <- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
+
+regArgs <- batchtoolsRegistryargs(packages = "RPipe")
+param <- BatchtoolsParam(workers=5, cluster="sge", template=template, registryargs = regArgs)
+results <- bplapply(letters[1:4], testRun, BPPARAM = param, cwl=echo)
+results <- bplapply(letters[1:4], test, BPPARAM = param)
+
+```
+
+# Writing Pipeline
+We can connect multiple tools together into a pipeline. Here is an example to uncompress an R script and execute it with `Rscript`.
+
+Here we define a simple `Rscript` tool without using docker.
+```{r}
+d1 <- InputParam(id = "rfile", type = "File")
+o1 <- OutputParam(id = "Rout", type = "File", glob = "output.txt")
+Rs <- cwlParam(baseCommand = "/usr/bin/Rscript",
+               inputs = InputParamList(d1),
+               outputs = OutputParamList(o1),
+               stdout = "output.txt")
+```
+
+Test run:
+```{r}
+Rs$rfile <- r4$output
+tres <- runCWL(Rs)
+readLines(tres$output)
+```
+
+The pipeline includes two steps, decompressed by `GZ` and compiled by `Rs`. The input file is a compressed file and the output would be the output `Rout` from `Rs`.
+
+First we need to define the direct inputs and outputs from `GZ` and `Rs`.
+```{r}
+i1 <- InputParam(id = "cwl_zfile", type = "File")
+o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/Rout")
+```
+For the input cwl_zifle, it refers to the `GZ` input `zfile`.  The output "cwl_cout" will be the outcome of `Rs` output `Rout`.
+
+The pipeline contains two steps, "Uncomp" to uncompress file with `GZ` and "Compile" to run script with `Rs`. First, we use `cwlStepParam` to define `inputs` and `outputs` from previous step. Then it connects with the two steps with `Step` function. The `run` option refer to the corresponding `cwlParam` object and the `In` option in steps should be linked to the input parameters defined by `cwlStepParam`. In the end, we use `+` to connect all steps.
+```{r}
+cwl <- cwlStepParam(inputs = InputParamList(i1),
+                    outputs = OutputParamList(o1))
+s1 <- Step(id = "Uncomp", run = GZ,
+           In = list(zfile = "cwl_zfile"))
+s2 <- Step(id = "Compile", run = Rs,
+           In = list(rfile = "Uncomp/rfile"))
+cwl <- cwl + s1 + s2
+cwl
+```
+
+Let's run the pipeline.
+```{r}
+cwl$cwl_zfile <- zzfil
+r7 <- runCWL(cwl)
+readLines(r7$output)
+```
+
+# SessionInfo
+```{r}
+sessionInfo()
+```

@@ -5,13 +5,15 @@ cwlToList <- function(cwl){
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
                baseCommand = baseCommand(cwl),
-               requirements = cwl@requirements,
+               requirements = list(cwl@requirements),
                hints = cwl@hints,
                arguments = cwl@arguments,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
                stdout = cwl@stdout)
-    CL <- CL[lengths(CL)>0]
+    ##CL <- CL[lengths(CL)>0]
+    CL$requirements <- .removeEmpty(CL$requirements)
+    CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps@steps)))
     }
@@ -19,7 +21,11 @@ cwlToList <- function(cwl){
     return(CL)
 }
 
-#' write cwlParam to cwl and yml
+#' Write CWL
+#' write `cwlParam` to cwl and yml.
+#' @param cwl A `cwlParam` or `cwlStepParam` object.
+#' @param prefix The prefix of `cwl` and `yml` file to write.
+#' @param ... Other options from `yaml::write_yaml`.
 #' @importFrom yaml write_yaml
 #' @export
 writeCWL <- function(cwl, prefix, ...){
@@ -38,7 +44,7 @@ writeCWL <- function(cwl, prefix, ...){
         }else {
             v <- x@default
         }
-        if(x@type == "int"){
+        if(is(x@type, "character") && x@type == "int"){
             v <- as.integer(v)
         }
         v
