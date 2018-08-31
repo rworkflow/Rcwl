@@ -1,28 +1,26 @@
 
-#' cwlVersion
-#' @rdname cwlClass
+#' cwlParam methods
+#' @rdname cwlParam-methods
 #' @export
 cwlVersion <- function(cwl) cwl@cwlVersion
 
 #' cwlVersion
 #' CWL document version
 #' @export
-#' @param cwl A cwlParam object.
-#' @param value CWL document version.
-#' @rdname cwlVersion
+#' @param cwl A `cwlParam` object.
+#' @param value Assign value to the `cwlParam` object.
+#' @rdname cwlParam-methods
 "cwlVersion<-" <- function(cwl, value){
     cwl@cwlVersion  <- value
     cwl
 }
 
 #' cwlClass
-#' @rdname cwlClass
+#' @rdname cwlParam-methods
 #' @export
 cwlClass <- function(cwl) cwl@cwlClass
 #' cwlClass
-#' @rdname cwlClass
-#' @param cwl A cwlParam object
-#' @param value The cwlParam class.
+#' @rdname cwlParam-methods
 #' @export
 "cwlClass<-" <- function(cwl, value){
     cwl@cwlClass <- value
@@ -30,16 +28,50 @@ cwlClass <- function(cwl) cwl@cwlClass
 }
 
 #' baseCommand
-#' @rdname cwlClass
+#' @rdname cwlParam-methods
 #' @export
 baseCommand <- function(cwl) cwl@baseCommand
 #' baseCommand
-#' @rdname baseCommand
-#' @param cwl A cwlParam object
-#' @param value The class of CWL
+#' @rdname cwlParam-methods
 #' @export
 "baseCommand<-" <- function(cwl, value){
     cwl@baseCommand <- value
+    cwl
+}
+
+#' arguments
+#' @rdname cwlParam-methods
+#' @export
+arguments <- function(cwl) cwl@arguments
+#' arguments
+#' @rdname cwlParam-methods
+#' @export
+"arguments<-" <- function(cwl, value){
+    cwl@arguments <- value
+    cwl
+}
+
+#' hints
+#' @export
+#' @rdname cwlParam-methods
+hints <- function(cwl) cwl@hints
+#' hints
+#' @rdname cwlParam-methods
+#' @export
+"hints<-" <- function(cwl, value){
+    cwl@hints <- value
+    cwl
+}
+
+#' requirements
+#' @rdname cwlParam-methods
+#' @export
+requirements <- function(cwl) cwl@requirements
+#' requirements
+#' @rdname cwlParam-methods
+#' @export
+"requirements<-" <- function(cwl, value){
+    cwl@requirements <- value
     cwl
 }
 

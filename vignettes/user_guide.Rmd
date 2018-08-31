@@ -1,5 +1,5 @@
 ---
-title: "Rcwl User Guide"
+title: "User Guide for Rcwl"
 author: "Qiang Hu"
 date: "`r Sys.Date()`"
 output:
@@ -7,11 +7,11 @@ output:
     toc: true
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{User Guide for Rcwl}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+%\VignetteEngine{knitr::knitr}
 <!-- ```{r setup, include = FALSE} -->
 <!-- knitr::opts_chunk$set( -->
 <!--   collapse = TRUE, -->
