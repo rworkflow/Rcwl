@@ -9,6 +9,7 @@
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @export
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", Args = character(), stdout = TRUE, stderr = TRUE, ...){
+    if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     writeCWL(cwl, prefix = prefix, ...)
     res <- system2(cwlRunner,
                    args = paste0(Args, " ", prefix, ".cwl ", prefix, ".yml"),

@@ -4,7 +4,7 @@ cwlToList <- function(cwl){
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
                baseCommand = baseCommand(cwl),
-               requirements = list(cwl@requirements),
+               requirements = cwl@requirements,
                hints = cwl@hints,
                arguments = cwl@arguments,
                inputs = as.listInputs(inputs(cwl)),
@@ -37,17 +37,7 @@ writeCWL <- function(cwl, prefix, ...){
             return(result)
         }
     )
-    yml <- lapply(inputs(cwl), function(x) {
-        if(length(x@value) > 0) {
-            v <- x@value
-        }else {
-            v <- x@default
-        }
-        if(is(x@type, "character") && x@type == "int"){
-            v <- as.integer(v)
-        }
-        v
-    })
+    yml <- .cwl2yml(cwl)
 
     if(cwlClass(cwl) == "Workflow") {
         Steps <- cwl@steps@steps
@@ -75,6 +65,19 @@ writeCWL <- function(cwl, prefix, ...){
     write_yaml(yml, file = paste0(prefix, ".yml"), handlers = handlers, ...)
 }
 
+.cwl2yml <- function(cwl){
+    lapply(inputs(cwl), function(x) {
+        if(length(x@value) > 0) {
+            v <- x@value
+        }else {
+            v <- x@default
+        }
+        if(is(x@type, "character") && x@type == "int"){
+            v <- as.integer(v)
+        }
+        v
+    })
+}
 
 .slot2list <- function(x) {
     mapply(function(y) slot(x, y),
@@ -138,9 +141,13 @@ as.listSteps <- function(Steps){
             ilist1
         })
     
-        list(run = paste0(st@id, ".cwl"),
-             "in" = sIns,
-             out = st@Out)
+        .removeEmpty(
+            list(run = paste0(st@id, ".cwl"),
+                 "in" = sIns,
+                 out = st@Out,
+                 scatter = st@scatter,
+                 scatterMethod = st@scatterMethod)
+        )
     })
     return(slist)
 }

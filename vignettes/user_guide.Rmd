@@ -11,7 +11,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-%\VignetteEngine{knitr::knitr}
 <!-- ```{r setup, include = FALSE} -->
 <!-- knitr::opts_chunk$set( -->
 <!--   collapse = TRUE, -->
@@ -23,7 +22,7 @@ vignette: >
 knitr::opts_knit$set(root.dir = tempdir())
 ```
 
-The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools in R and build data analysis pipelines using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
+The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
 
 # First Example
 The main class and constructor function is `cwlParam`, which wrap a command line tool and its parameters in a `cwlParam` object. Let's start with a simple example, `echo hello world`.
@@ -92,21 +91,21 @@ a2 <- InputParam(id = "B",
                                         prefix="-B=", separate = FALSE))
 a3 <- InputParam(id = "C", type = "string[]", prefix = "-C=",
                  itemSeparator = ",", separate = FALSE)
-echo <- cwlParam(baseCommand = "echo",
+echoB <- cwlParam(baseCommand = "echo",
                  inputs = InputParamList(a1, a2, a3))
 ```
 
 Then set values for the three inputs.
 ```{r}
-echo$A <- letters[1:3]
-echo$B <- letters[4:6]
-echo$C <- letters[7:9]
-echo
+echoB$A <- letters[1:3]
+echoB$B <- letters[4:6]
+echoB$C <- letters[7:9]
+echoB
 ```
 
 Now we can check whether the command behaves as we expected.
 ```{r}
-r3 <- runCWL(echo)
+r3 <- runCWL(echoB)
 r3$command
 ```
 
@@ -162,8 +161,9 @@ To make it for general usage, we can define a pattern with javascript to glob th
 ```{r}
 pfile <- "$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))"
 o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
+req1 <- list(class = "InlineJavascriptRequirement")
 GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
-               requirements = list(class = "InlineJavascriptRequirement"),
+               requirements = list(req1),
                inputs = InputParamList(z1),
                outputs = OutputParamList(o2),
                stdout = pfile)
@@ -184,13 +184,15 @@ r5$output
 ```
 
 # Running Tools in Docker
-The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` option.
+The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` or `requirements` option.
 ```{r, eval=FALSE}
 d1 <- InputParam(id = "rfile", type = "File")
+req1 <- list(class = "DockerRequirement",
+             dockerPull = "r-base")
 doc <- cwlParam(baseCommand = "Rscript",
                 inputs = InputParamList(d1),
                 stdout = "output.txt",
-                hints = list(DockerRequirement = list(dockerPull = "r-base")))
+                hints = list(req1))
 doc$rfile <- r4$output
 r6 <- runCWL(doc)
 ```
@@ -203,10 +205,12 @@ library(BiocParallel)
 
 testRun <- function(n, cwl) {
     cwl$sth  <- n
-    readLines(runCWL(cwl)$output)
+    ##readLines(runCWL(cwl)$output)
+    r1 <- runCWL(cwl)
+    r1
 }
 
-test <- function(n)n
+test <- function(n, m) paste(n, m)
 
 template <- system.file(
     package = "BiocParallel",
@@ -216,10 +220,12 @@ template <- system.file(
 param1 <- MulticoreParam(4)
 results <- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
 
+param2 <- BatchtoolsParam(workers=4, cluster="sge", template=template)
+results <- bplapply(letters[1:4], test, BPPARAM = param2, m = 1)
+
 regArgs <- batchtoolsRegistryargs(packages = "Rcwl")
-param <- BatchtoolsParam(workers=5, cluster="sge", template=template, registryargs = regArgs)
-results <- bplapply(letters[1:4], testRun, BPPARAM = param, cwl=echo)
-results <- bplapply(letters[1:4], test, BPPARAM = param)
+param3 <- BatchtoolsParam(workers=4, cluster="sge", template=template, registryargs = regArgs)
+results <- bplapply(letters[1:4], testRun, BPPARAM = param3, cwl=echo)
 
 ```
 
@@ -229,11 +235,9 @@ We can connect multiple tools together into a pipeline. Here is an example to un
 Here we define a simple `Rscript` tool without using docker.
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
-o1 <- OutputParam(id = "Rout", type = "File", glob = "output.txt")
 Rs <- cwlParam(baseCommand = "/usr/bin/Rscript",
-               inputs = InputParamList(d1),
-               outputs = OutputParamList(o1),
-               stdout = "output.txt")
+               inputs = InputParamList(d1))
+Rs
 ```
 
 Test run:
@@ -248,7 +252,7 @@ The pipeline includes two steps, decompressed by `GZ` and compiled by `Rs`. The 
 First we need to define the direct inputs and outputs from `GZ` and `Rs`.
 ```{r}
 i1 <- InputParam(id = "cwl_zfile", type = "File")
-o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/Rout")
+o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
 ```
 For the input cwl_zifle, it refers to the `GZ` input `zfile`.  The output "cwl_cout" will be the outcome of `Rs` output `Rout`.
 
@@ -269,6 +273,32 @@ Let's run the pipeline.
 cwl$cwl_zfile <- zzfil
 r7 <- runCWL(cwl)
 readLines(r7$output)
+```
+
+## Scattering pipeline
+The scattering feature can specifies the associated workflow step or subworkflow to execute separately over a list of input elements. To use this feature, `ScatterFeatureRequirement` must be specified in the workflow requirements. Different `scatter` methods can be used in the associated step to decompose the input into a discrete set of jobs. More details can be found at: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep.
+
+Here is an example to execute multiple R scripts. First, we need to set the input and output types to be array of "File", and add the requirments. In the "Compile" step, the scattering input is required to be set with the `scatter` option.
+```{r}
+i2 <- InputParam(id = "cwl_rfiles", type = "File[]")
+o2 <- OutputParam(id = "cwl_couts", type = "File[]", outputSource = "Compile/output")
+req1 <- list(class = "ScatterFeatureRequirement")
+
+cwl2 <- cwlStepParam(requirements = list(req1),
+                     inputs = InputParamList(i2),
+                     outputs = OutputParamList(o2))
+s1 <- Step(id = "Compile", run = Rs,
+           In = list(rfile = "cwl_rfiles"),
+           scatter = "rfile")
+cwl2 <- cwl2 + s1
+cwl2
+```
+
+Multiple R scripts can be assigned to the workflow inputs and executed.
+```{r}
+cwl2$cwl_rfiles <- c(r4b$output, r4b$output)
+r8 <- runCWL(cwl2)
+r8$output
 ```
 
 # SessionInfo

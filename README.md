@@ -1,6 +1,6 @@
 # Rcwl
 
-The R package can be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL).
+The Rcwl package can be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL).
 
 ## Installation
 

@@ -92,6 +92,10 @@ inputs <- function(cwl) cwl@inputs@inputs
         }else if(itype %in% c("File", "Directory")){
             if(!file.exists(value)) stop(value, " does not exist!")
             v <- list(class = itype, path = normalizePath(value))
+        }else if(itype == "File[]"){
+            v <- lapply(value, function(x)list(class="File",
+                                               path=normalizePath(x)))
+            ##v <- unlist(v, recursive = FALSE)
         }else{
             v <- value
         }
@@ -213,12 +217,12 @@ setMethod(show, "cwlParam", function(object){
     cat("cwlVersion:", cwlVersion(object), "\n")
     cat("baseCommand:", baseCommand(object), "\n")
     if(length(object@requirements) > 0){
-        cat("requirements:\n",
-            names(unlist(object@requirements)), ":", unlist(object@requirements), "\n")
+        cat("requirements:\n")
+        cat(yaml::as.yaml(object@requirements))
     }
     if(length(object@hints) > 0){
-        cat("hints:\n",
-            names(unlist(object@hints)), ":", unlist(object@hints), "\n")
+        cat("hints:\n")
+        cat(yaml::as.yaml(object@hints))
     }
     if(length(object@arguments) > 0){
         cat("arguments:", unlist(object@arguments), "\n")

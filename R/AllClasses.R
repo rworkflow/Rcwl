@@ -268,7 +268,7 @@ setClass("cwlParam",
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
 #' @param baseCommand Specifies the program to execute
-#' @param requirements Requirements that apply to either the runtime environment or the workflow engine.
+#' @param requirements A list of Requirement lists that apply to either the runtime environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
 #' @param arguments Command line bindings which are not directly associated with input parameters.
 #' @param inputs A object of `InputParamList`.
@@ -326,6 +326,7 @@ stepInParamList <- function(...){
     new("stepInParamList", Ins = iList)
 }
 
+setClassUnion("characterORlist", c("character", "list"))
 #' stepParam
 #' @rdname stepParam
 #' @export
@@ -333,7 +334,9 @@ setClass("stepParam",
          slots = c(id = "character",
                    run = "cwlParam",
                    In = "stepInParamList",
-                   Out = "list"))
+                   Out = "list",
+                   scatter = "characterORlist",
+                   scatterMethod = "character"))
 #' stepParam
 #' A workflow step parameters. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @rdname stepParam
@@ -341,13 +344,17 @@ setClass("stepParam",
 #' @param run A `cwlParam` object.
 #' @param In A `stepInParamList`.
 #' @param Out A list of outputs
+#' @param scatter character or a list. The inputs to be scattered.
+#' @param scatterMethod required if scatter is an array of more than one element. It can be one of "dotproduct", "nested_crossproduct" and "flat_crossproduct". Details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
-stepParam <- function(id, run = cwlParam(), In = stepInParamList(), Out = list()) {
+stepParam <- function(id, run = cwlParam(), In = stepInParamList(), Out = list(), scatter = character(), scatterMethod = character()) {
     new("stepParam",
         id = id,
         run = run,
         In = In,
-        Out = Out)
+        Out = Out,
+        scatter = scatter,
+        scatterMethod = scatterMethod)
 }
 
 #' stepParamList
@@ -408,6 +415,12 @@ setMethod(show, "stepParam", function(object) {
         cat("    ", paste0(y@id, ": ", y@source), "\n", sep = "")
     })
     cat("    out: ", unlist(object@Out), "\n", sep = "")
+    if(length(object@scatter) > 0){
+        cat("    scatter: ", object@scatter, "\n", sep = "")
+        if(length(object@scatterMethod) > 0){
+            cat("    scatterMethod: ", object@scatterMethod, "\n", sep = "")
+        }
+    }
 })
 
 setMethod(show, "stepParamList", function(object) {

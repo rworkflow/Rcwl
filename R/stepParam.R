@@ -5,7 +5,7 @@
 #' @param run A `cwlParam` object for command tool.
 #' @param In one or two layes of list.
 #' @export
-Step <- function(id, run = cwlParam(), In = list()) {
+Step <- function(id, run = cwlParam(), In = list(), scatter = character(), scatterMethod = character()) {
     stopifnot(names(In) %in% names(inputs(run)))
     slist <- list()
     for(i in seq(In)) {
@@ -23,7 +23,8 @@ Step <- function(id, run = cwlParam(), In = list()) {
     names(slist) <- names(In)
     ##sout <- paste0("[", paste(names(outputs(run)), collapse = ", "), "]")
     sout <- list(names(outputs(run)))
-    stepParam(id = id, run = run, In = stepInParamList(slist), Out = sout)
+    stepParam(id = id, run = run, In = stepInParamList(slist), Out = sout,
+              scatter = scatter, scatterMethod = scatterMethod)
 }
 
 #' Pipeline
