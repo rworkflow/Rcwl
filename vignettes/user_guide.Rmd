@@ -113,7 +113,7 @@ r3$command
 ## Capturing Output
 The outputs, similar to the inputs, is a list of output parameters. Three options *id*, *type* and *glob* can be defined. The glob option is used to define a pattern to find files relative to the output directory.
 
-Here is an example to uzip a compressed `gz` file. First, we generate a compressed R script file.
+Here is an example to unzip a compressed `gz` file. First, we generate a compressed R script file.
 ```{r}
 zzfil <- file.path(tempdir(), "sample.R.gz")
 zz <- gzfile(zzfil, "w")
@@ -198,34 +198,29 @@ r6 <- runCWL(doc)
 ```
 
 # Running Tools in Cluster server
-The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with SGE.
+The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with multicore and SGE.
 
 ```{r, eval=FALSE}
 library(BiocParallel)
 
 testRun <- function(n, cwl) {
+    library(Rcwl)
     cwl$sth  <- n
-    ##readLines(runCWL(cwl)$output)
-    r1 <- runCWL(cwl)
-    r1
+    runCWL(cwl)
 }
-
-test <- function(n, m) paste(n, m)
 
 template <- system.file(
     package = "BiocParallel",
     "unitTests", "test_script", "test-sge-template.tmpl"
 )
 
+## submit with mutlicore
 param1 <- MulticoreParam(4)
 results <- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
 
-param2 <- BatchtoolsParam(workers=4, cluster="sge", template=template)
-results <- bplapply(letters[1:4], test, BPPARAM = param2, m = 1)
-
-regArgs <- batchtoolsRegistryargs(packages = "Rcwl")
-param3 <- BatchtoolsParam(workers=4, cluster="sge", template=template, registryargs = regArgs)
-results <- bplapply(letters[1:4], testRun, BPPARAM = param3, cwl=echo)
+## submit with SGE
+param2 <- BatchtoolsParam(workers = 4, cluster = "sge", template = template)
+results <- bptry(bplapply(letters[1:4], testRun, BPPARAM = param2, cwl = echo))
 
 ```
 

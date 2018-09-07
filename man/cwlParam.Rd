@@ -19,7 +19,7 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 
 \item{baseCommand}{Specifies the program to execute}
 
-\item{requirements}{Requirements that apply to either the runtime environment or the workflow engine.}
+\item{requirements}{A list of Requirement lists that apply to either the runtime environment or the workflow engine.}
 
 \item{hints}{Any or a list for the workflow engine.}
 
@@ -34,4 +34,13 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 \description{
 Parameters for CWL
 The main CWL parameter class and constructor for command tools. More details: https://www.commonwl.org/v1.0/CommandLineTool.html
+}
+\details{
+https://www.commonwl.org/v1.0/CommandLineTool.html
+}
+\examples{
+input1 <- InputParam(id = "sth")
+echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+echo$sth <- "Hello World!"
+r1 <- runCWL(echo)
 }

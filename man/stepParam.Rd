@@ -6,7 +6,8 @@
 \alias{stepParam}
 \title{stepParam}
 \usage{
-stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list())
+stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list(),
+  scatter = character(), scatterMethod = character())
 }
 \arguments{
 \item{id}{The unique identifier for this workflow step.}
@@ -16,6 +17,10 @@ stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list())
 \item{In}{A `stepInParamList`.}
 
 \item{Out}{A list of outputs}
+
+\item{scatter}{character or a list. The inputs to be scattered.}
+
+\item{scatterMethod}{required if scatter is an array of more than one element. It can be one of "dotproduct", "nested_crossproduct" and "flat_crossproduct". Details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
 }
 \description{
 stepParam

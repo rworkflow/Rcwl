@@ -212,7 +212,7 @@ setMethod(show, "OutputParamList", function(object) {
 })
 
 setMethod(show, "cwlParam", function(object){
-    cat("class: cwlParam\n")
+    cat("class:", class(object), "\n")
     cat("cwlClass:", cwlClass(object), "\n")
     cat("cwlVersion:", cwlVersion(object), "\n")
     cat("baseCommand:", baseCommand(object), "\n")
