@@ -421,7 +421,7 @@ setMethod(show, "stepParam", function(object) {
     lapply(object@In@Ins, function(y) {
         cat("    ", paste0(y@id, ": ", y@source), "\n", sep = "")
     })
-    cat("    out: ", unlist(object@Out), "\n", sep = "")
+    cat("    out: ", paste(unlist(object@Out), collapse=" "), "\n", sep = "")
     if(length(object@scatter) > 0){
         cat("    scatter: ", object@scatter, "\n", sep = "")
         if(length(object@scatterMethod) > 0){

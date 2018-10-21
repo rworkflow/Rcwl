@@ -135,6 +135,18 @@ outputs <- function(cwl) {
     }
 }
 
+#' stdout of cwlParam
+#' @rdname cwlParam-methods
+#' @export
+stdOut <- function(cwl) cwl@stdout
+#' stdout of cwlParam
+#' @rdname cwlParam-methods
+#' @export
+"stdOut<-" <- function(cwl, value){
+    cwl@stdout <- value
+    cwl
+}
+
 ## #' Assign values to input params
 ## assignOutputGlob <- function(cwl, name="output", value){
 ##     itype <- cwl@outputs$output@type
