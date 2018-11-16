@@ -11,7 +11,7 @@
 
 <meta name="author" content="Qiang Hu" />
 
-<meta name="date" content="2018-09-04" />
+<meta name="date" content="2018-11-09" />
 
 <title>User Guide for Rcwl</title>
 
@@ -215,7 +215,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">User Guide for Rcwl</h1>
 <p class="author-name">Qiang Hu</p>
-<h4 class="date"><em>2018-09-04</em></h4>
+<h4 class="date"><em>2018-11-09</em></h4>
 
 </div>
 
@@ -238,7 +238,7 @@ input1 &lt;- InputParam(id = &quot;sth&quot;)</code></pre>
 <p>Now we have a command object to run. Let’s send a string “Hello World!” to the object. Without defining the outputs, it will stream standard output to a temporary file by default.</p>
 <pre class="r"><code>echo$sth &lt;- &quot;Hello World!&quot;
 echo</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlParam 
 ## cwlClass: CommandLineTool 
 ## cwlVersion: v1.0 
 ## baseCommand: echo 
@@ -282,13 +282,13 @@ echoA$file &lt;- tmpfile
 r2 &lt;- runCWL(echoA)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r2$command</code></pre>
-<pre><code>## [1] &quot;[job file10da6732012bb.cwl] /tmp/tmppW1AE4$ echo \\&quot;                                  
-## [2] &quot;    --file=/tmp/tmpJT2lZ4/stg1060612f-f661-4aa0-bc2e-c12dfa9dd33a/file10da68fc702d \\&quot;
+<pre><code>## [1] &quot;[job file3b7a79ab840f.cwl] /tmp/tmpUo8O54$ echo \\&quot;                                   
+## [2] &quot;    --file=/tmp/tmpQQ9dO6/stgad6d5b4a-7fed-4fc1-9ea3-3b596606a502/file3b7a137cd61f \\&quot;
 ## [3] &quot;    -f \\&quot;                                                                            
 ## [4] &quot;    -i \\&quot;                                                                            
 ## [5] &quot;    1 \\&quot;                                                                             
 ## [6] &quot;    -s \\&quot;                                                                            
-## [7] &quot;    Hello &gt; /tmp/tmppW1AE4/output.txt&quot;</code></pre>
+## [7] &quot;    Hello &gt; /tmp/tmpUo8O54/output.txt&quot;</code></pre>
 </div>
 <div id="array-inputs" class="section level2">
 <h2><span class="header-section-number">2.2</span> Array Inputs</h2>
@@ -306,7 +306,7 @@ echoB &lt;- cwlParam(baseCommand = &quot;echo&quot;,
 echoB$B &lt;- letters[4:6]
 echoB$C &lt;- letters[7:9]
 echoB</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlParam 
 ## cwlClass: CommandLineTool 
 ## cwlVersion: v1.0 
 ## baseCommand: echo 
@@ -323,7 +323,7 @@ echoB</code></pre>
 <pre class="r"><code>r3 &lt;- runCWL(echoB)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r3$command</code></pre>
-<pre><code>## [1] &quot;[job file10da633c9506c.cwl] /tmp/tmpdfFWC5$ echo \\&quot;                   
+<pre><code>## [1] &quot;[job file3b7a6d346683.cwl] /tmp/tmpALWZt0$ echo \\&quot;                    
 ## [2] &quot;    -A \\&quot;                                                             
 ## [3] &quot;    a \\&quot;                                                              
 ## [4] &quot;    b \\&quot;                                                              
@@ -331,7 +331,7 @@ echoB</code></pre>
 ## [6] &quot;    -B=d \\&quot;                                                           
 ## [7] &quot;    -B=e \\&quot;                                                           
 ## [8] &quot;    -B=f \\&quot;                                                           
-## [9] &quot;    -C=g,h,i &gt; /tmp/tmpdfFWC5/d4aae7b88b6bcc503d8d7ba867a266e8ec885ae9&quot;</code></pre>
+## [9] &quot;    -C=g,h,i &gt; /tmp/tmpALWZt0/30b3227e07dba757f4ec70eb2a7b98e62e0c9820&quot;</code></pre>
 </div>
 </div>
 <div id="output-parameters" class="section level1">
@@ -339,7 +339,7 @@ echoB</code></pre>
 <div id="capturing-output" class="section level2">
 <h2><span class="header-section-number">3.1</span> Capturing Output</h2>
 <p>The outputs, similar to the inputs, is a list of output parameters. Three options <em>id</em>, <em>type</em> and <em>glob</em> can be defined. The glob option is used to define a pattern to find files relative to the output directory.</p>
-<p>Here is an example to uzip a compressed <code>gz</code> file. First, we generate a compressed R script file.</p>
+<p>Here is an example to unzip a compressed <code>gz</code> file. First, we generate a compressed R script file.</p>
 <pre class="r"><code>zzfil &lt;- file.path(tempdir(), &quot;sample.R.gz&quot;)
 zz &lt;- gzfile(zzfil, &quot;w&quot;)
 cat(&quot;sample(1:10, 5)&quot;, file = zz, sep = &quot;\n&quot;)
@@ -361,7 +361,7 @@ gz$zfile &lt;- zzfil
 r4 &lt;- runCWL(gz)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r4$output</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9Ymhg7/sample.R&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpv0APj2/sample.R&quot;</code></pre>
 <p>Or we can use <code>arguments</code> to set some default parameters.</p>
 <pre class="r"><code>z1 &lt;- InputParam(id = &quot;zfile&quot;, type = &quot;File&quot;)
 o1 &lt;- OutputParam(id = &quot;rfile&quot;, type = &quot;File&quot;, glob = ofile)
@@ -371,7 +371,7 @@ Gz &lt;- cwlParam(baseCommand = &quot;gzip&quot;,
                outputs = OutputParamList(o1),
                stdout = ofile)
 Gz</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlParam 
 ## cwlClass: CommandLineTool 
 ## cwlVersion: v1.0 
 ## baseCommand: gzip 
@@ -409,7 +409,7 @@ touch$a &lt;- c(&quot;a.txt&quot;, &quot;b.gz&quot;, &quot;c.txt&quot;)
 r5 &lt;- runCWL(touch)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r5$output</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9Ymhg7/a.txt&quot; &quot;/tmp/Rtmp9Ymhg7/c.txt&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpv0APj2/a.txt&quot; &quot;/tmp/Rtmpv0APj2/c.txt&quot;</code></pre>
 </div>
 </div>
 <div id="running-tools-in-docker" class="section level1">
@@ -427,32 +427,27 @@ r6 &lt;- runCWL(doc)</code></pre>
 </div>
 <div id="running-tools-in-cluster-server" class="section level1">
 <h1><span class="header-section-number">5</span> Running Tools in Cluster server</h1>
-<p>The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package <code>BiocParallel</code>. Here is an example to submit jobs with SGE.</p>
+<p>The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package <code>BiocParallel</code>. Here is an example to submit jobs with multicore and SGE.</p>
 <pre class="r"><code>library(BiocParallel)
 
 testRun &lt;- function(n, cwl) {
+    library(Rcwl)
     cwl$sth  &lt;- n
-    ##readLines(runCWL(cwl)$output)
-    r1 &lt;- runCWL(cwl)
-    r1
+    runCWL(cwl)
 }
-
-test &lt;- function(n, m) paste(n, m)
 
 template &lt;- system.file(
     package = &quot;BiocParallel&quot;,
     &quot;unitTests&quot;, &quot;test_script&quot;, &quot;test-sge-template.tmpl&quot;
 )
 
+## submit with mutlicore
 param1 &lt;- MulticoreParam(4)
 results &lt;- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
 
-param2 &lt;- BatchtoolsParam(workers=4, cluster=&quot;sge&quot;, template=template)
-results &lt;- bplapply(letters[1:4], test, BPPARAM = param2, m = 1)
-
-regArgs &lt;- batchtoolsRegistryargs(packages = &quot;Rcwl&quot;)
-param3 &lt;- BatchtoolsParam(workers=4, cluster=&quot;sge&quot;, template=template, registryargs = regArgs)
-results &lt;- bplapply(letters[1:4], testRun, BPPARAM = param3, cwl=echo)</code></pre>
+## submit with SGE
+param2 &lt;- BatchtoolsParam(workers = 4, cluster = &quot;sge&quot;, template = template)
+results &lt;- bptry(bplapply(letters[1:4], testRun, BPPARAM = param2, cwl = echo))</code></pre>
 </div>
 <div id="writing-pipeline" class="section level1">
 <h1><span class="header-section-number">6</span> Writing Pipeline</h1>
@@ -462,7 +457,7 @@ results &lt;- bplapply(letters[1:4], testRun, BPPARAM = param3, cwl=echo)</code>
 Rs &lt;- cwlParam(baseCommand = &quot;/usr/bin/Rscript&quot;,
                inputs = InputParamList(d1))
 Rs</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlParam 
 ## cwlClass: CommandLineTool 
 ## cwlVersion: v1.0 
 ## baseCommand: /usr/bin/Rscript 
@@ -476,7 +471,7 @@ Rs</code></pre>
 tres &lt;- runCWL(Rs)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>readLines(tres$output)</code></pre>
-<pre><code>## [1] &quot;[1]  9  1 10  6  7&quot;</code></pre>
+<pre><code>## [1] &quot;[1]  4 10  9  5  6&quot;</code></pre>
 <p>The pipeline includes two steps, decompressed by <code>GZ</code> and compiled by <code>Rs</code>. The input file is a compressed file and the output would be the output <code>Rout</code> from <code>Rs</code>.</p>
 <p>First we need to define the direct inputs and outputs from <code>GZ</code> and <code>Rs</code>.</p>
 <pre class="r"><code>i1 &lt;- InputParam(id = &quot;cwl_zfile&quot;, type = &quot;File&quot;)
@@ -491,7 +486,7 @@ s2 &lt;- Step(id = &quot;Compile&quot;, run = Rs,
            In = list(rfile = &quot;Uncomp/rfile&quot;))
 cwl &lt;- cwl + s1 + s2
 cwl</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlStepParam 
 ## cwlClass: Workflow 
 ## cwlVersion: v1.0 
 ## baseCommand:  
@@ -515,7 +510,7 @@ cwl</code></pre>
 r7 &lt;- runCWL(cwl)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>readLines(r7$output)</code></pre>
-<pre><code>## [1] &quot;[1]  1 10  6  4  5&quot;</code></pre>
+<pre><code>## [1] &quot;[1]  5  7  6 10  3&quot;</code></pre>
 <div id="scattering-pipeline" class="section level2">
 <h2><span class="header-section-number">6.1</span> Scattering pipeline</h2>
 <p>The scattering feature can specifies the associated workflow step or subworkflow to execute separately over a list of input elements. To use this feature, <code>ScatterFeatureRequirement</code> must be specified in the workflow requirements. Different <code>scatter</code> methods can be used in the associated step to decompose the input into a discrete set of jobs. More details can be found at: <a href="https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep" class="uri">https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep</a>.</p>
@@ -532,7 +527,7 @@ s1 &lt;- Step(id = &quot;Compile&quot;, run = Rs,
            scatter = &quot;rfile&quot;)
 cwl2 &lt;- cwl2 + s1
 cwl2</code></pre>
-<pre><code>## class: cwlParam
+<pre><code>## class: cwlStepParam 
 ## cwlClass: Workflow 
 ## cwlVersion: v1.0 
 ## baseCommand:  
@@ -555,8 +550,8 @@ cwl2</code></pre>
 r8 &lt;- runCWL(cwl2)</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r8$output</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9Ymhg7/f4c15c9d164dc9de3b18a24d4693d25325eba3c0&quot;
-## [2] &quot;/tmp/Rtmp9Ymhg7/f4c15c9d164dc9de3b18a24d4693d25325eba3c0&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpv0APj2/f5fa4686a2db60c36fd39f531e037c89ef855bcf&quot;
+## [2] &quot;/tmp/Rtmpv0APj2/f5fa4686a2db60c36fd39f531e037c89ef855bcf&quot;</code></pre>
 </div>
 </div>
 <div id="sessioninfo" class="section level1">
@@ -583,20 +578,35 @@ r8 &lt;- runCWL(cwl2)</code></pre>
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] BiocParallel_1.14.2 Rcwl_0.0.1          BiocStyle_2.8.2    
-## [4] rmarkdown_1.10      S4Vectors_0.18.3    BiocGenerics_0.26.0
-## [7] yaml_2.2.0          devtools_1.13.6    
+##  [1] BiocStyle_2.10.0    rmarkdown_1.10      proxy_0.4-22       
+##  [4] forcats_0.3.0       stringr_1.3.1       purrr_0.2.5        
+##  [7] readr_1.1.1         tidyr_0.8.2         tibble_1.4.2       
+## [10] ggplot2_3.1.0       tidyverse_1.2.1     dplyr_0.7.7        
+## [13] usethis_1.4.0       devtools_2.0.1      Rcwl_0.0.3         
+## [16] S4Vectors_0.20.0    BiocGenerics_0.28.0 yaml_2.2.0         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.18      compiler_3.5.0    prettyunits_1.0.2 progress_1.2.0   
-##  [5] tools_3.5.0       testthat_2.0.0    digest_0.6.16     debugme_1.1.0    
-##  [9] memoise_1.1.0     evaluate_0.11     checkmate_1.8.5   pkgconfig_2.0.2  
-## [13] rlang_0.2.2       commonmark_1.5    xfun_0.3          withr_2.1.2      
-## [17] stringr_1.3.1     roxygen2_6.1.0    xml2_1.2.0        knitr_1.20       
-## [21] fs_1.2.6          rappdirs_0.3.1    hms_0.4.2         rprojroot_1.3-2  
-## [25] data.table_1.11.4 R6_2.2.2          base64url_1.4     bookdown_0.7     
-## [29] magrittr_1.5      backports_1.1.2   batchtools_0.9.11 htmltools_0.3.6  
-## [33] assertthat_0.2.0  brew_1.0-6        stringi_1.2.4     crayon_1.3.4</code></pre>
+##  [1] Rcpp_0.12.19       lubridate_1.7.4    lattice_0.20-38   
+##  [4] prettyunits_1.0.2  ps_1.2.0           assertthat_0.2.0  
+##  [7] rprojroot_1.3-2    digest_0.6.18      R6_2.3.0          
+## [10] cellranger_1.1.0   plyr_1.8.4         backports_1.1.2   
+## [13] evaluate_0.12      httr_1.3.1         pillar_1.3.0      
+## [16] rlang_0.3.0.1      lazyeval_0.2.1     readxl_1.1.0      
+## [19] rstudioapi_0.8     callr_3.0.0        desc_1.2.0        
+## [22] munsell_0.5.0      broom_0.5.0        xfun_0.4          
+## [25] compiler_3.5.0     modelr_0.1.2       pkgconfig_2.0.2   
+## [28] base64enc_0.1-3    pkgbuild_1.0.2     htmltools_0.3.6   
+## [31] tidyselect_0.2.5   bookdown_0.7       crayon_1.3.4      
+## [34] withr_2.1.2        grid_3.5.0         nlme_3.1-137      
+## [37] jsonlite_1.5       gtable_0.2.0       magrittr_1.5      
+## [40] scales_1.0.0       cli_1.0.1          stringi_1.2.4     
+## [43] debugme_1.1.0      fs_1.2.6           remotes_2.0.2     
+## [46] bindrcpp_0.2.2     testthat_2.0.1     xml2_1.2.0        
+## [49] tools_3.5.0        glue_1.3.0         hms_0.4.2         
+## [52] processx_3.2.0     pkgload_1.0.2      colorspace_1.3-2  
+## [55] BiocManager_1.30.3 sessioninfo_1.1.1  rvest_0.3.2       
+## [58] memoise_1.1.0      knitr_1.20         bindr_0.1.1       
+## [61] haven_1.1.2</code></pre>
 </div>
 
 

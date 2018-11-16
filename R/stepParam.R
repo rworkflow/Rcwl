@@ -42,3 +42,16 @@ setMethod("+", c("cwlStepParam", "stepParam"), function(e1, e2) {
 
 setGeneric("+")
 
+#' Steps
+#' Function to extract step slots
+#' @rdname cwlParam-methods
+#' @export
+steps <- function(cwl) cwl@steps@steps
+
+#' Steps
+#' @rdname cwlParam-methods
+#' @export
+"steps<-" <- function(cwl, value){
+    cwl@steps@steps  <- value
+    cwl
+}

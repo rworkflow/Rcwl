@@ -38,3 +38,44 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", Args = chara
         res
     }
 }
+
+
+runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
+    library(Rcwl)
+    stopifnot(all(names(inputList) %in% names(inputs(cwl))))
+    ## change work directory
+    sname <- names(inputList[[1]])
+    wdir <- file.path(wdir, sname[idx])
+    dir.create(wdir, showWarnings = FALSE, recursive = TRUE)
+    setwd(wdir)
+    ## assign inputs
+    for(i in 1:length(inputList)){
+        cwl <- .assignInput(cwl, names(inputList)[i], inputList[[i]][[idx]])
+    }
+    if(length(paramList) > 0){
+        for(j in 1:length(paramList)){
+            cwl <- .assignInput(cwl, names(paramList)[j], paramList[[j]])
+        }
+    }
+    runCWL(cwl, ...)
+}
+
+#' run CWL with batchtools
+#' @param cwl A `cwlParam` or `cwlStepParam` object.
+#' @param wdir Directory to output results
+#' @param inputList An input list to run in parallel. The list names must be in the inputs of cwl. Jobs will be submitted in parallel for each element in the list. The output directory of each job will be made using the name of each element under the `wdir`.
+#' @param paramList A parameter list for the cwl. The list names must be in the inputs of cwl. 
+#' @param BPoptions The options for `BatchtoolsParam`.
+#' @param ... The options from runCWL.
+#' @import BiocParallel
+#' @export
+runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
+                        BPoptions = list(), ...){
+    nsample <- lengths(inputList)[1]
+    ##param <- BatchtoolsParam(workers = nsample, cluster = cluster, ...)
+    param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
+    bptry(bplapply(seq(nsample), runFun, BPPARAM = param,
+                   cwl = cwl, wdir = wdir,
+                   inputList = inputList,
+                   paramList = paramList, ...))
+}

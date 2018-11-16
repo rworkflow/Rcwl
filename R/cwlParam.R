@@ -108,7 +108,17 @@ inputs <- function(cwl) cwl@inputs@inputs
 #' @rdname InputParam
 #' @export
 setMethod("$", "cwlParam", function(x, name){
-    inputs(x)[[name]]@value
+    ## check if exist
+    ins <- names(inputs(x))
+    ins <- ins[startsWith(ins, name)]
+    pattern <- sprintf("(%s*)/.*$", name)
+    
+    if(name %in% sub(pattern, "\\1", ins)){
+        inputs(x)[[name]]@value
+    }else{
+        stop(wmsg("the '", name, "' does not exist"))
+    }
+    ##inputs(x)[[name]]@value
 })
 
 #' Set input values by name
@@ -215,6 +225,9 @@ setMethod(show, "OutputParamList", function(object) {
                 if(length(object@outputs[[j]]@outputBinding$glob) > 0){
                     cat("      glob: ", object@outputs[[j]]@outputBinding$glob, "\n", sep = "")
                 }
+                if(length(object@outputs[[j]]@secondaryFiles) > 0){
+                    cat("      secondaryFiles: ", object@outputs[[j]]@secondaryFiles, "\n", sep = "")
+                }
                 if(length(object@outputs[[j]]@outputSource) > 0){
                     cat("    outputSource: ", object@outputs[[j]]@outputSource, "\n", sep = "")
                 }
@@ -228,6 +241,29 @@ setMethod(show, "cwlParam", function(object){
     cat("cwlClass:", cwlClass(object), "\n")
     cat("cwlVersion:", cwlVersion(object), "\n")
     cat("baseCommand:", baseCommand(object), "\n")
+    if(length(object@requirements) > 0){
+        cat("requirements:\n")
+        cat(yaml::as.yaml(object@requirements))
+    }
+    if(length(object@hints) > 0){
+        cat("hints:\n")
+        cat(yaml::as.yaml(object@hints))
+    }
+    if(length(object@arguments) > 0){
+        cat("arguments:", unlist(object@arguments), "\n")
+    }
+    show(object@inputs)
+    show(object@outputs)
+    if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
+    ## if(cwlClass(object) == "Workflow") {
+    ##     show(object@steps)
+    ## }
+})
+
+setMethod(show, "cwlStepParam", function(object){
+    cat("class:", class(object), "\n")
+    cat("cwlClass:", cwlClass(object), "\n")
+    cat("cwlVersion:", cwlVersion(object), "\n")
     if(length(object@requirements) > 0){
         cat("requirements:\n")
         cat(yaml::as.yaml(object@requirements))

@@ -40,12 +40,21 @@ writeCWL <- function(cwl, prefix, ...){
     yml <- .cwl2yml(cwl)
 
     if(cwlClass(cwl) == "Workflow") {
-        Steps <- cwl@steps@steps
+        Steps <- steps(cwl)
         lapply(seq(Steps), function(i) {
             run1 <- Steps[[i]]@run
             write_yaml(cwlToList(run1),
                        file = paste0(file.path(dirname(prefix), names(Steps)[[i]]), ".cwl"),
                        handlers = handlers, ...)
+            if(is(run1, "cwlStepParam")){
+                step1 <- steps(run1)
+                lapply(seq(step1), function(j){
+                    run1sub <- step1[[j]]@run
+                    write_yaml(cwlToList(run1sub),
+                               file = paste0(file.path(dirname(prefix), names(step1)[[j]]), ".cwl"),
+                               handlers = handlers, ...)
+                })
+            }
         })
 
         cList <- cwlToList(cwl)
