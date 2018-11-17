@@ -68,6 +68,7 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
 #' @param BPoptions The options for `BatchtoolsParam`.
 #' @param ... The options from runCWL.
 #' @import BiocParallel
+#' @import batchtools
 #' @export
 runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
                         BPoptions = list(), ...){
