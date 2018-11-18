@@ -282,3 +282,19 @@ setMethod(show, "cwlStepParam", function(object){
         show(object@steps)
     }
 })
+
+#' short
+#' 
+#' The function to show short summary of cwlParam or cwlStepParam
+#' @param object An cwlParam or cwlStepParam object
+#' @rdname cwlParam-methods
+#' @export
+short <- function(object){
+    if(is(object, "cwlParam")){
+        cat(as.yaml(list(inputs = names(inputs(object)))))
+        cat(as.yaml(list(outputs = names(outputs(object)))))
+    }
+    if(is(object, "cwlStepParam")) {
+        cat(as.yaml(list(steps = names(steps(object)))))
+    }
+}

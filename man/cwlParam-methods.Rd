@@ -15,6 +15,7 @@
 \alias{requirements<-}
 \alias{stdOut}
 \alias{stdOut<-}
+\alias{short}
 \alias{steps}
 \alias{steps<-}
 \title{cwlParam methods}
@@ -47,6 +48,8 @@ stdOut(cwl)
 
 stdOut(cwl) <- value
 
+short(object)
+
 steps(cwl)
 
 steps(cwl) <- value
@@ -55,39 +58,9 @@ steps(cwl) <- value
 \item{cwl}{A `cwlParam` object.}
 
 \item{value}{Assign value to the `cwlParam` object.}
+
+\item{object}{An cwlParam or cwlStepParam object}
 }
 \description{
-cwlParam methods
-
-cwlVersion
-CWL document version
-
-cwlClass
-
-cwlClass
-
-baseCommand
-
-baseCommand
-
-arguments
-
-arguments
-
-hints
-
-hints
-
-requirements
-
-requirements
-
-stdout of cwlParam
-
-stdout of cwlParam
-
-Steps
-Function to extract step slots
-
-Steps
+The function to show short summary of cwlParam or cwlStepParam
 }

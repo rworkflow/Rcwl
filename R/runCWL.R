@@ -76,7 +76,7 @@ runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
     ##param <- BatchtoolsParam(workers = nsample, cluster = cluster, ...)
     param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
     bptry(bplapply(seq(nsample), runFun, BPPARAM = param,
-                   cwl = cwl, wdir = wdir,
+                   cwl = cwl, wdir = normalizePath(wdir),
                    inputList = inputList,
                    paramList = paramList, ...))
 }
