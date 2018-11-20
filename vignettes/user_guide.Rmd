@@ -198,30 +198,21 @@ r6 <- runCWL(doc)
 ```
 
 # Running Tools in Cluster server
-The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with multicore and SGE.
+The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with "Multiicore" and "SGE". A more detailed example can be found (<https://hubentu.github.io/others/Rcwl_RNASeq.html>).
 
 ```{r, eval=FALSE}
 library(BiocParallel)
-
-testRun <- function(n, cwl) {
-    library(Rcwl)
-    cwl$sth  <- n
-    runCWL(cwl)
-}
-
-template <- system.file(
-    package = "BiocParallel",
-    "unitTests", "test_script", "test-sge-template.tmpl"
-)
+sth.list <- as.list(LETTERS)
+names(sth.list) <- LETTERS
 
 ## submit with mutlicore
-param1 <- MulticoreParam(4)
-results <- bplapply(letters[1:4], testRun, BPPARAM = param1, cwl=echo)
+result1 <- runCWLBatch(cwl = echo, wdir = tempdir(), inputList = list(sth = sth.list),
+                       BPPARAM = MulticoreParam(26))
 
 ## submit with SGE
-param2 <- BatchtoolsParam(workers = 4, cluster = "sge", template = template)
-results <- bptry(bplapply(letters[1:4], testRun, BPPARAM = param2, cwl = echo))
-
+result2 <- runCWLBatch(cwl = echo, wdir = tempdir(), inputList = list(sth = sth.list),
+                       BPPARAM = BatchtoolsParam(workers = 26, cluster = "sge",
+                                                 resources = list(queue = "all.q")))
 ```
 
 # Writing Pipeline
@@ -294,6 +285,13 @@ Multiple R scripts can be assigned to the workflow inputs and executed.
 cwl2$cwl_rfiles <- c(r4b$output, r4b$output)
 r8 <- runCWL(cwl2)
 r8$output
+```
+
+## Pipeline plot
+The function `plotCWL` can be used to visualize the relationship of inputs, outputs and the analysis for a pipeline.
+
+```{r}
+plotCWL(cwl)
 ```
 
 # SessionInfo

@@ -5,7 +5,7 @@
 \title{run CWL with batchtools}
 \usage{
 runCWLBatch(cwl, wdir = getwd(), inputList, paramList = list(),
-  BPoptions = list(), ...)
+  BPPARAM = BatchtoolsParam(), ...)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
@@ -16,7 +16,7 @@ runCWLBatch(cwl, wdir = getwd(), inputList, paramList = list(),
 
 \item{paramList}{A parameter list for the cwl. The list names must be in the inputs of cwl.}
 
-\item{BPoptions}{The options for `BatchtoolsParam`.}
+\item{BPPARAM}{The options for `BiocParallelParam`.}
 
 \item{...}{The options from runCWL.}
 }

@@ -65,17 +65,17 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
 #' @param wdir Directory to output results
 #' @param inputList An input list to run in parallel. The list names must be in the inputs of cwl. Jobs will be submitted in parallel for each element in the list. The output directory of each job will be made using the name of each element under the `wdir`.
 #' @param paramList A parameter list for the cwl. The list names must be in the inputs of cwl. 
-#' @param BPoptions The options for `BatchtoolsParam`.
+#' @param BPPARAM The options for `BiocParallelParam`.
 #' @param ... The options from runCWL.
 #' @import BiocParallel
 #' @import batchtools
 #' @export
 runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
-                        BPoptions = list(), ...){
+                        BPPARAM = BatchtoolsParam(), ...){
     nsample <- lengths(inputList)[1]
-    ##param <- BatchtoolsParam(workers = nsample, cluster = cluster, ...)
-    param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
-    bptry(bplapply(seq(nsample), runFun, BPPARAM = param,
+    ##param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
+    if(!dir.exists(wdir)) dir.create(wdir, recursive = TRUE)
+    bptry(bplapply(seq(nsample), runFun, BPPARAM = BPPARAM,
                    cwl = cwl, wdir = normalizePath(wdir),
                    inputList = inputList,
                    paramList = paramList, ...))
