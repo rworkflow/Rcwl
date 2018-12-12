@@ -1,12 +1,13 @@
 cwlToList <- function(cwl){
     stopifnot(is(cwl, "cwlParam"))
-    
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
                baseCommand = baseCommand(cwl),
                requirements = cwl@requirements,
                hints = cwl@hints,
                arguments = cwl@arguments,
+               id = cwl@id,
+               label = cwl@label,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
                stdout = cwl@stdout)
@@ -15,9 +16,38 @@ cwlToList <- function(cwl){
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps@steps)))
+
+        ## remove inputBinding
+        for(i in seq(CL$inputs)){
+            CL$inputs[[i]]$inputBinding <- NULL
+        }
     }
     if(is.null(CL$outputs)) CL$outputs <- list()
     return(CL)
+}
+
+## Nested steps
+allRun <- function(cwl){
+    Steps <- steps(cwl)
+    Run <- c()
+    for(i in seq(Steps)){
+        nm1 <- names(Steps)[i]
+        run1 <- Steps[[i]]@run
+
+        if(class(run1) == "cwlParam"){
+            nn <- names(Run)
+            Run <- c(Run, run1)
+            names(Run) <- c(nn, nm1)
+        }else if(class(run1) == "cwlStepParam"){
+            ## record cwlStepParam
+            nn <- names(Run)
+            Run <- c(Run, run1)
+            names(Run) <- c(nn, nm1)
+            ## recursive
+            Run <- c(Run, allRun(run1))
+        }
+    }
+    return(Run)
 }
 
 #' Write CWL
@@ -37,29 +67,43 @@ writeCWL <- function(cwl, prefix, ...){
             return(result)
         }
     )
-    yml <- .cwl2yml(cwl)
+    yml <- .removeEmpty(.cwl2yml(cwl))
 
     if(cwlClass(cwl) == "Workflow") {
-        Steps <- steps(cwl)
-        lapply(seq(Steps), function(i) {
-            run1 <- Steps[[i]]@run
-            write_yaml(cwlToList(run1),
-                       file = paste0(file.path(dirname(prefix), names(Steps)[[i]]), ".cwl"),
+        ## Steps <- steps(cwl)
+        ## lapply(seq(Steps), function(i) {
+        ##     run1 <- Steps[[i]]@run
+        ##     if(class(run1)=="cwlParam"){
+        ##         write_yaml(cwlToList(run1),
+        ##                    file = paste0(file.path(dirname(prefix),
+        ##                                            names(Steps)[[i]]), ".cwl"),
+        ##                    handlers = handlers, ...)
+        ##     }else if(class(run1)=="cwlStepParam"){
+        ##     ## nested two layer
+        ##         step1 <- steps(run1)
+        ##         lapply(seq(step1), function(j){
+        ##             run1sub <- step1[[j]]@run
+        ##             if(is(run1sub, "cwlParam")){
+        ##                 write_yaml(cwlToList(run1sub),
+        ##                            file = paste0(file.path(dirname(prefix), names(step1)[[j]]), ".cwl"),
+        ##                            handlers = handlers, ...)
+        ##             }
+        ##         })
+        ##     }
+        ## })
+        Runs <- allRun(cwl)
+        lapply(seq(Runs), function(i){
+            write_yaml(cwlToList(Runs[[i]]),
+                       file = paste0(file.path(dirname(prefix),
+                                               names(Runs)[[i]]), ".cwl"),
                        handlers = handlers, ...)
-            if(is(run1, "cwlStepParam")){
-                step1 <- steps(run1)
-                lapply(seq(step1), function(j){
-                    run1sub <- step1[[j]]@run
-                    write_yaml(cwlToList(run1sub),
-                               file = paste0(file.path(dirname(prefix), names(step1)[[j]]), ".cwl"),
-                               handlers = handlers, ...)
-                })
-            }
         })
-
+        
         cList <- cwlToList(cwl)
         for(i in seq(cList$steps)){
-            cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
+            if(!grepl("^/", cList$steps[[i]]$run)){
+                cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
+            }
         }
     }else{
         cList <- cwlToList(cwl)
@@ -76,10 +120,25 @@ writeCWL <- function(cwl, prefix, ...){
 
 .cwl2yml <- function(cwl){
     lapply(inputs(cwl), function(x) {
+        ## ## remove empty path
+        ## if(grepl("File\\[\\]", x@type)){
+        ##     for(i in seq(x@value)){
+        ##         if(x@value[[i]]$path == ""){
+        ##             x@value[[i]] <- NULL
+        ##         }
+        ##     }
+        ## }else if(x@type=="File?"){
+        ##     if(x@value$path == ""){
+        ##         x@value <- NULL
+        ##     }
+        ## }
+
         if(length(x@value) > 0) {
             v <- x@value
-        }else {
+        }else if(length(x@default) > 0){
             v <- x@default
+        }else{
+            v <- NULL
         }
         if(is(x@type, "character") && x@type == "int"){
             v <- as.integer(v)
@@ -113,6 +172,9 @@ as.listInputs <- function(Inputs){
         if(alist[[i]]$inputBinding$position == 0){
             alist[[i]]$inputBinding$position <- NULL
         }
+        ## if(alist[[i]]$inputBinding$separate){
+        ##     alist[[i]]$inputBinding$separate <- NULL
+        ## }
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
@@ -149,9 +211,14 @@ as.listSteps <- function(Steps){
             }
             ilist1
         })
-    
+
+        if(is(st@run, "cwlParam")){
+            run <- paste0(st@id, ".cwl")
+        }else{
+            run <- st@run
+        }
         .removeEmpty(
-            list(run = paste0(st@id, ".cwl"),
+            list(run = run,
                  "in" = sIns,
                  out = st@Out,
                  scatter = st@scatter,

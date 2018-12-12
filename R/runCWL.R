@@ -47,16 +47,17 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
     sname <- names(inputList[[1]])
     wdir <- file.path(wdir, sname[idx])
     dir.create(wdir, showWarnings = FALSE, recursive = TRUE)
-    setwd(wdir)
     ## assign inputs
     for(i in 1:length(inputList)){
-        cwl <- .assignInput(cwl, names(inputList)[i], inputList[[i]][[idx]])
+        input1 <- inputList[[i]][[idx]]
+        cwl <- .assignInput(cwl, names(inputList)[i], input1)
     }
     if(length(paramList) > 0){
         for(j in 1:length(paramList)){
             cwl <- .assignInput(cwl, names(paramList)[j], paramList[[j]])
         }
     }
+    setwd(wdir)
     runCWL(cwl, ...)
 }
 
@@ -71,7 +72,7 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
 #' @import batchtools
 #' @export
 runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
-                        BPPARAM = BatchtoolsParam(), ...){
+                        BPPARAM = BatchtoolsParam(workers = lengths(inputList)[1]), ...){
     nsample <- lengths(inputList)[1]
     ##param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
     if(!dir.exists(wdir)) dir.create(wdir, recursive = TRUE)

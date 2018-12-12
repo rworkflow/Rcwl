@@ -8,8 +8,9 @@
 \alias{$<-,cwlParam-method}
 \title{InputParam}
 \usage{
-InputParam(id, label = "", type = "string", position = 0L,
-  prefix = "", separate = TRUE, itemSeparator = character(),
+InputParam(id, label = "", type = "string", doc = character(),
+  secondaryFiles = character(), position = 0L, prefix = "",
+  separate = TRUE, itemSeparator = character(),
   valueFrom = character(), default = character(),
   value = character())
 
@@ -23,6 +24,10 @@ InputParam(id, label = "", type = "string", position = 0L,
 \item{label}{A short, human-readable label of this object.}
 
 \item{type}{valid types of data that may be assigned to this parameter.}
+
+\item{doc}{A documentation string for this type.}
+
+\item{secondaryFiles}{Only valid when type: File or is an array of items: File. Provides a pattern or expression specifying files or directories that must be included alongside the primary file.}
 
 \item{position}{The position for this parameter.}
 

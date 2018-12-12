@@ -44,6 +44,7 @@ InputArrayParam <- function(label = "", type = "array", items = character(), pre
 
 #' Input parameters
 setClassUnion("characterORInputArrayParam", c("character", "InputArrayParam"))
+setClassUnion("characterORlist", c("character", "list"))
 
 #' InputParam
 #' @rdname InputParam
@@ -52,7 +53,9 @@ setClass("InputParam",
          slots = c(
              id = "character",
              label = "character",
+             doc = "character",
              type = "characterORInputArrayParam",
+             secondaryFiles = "characterORlist",
              inputBinding = "list",
              default = "ANY",
              value = "ANY"
@@ -60,7 +63,9 @@ setClass("InputParam",
          prototype = list(
              id = character(),
              label = character(),
+             doc = character(),
              type = character(),
+             secondaryFiles = character(),
              inputBinding = list(position = integer(),
                                  prefix = character(),
                                  separate = logical(),
@@ -76,6 +81,8 @@ setClass("InputParam",
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
 #' @param type valid types of data that may be assigned to this parameter.
+#' @param doc A documentation string for this type.
+#' @param secondaryFiles Only valid when type: File or is an array of items: File. Provides a pattern or expression specifying files or directories that must be included alongside the primary file. 
 #' @param position The position for this parameter.
 #' @param prefix Command line prefix to add before the value.
 #' @param separate If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.
@@ -84,11 +91,13 @@ setClass("InputParam",
 #' @param default The default value for this parameter
 #' @param value Assigned value for this parameter
 #' @export
-InputParam <- function(id, label= "", type = "string", position = 0L, prefix = "", separate = TRUE, itemSeparator = character(), valueFrom = character(), default = character(), value = character()){
+InputParam <- function(id, label= "", type = "string", doc = character(), secondaryFiles = character(), position = 0L, prefix = "", separate = TRUE, itemSeparator = character(), valueFrom = character(), default = character(), value = character()){
     new("InputParam",
         id = id,
         label = label,
+        doc = doc,
         type = type,
+        secondaryFiles = secondaryFiles,
         inputBinding = list(position = as.integer(position),
                             prefix = prefix,
                             separate = separate,
@@ -244,6 +253,8 @@ setClass("cwlParam",
              requirements = "list",
              hints = "list",
              arguments = "list",
+             id = "character",
+             label = "character",
              inputs = "InputParamList",
              outputs = "OutputParamListORlist",
              stdout = "character"
@@ -253,6 +264,8 @@ setClass("cwlParam",
                           baseCommand = character(),
                           requirements = list(),
                           hints = list(),
+                          id = character(),
+                          label = character(),
                           arguments = list(),
                           inputs = InputParamList(),
                           outputs = OutputParamList(),
@@ -271,6 +284,8 @@ setClass("cwlParam",
 #' @param requirements A list of Requirement lists that apply to either the runtime environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
 #' @param arguments Command line bindings which are not directly associated with input parameters.
+#' @param id The unique identifier for this process object.
+#' @param label A short, human-readable label of this process object.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a file written to the designated output directory.
@@ -284,10 +299,10 @@ setClass("cwlParam",
 
 cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
                      baseCommand = character(), requirements = list(),
-                     hints = list(), arguments = list(),
+                     hints = list(), arguments = list(), id = character(), label = character(),
                      inputs = InputParamList(), outputs = OutputParamList(),
                      stdout = character()){
-    new("cwlParam", cwlVersion = cwlVersion, cwlClass = cwlClass,
+    new("cwlParam", cwlVersion = cwlVersion, cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand, requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs, outputs = outputs, stdout = stdout)
 }
@@ -333,13 +348,14 @@ stepInParamList <- function(...){
     new("stepInParamList", Ins = iList)
 }
 
-setClassUnion("characterORlist", c("character", "list"))
+##setClassUnion("characterORlist", c("character", "list"))
+setClassUnion("cwlParamORcharacter", c("cwlParam", "character"))
 #' stepParam
 #' @rdname stepParam
 #' @export
 setClass("stepParam",
          slots = c(id = "character",
-                   run = "cwlParam",
+                   run = "cwlParamORcharacter",
                    In = "stepInParamList",
                    Out = "list",
                    scatter = "characterORlist",
@@ -348,7 +364,7 @@ setClass("stepParam",
 #' A workflow step parameters. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @rdname stepParam
 #' @param id The unique identifier for this workflow step.
-#' @param run A `cwlParam` object.
+#' @param run A `cwlParam` object or the path of a cwl file.
 #' @param In A `stepInParamList`.
 #' @param Out A list of outputs
 #' @param scatter character or a list. The inputs to be scattered.
@@ -397,6 +413,7 @@ setClass("cwlStepParam",
 #' @param requirements Requirements that apply to either the runtime environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
 #' @param arguments Command line bindings which are not directly associated with input parameters.
+#' @param id The unique identifier for this process object.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a file written to the designated output directory.
@@ -404,7 +421,7 @@ setClass("cwlStepParam",
 #' @rdname cwlStepParam
 #' @export
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
-                     requirements = list(),
+                     requirements = list(), id = character(),
                      hints = list(), arguments = list(),
                      inputs = InputParamList(), outputs = OutputParamList(),
                      stdout = character(), steps = stepParamList()){
@@ -423,7 +440,7 @@ setMethod(show, "stepParam", function(object) {
     })
     cat("    out: ", paste(unlist(object@Out), collapse=" "), "\n", sep = "")
     if(length(object@scatter) > 0){
-        cat("    scatter: ", object@scatter, "\n", sep = "")
+        cat("    scatter:", unlist(object@scatter), "\n", sep = " ")
         if(length(object@scatterMethod) > 0){
             cat("    scatterMethod: ", object@scatterMethod, "\n", sep = "")
         }

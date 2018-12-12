@@ -9,8 +9,9 @@ The main CWL parameter class and constructor for command tools. More details: ht
 \usage{
 cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
   baseCommand = character(), requirements = list(), hints = list(),
-  arguments = list(), inputs = InputParamList(),
-  outputs = OutputParamList(), stdout = character())
+  arguments = list(), id = character(), label = character(),
+  inputs = InputParamList(), outputs = OutputParamList(),
+  stdout = character())
 }
 \arguments{
 \item{cwlVersion}{CWL version}
@@ -24,6 +25,10 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 \item{hints}{Any or a list for the workflow engine.}
 
 \item{arguments}{Command line bindings which are not directly associated with input parameters.}
+
+\item{id}{The unique identifier for this process object.}
+
+\item{label}{A short, human-readable label of this process object.}
 
 \item{inputs}{A object of `InputParamList`.}
 

@@ -63,5 +63,7 @@ plotCWL <- function(cwl, ...){
         }
         mm <- c(mm, mIn, mOut)
     }
+    ## remove orphan output nodes
+    mm <- na.omit(mm)
     mermaid(paste(mm, collapse = "\n"), ...)
 }

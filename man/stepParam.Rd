@@ -12,7 +12,7 @@ stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list(),
 \arguments{
 \item{id}{The unique identifier for this workflow step.}
 
-\item{run}{A `cwlParam` object.}
+\item{run}{A `cwlParam` object or the path of a cwl file.}
 
 \item{In}{A `stepInParamList`.}
 

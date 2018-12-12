@@ -87,6 +87,10 @@ inputs <- function(cwl) cwl@inputs@inputs
     if(is(itype, "InputArrayParam")){
         v <- value
     }else if(is(itype, "character")){
+        ## optional type
+        if(grepl("?", itype)){
+            itype <- sub("\\?", "", itype)
+        }
         if(itype == "int"){
             v <- as.integer(value)
         }else if(itype %in% c("File", "Directory")){
@@ -190,7 +194,7 @@ setMethod(show, "InputParamList", function(object) {
             ##     v <- object@inputs[[i]]@value
             ## }
 
-            cat("  ", iname, ": ",
+            cat("  ", iname, " (", object@inputs[[i]]@type, "): ",
                 object@inputs[[i]]@inputBinding$prefix, " ",
                 paste(unlist(v), collapse = " "), "\n", sep = "")
         }else if(is(object@inputs[[i]]@type, "InputArrayParam")){

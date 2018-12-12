@@ -7,9 +7,10 @@
 \title{cwlStepParam}
 \usage{
 cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
-  requirements = list(), hints = list(), arguments = list(),
-  inputs = InputParamList(), outputs = OutputParamList(),
-  stdout = character(), steps = stepParamList())
+  requirements = list(), id = character(), hints = list(),
+  arguments = list(), inputs = InputParamList(),
+  outputs = OutputParamList(), stdout = character(),
+  steps = stepParamList())
 }
 \arguments{
 \item{cwlVersion}{CWL version}
@@ -17,6 +18,8 @@ cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
 \item{cwlClass}{"Workflow".}
 
 \item{requirements}{Requirements that apply to either the runtime environment or the workflow engine.}
+
+\item{id}{The unique identifier for this process object.}
 
 \item{hints}{Any or a list for the workflow engine.}
 
