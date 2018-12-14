@@ -3,14 +3,18 @@
 #' @param cwl A `cwlParam` or `cwlStepParam` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param cwlRunner The path to the `cwltool` or `cwl-runner`.
+#' @param cwlTemp Whether to keep temporary files. If true, all temporary files will be kept in a "temp" folder of current output directory.
 #' @param Args The arguments for `cwltool` or `cwl-runner`. For example, "--debug" can work with `cwltool` to show debug information.
 #' @param stdout standard output from `system2`.
 #' @param stderr standard error from `system2`.
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @export
-runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", Args = character(), stdout = TRUE, stderr = TRUE, ...){
+runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", cwlTemp = FALSE, Args = character(), stdout = TRUE, stderr = TRUE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     writeCWL(cwl, prefix = prefix, ...)
+    if(cwlTemp){
+        Args <- paste("--tmp-outdir-prefix temp/", Args)
+    }
     res <- system2(cwlRunner,
                    args = paste0(Args, " ", prefix, ".cwl ", prefix, ".yml"),
                    stdout = stdout, stderr = stderr, ...)
