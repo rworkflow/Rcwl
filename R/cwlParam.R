@@ -302,3 +302,13 @@ short <- function(object){
         cat(as.yaml(list(steps = names(steps(object)))))
     }
 }
+
+#' runs
+#'
+#' The function to access all runs of a cwlStepParam object
+#' @rdname cwlParam-methods
+#' @export
+runs <- function(object){
+    stopifnot(is(object, "cwlStepParam"))
+    SimpleList(lapply(steps(object), function(x)x@run))
+}

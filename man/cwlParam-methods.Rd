@@ -16,6 +16,7 @@
 \alias{stdOut}
 \alias{stdOut<-}
 \alias{short}
+\alias{runs}
 \alias{steps}
 \alias{steps<-}
 \title{cwlParam methods}
@@ -50,6 +51,8 @@ stdOut(cwl) <- value
 
 short(object)
 
+runs(object)
+
 steps(cwl)
 
 steps(cwl) <- value
@@ -63,4 +66,6 @@ steps(cwl) <- value
 }
 \description{
 The function to show short summary of cwlParam or cwlStepParam
+
+The function to access all runs of a cwlStepParam object
 }

@@ -1,5 +1,27 @@
-cwlToList <- function(cwl){
+
+.rmDList <- function(reqList){
+    if(length(reqList) > 0){
+        for(i in seq(reqList)){
+            if(reqList[[i]]$class == "DockerRequirement"){
+                reqList[[i]] <- NULL
+            }
+            if("DockerRequirement" %in% names(reqList)){
+                reqList$DockerRequirement <- NULL
+            }
+        }
+    }
+    return(reqList)
+}
+
+.rmDocker <- function(cwl){
+    requirements(cwl) <- .rmDList(requirements(cwl))
+    hints(cwl) <- .rmDList(hints(cwl))
+    return(cwl)
+}
+
+cwlToList <- function(cwl, noDocker){
     stopifnot(is(cwl, "cwlParam"))
+    if(noDocker) cwl <- .rmDocker(cwl)
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
                baseCommand = baseCommand(cwl),
@@ -54,10 +76,11 @@ allRun <- function(cwl){
 #' write `cwlParam` to cwl and yml.
 #' @param cwl A `cwlParam` or `cwlStepParam` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
+#' @param noDocker Whether to disable docker. 
 #' @param ... Other options from `yaml::write_yaml`.
 #' @importFrom yaml write_yaml
 #' @export
-writeCWL <- function(cwl, prefix, ...){
+writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
     stopifnot(is(cwl, "cwlParam"))
     ## logical to true/false
     handlers  <-  list(
@@ -93,20 +116,20 @@ writeCWL <- function(cwl, prefix, ...){
         ## })
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
-            write_yaml(cwlToList(Runs[[i]]),
+            write_yaml(cwlToList(Runs[[i]], noDocker),
                        file = paste0(file.path(dirname(prefix),
                                                names(Runs)[[i]]), ".cwl"),
                        handlers = handlers, ...)
         })
         
-        cList <- cwlToList(cwl)
+        cList <- cwlToList(cwl, noDocker)
         for(i in seq(cList$steps)){
             if(!grepl("^/", cList$steps[[i]]$run)){
                 cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
             }
         }
     }else{
-        cList <- cwlToList(cwl)
+        cList <- cwlToList(cwl, noDocker)
     }
     write_yaml(cList, file = paste0(prefix, ".cwl"), handlers = handlers, ...)
     ## ## fix "["
@@ -178,7 +201,7 @@ as.listInputs <- function(Inputs){
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
-        alist[[i]]$default <- NULL
+        ## alist[[i]]$default <- NULL
         alist[[i]] <- .removeEmpty(alist[[i]])
     }
     return(alist)

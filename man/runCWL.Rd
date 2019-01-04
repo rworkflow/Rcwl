@@ -6,7 +6,8 @@
 Execute a cwlParam object with assigned inputs.}
 \usage{
 runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-  Args = character(), stdout = TRUE, stderr = TRUE, ...)
+  cwlTemp = FALSE, Args = character(), stdout = TRUE,
+  stderr = TRUE, noDocker = FALSE, ...)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
@@ -15,11 +16,15 @@ runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 
 \item{cwlRunner}{The path to the `cwltool` or `cwl-runner`.}
 
+\item{cwlTemp}{Whether to keep temporary files. If true, all temporary files will be kept in a "temp" folder of current output directory.}
+
 \item{Args}{The arguments for `cwltool` or `cwl-runner`. For example, "--debug" can work with `cwltool` to show debug information.}
 
 \item{stdout}{standard output from `system2`.}
 
-\item{stderr}{standard error from `system2`.}
+\item{stderr}{standard error from `system2`. By setting it to "", the detailed running logs will return directly.}
+
+\item{noDocker}{Whether to disable docker.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }

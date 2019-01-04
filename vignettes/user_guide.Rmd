@@ -185,7 +185,7 @@ r5$output
 
 # Running Tools in Docker
 The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` or `requirements` option.
-```{r, eval=FALSE}
+```{r}
 d1 <- InputParam(id = "rfile", type = "File")
 req1 <- list(class = "DockerRequirement",
              dockerPull = "r-base")
@@ -194,7 +194,14 @@ doc <- cwlParam(baseCommand = "Rscript",
                 stdout = "output.txt",
                 hints = list(req1))
 doc$rfile <- r4$output
+```
+```{r, eval=FALSE}
 r6 <- runCWL(doc)
+```
+
+The tools defined with docker requirements can also be run locally by disabling the docker option. In case your `Rscript` depends some local libraries to run, an option from `cwltools`, "--preserve-entire-environment", can be used to pass all environment variables.
+```{r}
+r6a <- runCWL(doc, noDocker = TRUE, Args = "--preserve-entire-environment")
 ```
 
 # Running Tools in Cluster server

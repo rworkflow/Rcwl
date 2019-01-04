@@ -5,12 +5,14 @@
 \title{Write CWL
 write `cwlParam` to cwl and yml.}
 \usage{
-writeCWL(cwl, prefix, ...)
+writeCWL(cwl, prefix, noDocker = FALSE, ...)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
 
 \item{prefix}{The prefix of `cwl` and `yml` file to write.}
+
+\item{noDocker}{Whether to disable docker.}
 
 \item{...}{Other options from `yaml::write_yaml`.}
 }

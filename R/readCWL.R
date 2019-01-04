@@ -33,6 +33,9 @@
 .readOutputs <- function(cwl.origin, cwl){
     outputList <- cwl.origin$outputs
     oList <- SimpleList()
+    if(length(outputList) == 0){
+        return(oList)
+    }
     for(i in 1:length(outputList)){
         if(cwlClass(cwl) == "Workflow"){
             olist <- c(id = names(outputList)[i], outputList[[i]])

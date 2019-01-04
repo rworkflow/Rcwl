@@ -6,12 +6,13 @@
 #' @param cwlTemp Whether to keep temporary files. If true, all temporary files will be kept in a "temp" folder of current output directory.
 #' @param Args The arguments for `cwltool` or `cwl-runner`. For example, "--debug" can work with `cwltool` to show debug information.
 #' @param stdout standard output from `system2`.
-#' @param stderr standard error from `system2`.
+#' @param stderr standard error from `system2`. By setting it to "", the detailed running logs will return directly.
+#' @param noDocker Whether to disable docker.
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @export
-runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", cwlTemp = FALSE, Args = character(), stdout = TRUE, stderr = TRUE, ...){
+runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool", cwlTemp = FALSE, Args = character(), stdout = TRUE, stderr = TRUE, noDocker = FALSE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
-    writeCWL(cwl, prefix = prefix, ...)
+    writeCWL(cwl, prefix = prefix, noDocker = noDocker, ...)
     if(cwlTemp){
         Args <- paste("--tmp-outdir-prefix temp/", Args)
     }
