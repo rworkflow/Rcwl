@@ -1,13 +1,11 @@
 
 .rmDList <- function(reqList){
     if(length(reqList) > 0){
-        for(i in seq(reqList)){
-            if(reqList[[i]]$class == "DockerRequirement"){
-                reqList[[i]] <- NULL
-            }
-            if("DockerRequirement" %in% names(reqList)){
-                reqList$DockerRequirement <- NULL
-            }
+        cs <- unlist(lapply(reqList, function(x)x$class))
+        if("DockerRequirement" %in% names(reqList)){
+            reqList <- reqList[-match("DockerRequirement", names(reqList))]
+        }else if( "DockerRequirement" %in% cs){
+            reqList <- reqList[-match("DockerRequirement", cs)]
         }
     }
     return(reqList)
@@ -163,8 +161,10 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
         }else{
             v <- NULL
         }
-        if(is(x@type, "character") && x@type == "int"){
+        if(is(v, "character") && x@type == "int"){
             v <- as.integer(v)
+        }else if(is(v, "character") && x@type == "boolean"){
+            v <- as.logical(v)
         }
         v
     })
