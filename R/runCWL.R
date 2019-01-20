@@ -44,6 +44,7 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
             message("Find cwltool: ", cr)
         }else{
             message("Install cwltool ...")
+            py_install("virtualenv")
             py_install("cwltool",
                        envname = "r-reticulate",
                        method = "virtualenv")
