@@ -23,7 +23,7 @@
 #' echo <- cwlParam(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
 #' echo$sth <- "Hello World!"
-#' runCWL(echo)
+#' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    cwlTemp = FALSE, Args = character(), stdout = TRUE,
                    stderr = TRUE, noDocker = FALSE, ...){

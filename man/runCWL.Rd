@@ -41,5 +41,5 @@ input1 <- InputParam(id = "sth")
 echo <- cwlParam(baseCommand = "echo",
                  inputs = InputParamList(input1))
 echo$sth <- "Hello World!"
-runCWL(echo)
+## res <- runCWL(echo)
 }

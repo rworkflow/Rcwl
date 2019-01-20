@@ -340,9 +340,6 @@ setClass("cwlParam",
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
-#' echo$sth <- "Hello World!"
-#' r1 <- runCWL(echo)
-
 cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
                      baseCommand = character(), requirements = list(),
                      hints = list(), arguments = list(), id = character(),

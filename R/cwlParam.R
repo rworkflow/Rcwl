@@ -110,6 +110,7 @@ inputs <- function(cwl) cwl@inputs@inputs
 
 #' Extract input values by name
 #' @rdname InputParam
+#' @importFrom S4Vectors wmsg
 #' @export
 setMethod("$", "cwlParam", function(x, name){
     ## check if exist
