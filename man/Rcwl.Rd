@@ -6,5 +6,6 @@
 \alias{Rcwl-package}
 \title{Rcwl}
 \description{
-An R package to wrap command line tools and build pipelines with Common Workflow Language.
+An R package to wrap command line tools and build pipelines with
+Common Workflow Language.
 }

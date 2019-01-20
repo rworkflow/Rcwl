@@ -20,7 +20,11 @@ setClass("InputArrayParam",
          )
 #' InputArrayParam
 #'
-#' Parameters for array inputs. To specify an array parameter, the array definition is nested under the type field with 'type: array' and items defining the valid data types that may appear in the array. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
+#' Parameters for array inputs. To specify an array parameter, the
+#' array definition is nested under the type field with 'type: array'
+#' and items defining the valid data types that may appear in the
+#' array. More details:
+#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
 #'
 #' @export
 #' @rdname InputArrayParam
@@ -28,10 +32,17 @@ setClass("InputArrayParam",
 #' @param type Must be "array".
 #' @param items Defines the type of the array elements.
 #' @param prefix Command line prefix to add before the value.
-#' @param separate If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.
-#' @param itemSeparator Join the array elements into a single string with separator.
+#' @param separate If true (default), then the prefix and value must
+#'     be added as separate command line arguments; if false, prefix
+#'     and value must be concatenated into a single command line
+#'     argument.
+#' @param itemSeparator Join the array elements into a single string
+#'     with separator.
 #' @param valueFrom String or Expression.
-InputArrayParam <- function(label = "", type = "array", items = character(), prefix = "", separate = TRUE, itemSeparator = character(), valueFrom = character()){
+InputArrayParam <- function(label = "", type = "array",
+                            items = character(), prefix = "",
+                            separate = TRUE, itemSeparator = character(),
+                            valueFrom = character()){
     new("InputArrayParam",
         label = label,
         type = type,
@@ -76,22 +87,37 @@ setClass("InputParam",
          )
 
 #' InputParam
-#' parameter for a command tool. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
+#' 
+#' parameter for a command tool. More details:
+#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
 #' @rdname InputParam
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
-#' @param type valid types of data that may be assigned to this parameter.
+#' @param type valid types of data that may be assigned to this
+#'     parameter.
 #' @param doc A documentation string for this type.
-#' @param secondaryFiles Only valid when type: File or is an array of items: File. Provides a pattern or expression specifying files or directories that must be included alongside the primary file. 
+#' @param secondaryFiles Only valid when type: File or is an array of
+#'     items: File. Provides a pattern or expression specifying files
+#'     or directories that must be included alongside the primary
+#'     file.
 #' @param position The position for this parameter.
 #' @param prefix Command line prefix to add before the value.
-#' @param separate If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.
-#' @param itemSeparator Join the array elements into a single string with the elements separated by by itemSeparator.
+#' @param separate If true (default), then the prefix and value must
+#'     be added as separate command line arguments; if false, prefix
+#'     and value must be concatenated into a single command line
+#'     argument.
+#' @param itemSeparator Join the array elements into a single string
+#'     with the elements separated by by itemSeparator.
 #' @param valueFrom String or Expression.
 #' @param default The default value for this parameter
 #' @param value Assigned value for this parameter
 #' @export
-InputParam <- function(id, label= "", type = "string", doc = character(), secondaryFiles = character(), position = 0L, prefix = "", separate = TRUE, itemSeparator = character(), valueFrom = character(), default = character(), value = character()){
+InputParam <- function(id, label= "", type = "string",
+                       doc = character(), secondaryFiles = character(),
+                       position = 0L, prefix = "",
+                       separate = TRUE, itemSeparator = character(),
+                       valueFrom = character(), default = character(),
+                       value = character()){
     new("InputParam",
         id = id,
         label = label,
@@ -145,17 +171,21 @@ setClass("OutputArrayParam",
                                  outputEval = character()))
          )
 #' Output array parameters
-#' Parameters for array outputs. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
+#' 
+#' Parameters for array outputs. More details:
+#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
 #' @rdname OutputArrayParam
 #' @param label A short, human-readable label of this object.
 #' @param type Must be "array".
 #' @param items Defines the type of the array elements.
 #' @param glob Pattern to find files relative to the output directory.
 #' @param loadContents Read text from globbed file.
-#' @param outputEval Evaluate an expression to generate the output value.
+#' @param outputEval Evaluate an expression to generate the output
+#'     value.
 #' @export
-OutputArrayParam <- function(label= character(), type = "array", items = character(),
-                             glob = character(), loadContents = logical(),
+OutputArrayParam <- function(label= character(), type = "array",
+                             items = character(), glob = character(),
+                             loadContents = logical(),
                              outputEval = character()){
     new("OutputArrayParam",
         label = label,
@@ -193,21 +223,31 @@ setClass("OutputParam",
          )
 
 #' Output parameters
-#' An output parameter for a Command Line Tool. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
+#' 
+#' An output parameter for a Command Line Tool. More details:
+#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
-#' @param type Specify valid types of data that may be assigned to this parameter.
-#' @param secondaryFiles Provides a pattern or expression specifying files or directories. Only valid when type: File or is an array of items: File.
-#' @param streamable A value of true indicates that the file is read or written sequentially without seeking. Only valid when type: File or is an array of items: File.
+#' @param type Specify valid types of data that may be assigned to
+#'     this parameter.
+#' @param secondaryFiles Provides a pattern or expression specifying
+#'     files or directories. Only valid when type: File or is an array
+#'     of items: File.
+#' @param streamable A value of true indicates that the file is read
+#'     or written sequentially without seeking. Only valid when type:
+#'     File or is an array of items: File.
 #' @param glob Pattern to find files relative to the output directory.
 #' @param loadContents Read text from globbed file.
-#' @param outputEval Evaluate an expression to generate the output value.
-#' @param outputSource Specifies one or more workflow parameters that supply the value of to the output parameter.
+#' @param outputEval Evaluate an expression to generate the output
+#'     value.
+#' @param outputSource Specifies one or more workflow parameters that
+#'     supply the value of to the output parameter.
 #' @rdname OutputParam
 #' @export
 OutputParam <- function(id = "output", label = character(), type = "stdout",
                         secondaryFiles = character(), streamable = logical(),
-                        glob = character(), loadContents = logical(), outputEval = character(),
+                        glob = character(), loadContents = logical(),
+                        outputEval = character(),
                         outputSource = character()){
     ##if(items %in% c("File", "Directory") && type != "array") stop("type must be array!")
     new("OutputParam",
@@ -273,7 +313,10 @@ setClass("cwlParam",
          ))
 
 #' Parameters for CWL
-#' The main CWL parameter class and constructor for command tools. More details: https://www.commonwl.org/v1.0/CommandLineTool.html
+#' 
+#' The main CWL parameter class and constructor for command
+#' tools. More details:
+#' https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @rdname cwlParam
 #' @importFrom S4Vectors SimpleList
 #' @import methods
@@ -281,14 +324,17 @@ setClass("cwlParam",
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
 #' @param baseCommand Specifies the program to execute
-#' @param requirements A list of Requirement lists that apply to either the runtime environment or the workflow engine.
+#' @param requirements A list of Requirement lists that apply to
+#'     either the runtime environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
-#' @param arguments Command line bindings which are not directly associated with input parameters.
+#' @param arguments Command line bindings which are not directly
+#'     associated with input parameters.
 #' @param id The unique identifier for this process object.
 #' @param label A short, human-readable label of this process object.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
-#' @param stdout Capture the command's standard output stream to a file written to the designated output directory.
+#' @param stdout Capture the command's standard output stream to a
+#'     file written to the designated output directory.
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @examples
@@ -299,12 +345,16 @@ setClass("cwlParam",
 
 cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
                      baseCommand = character(), requirements = list(),
-                     hints = list(), arguments = list(), id = character(), label = character(),
+                     hints = list(), arguments = list(), id = character(),
+                     label = character(),
                      inputs = InputParamList(), outputs = OutputParamList(),
                      stdout = character()){
-    new("cwlParam", cwlVersion = cwlVersion, cwlClass = cwlClass, id = id, label = label,
-        baseCommand = baseCommand, requirements = requirements, hints = hints,
-        arguments = arguments, inputs = inputs, outputs = outputs, stdout = stdout)
+    new("cwlParam", cwlVersion = cwlVersion,
+        cwlClass = cwlClass, id = id, label = label,
+        baseCommand = baseCommand,
+        requirements = requirements, hints = hints,
+        arguments = arguments, inputs = inputs,
+        outputs = outputs, stdout = stdout)
 }
 
 #' stepInParam
@@ -317,15 +367,23 @@ setClass("stepInParam",
                    default = "ANY",
                    valueFrom = "character"))
 #' stepInParam
-#' The input parameter of a workflow step. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
+#' 
+#' The input parameter of a workflow step. More details:
+#' https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
 #' @rdname stepInParam
 #' @param id A unique identifier for this workflow input parameter.
-#' @param source Specifies one or more workflow parameters that will provide input to the underlying step parameter.
-#' @param linkMerge The method to use to merge multiple inbound links into a single array.
-#' @param default The default value for this parameter to use if either there is no source field, or the value produced by the source is null.
+#' @param source Specifies one or more workflow parameters that will
+#'     provide input to the underlying step parameter.
+#' @param linkMerge The method to use to merge multiple inbound links
+#'     into a single array.
+#' @param default The default value for this parameter to use if
+#'     either there is no source field, or the value produced by the
+#'     source is null.
 #' @param valueFrom value from string or expression.
 #' @export
-stepInParam <- function(id, source = character(), linkMerge = character(), default = character(), valueFrom = character()){
+stepInParam <- function(id, source = character(),
+                        linkMerge = character(), default = character(),
+                        valueFrom = character()){
     new("stepInParam",
         id = id, source = source, linkMerge = linkMerge,
         default = default, valueFrom = valueFrom)
@@ -361,16 +419,23 @@ setClass("stepParam",
                    scatter = "characterORlist",
                    scatterMethod = "character"))
 #' stepParam
-#' A workflow step parameters. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+#' 
+#' A workflow step parameters. More details:
+#' https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @rdname stepParam
 #' @param id The unique identifier for this workflow step.
 #' @param run A `cwlParam` object or the path of a cwl file.
 #' @param In A `stepInParamList`.
 #' @param Out A list of outputs
 #' @param scatter character or a list. The inputs to be scattered.
-#' @param scatterMethod required if scatter is an array of more than one element. It can be one of "dotproduct", "nested_crossproduct" and "flat_crossproduct". Details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+#' @param scatterMethod required if scatter is an array of more than
+#'     one element. It can be one of "dotproduct",
+#'     "nested_crossproduct" and "flat_crossproduct". Details:
+#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
-stepParam <- function(id, run = cwlParam(), In = stepInParamList(), Out = list(), scatter = character(), scatterMethod = character()) {
+stepParam <- function(id, run = cwlParam(),
+                      In = stepInParamList(), Out = list(),
+                      scatter = character(), scatterMethod = character()) {
     new("stepParam",
         id = id,
         run = run,
@@ -407,16 +472,21 @@ setClass("cwlStepParam",
          )
 
 #' cwlStepParam
-#' A workflow steps paramter, which connect multiple command line steps into a workflow. More details: stepInParamList.
+#' 
+#' A workflow steps paramter, which connect multiple command line
+#' steps into a workflow. More details: stepInParamList.
 #' @param cwlVersion CWL version
 #' @param cwlClass "Workflow".
-#' @param requirements Requirements that apply to either the runtime environment or the workflow engine.
+#' @param requirements Requirements that apply to either the runtime
+#'     environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
-#' @param arguments Command line bindings which are not directly associated with input parameters.
+#' @param arguments Command line bindings which are not directly
+#'     associated with input parameters.
 #' @param id The unique identifier for this process object.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
-#' @param stdout Capture the command's standard output stream to a file written to the designated output directory.
+#' @param stdout Capture the command's standard output stream to a
+#'     file written to the designated output directory.
 #' @param steps A list of `stepParamList`.
 #' @rdname cwlStepParam
 #' @export

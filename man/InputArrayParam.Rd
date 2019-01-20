@@ -19,12 +19,20 @@ InputArrayParam(label = "", type = "array", items = character(),
 
 \item{prefix}{Command line prefix to add before the value.}
 
-\item{separate}{If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.}
+\item{separate}{If true (default), then the prefix and value must
+be added as separate command line arguments; if false, prefix
+and value must be concatenated into a single command line
+argument.}
 
-\item{itemSeparator}{Join the array elements into a single string with separator.}
+\item{itemSeparator}{Join the array elements into a single string
+with separator.}
 
 \item{valueFrom}{String or Expression.}
 }
 \description{
-Parameters for array inputs. To specify an array parameter, the array definition is nested under the type field with 'type: array' and items defining the valid data types that may appear in the array. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
+Parameters for array inputs. To specify an array parameter, the
+array definition is nested under the type field with 'type: array'
+and items defining the valid data types that may appear in the
+array. More details:
+https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
 }

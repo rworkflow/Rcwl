@@ -21,11 +21,10 @@ OutputArrayParam(label = character(), type = "array",
 
 \item{loadContents}{Read text from globbed file.}
 
-\item{outputEval}{Evaluate an expression to generate the output value.}
+\item{outputEval}{Evaluate an expression to generate the output
+value.}
 }
 \description{
-Output array parameters
-
-Output array parameters
-Parameters for array outputs. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
+Parameters for array outputs. More details:
+https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
 }

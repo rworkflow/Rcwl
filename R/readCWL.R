@@ -104,7 +104,8 @@
 readCWL <- function(cwlfile){
     cwl.origin <- read_yaml(cwlfile)
     names(cwl.origin)[names(cwl.origin)=="class"] <- "cwlClass"
-    cwl.list1 <- cwl.origin[setdiff(names(cwl.origin), c("inputs", "outputs", "steps"))]
+    cwl.list1 <- cwl.origin[setdiff(names(cwl.origin),
+                                    c("inputs", "outputs", "steps"))]
     idx <- names(cwl.list1) %in% formalArgs(cwlParam)
     if(any(!idx)){
         warning(names(cwl.list1)[!idx], " not imported")

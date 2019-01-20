@@ -17,25 +17,26 @@ cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
 
 \item{cwlClass}{"Workflow".}
 
-\item{requirements}{Requirements that apply to either the runtime environment or the workflow engine.}
+\item{requirements}{Requirements that apply to either the runtime
+environment or the workflow engine.}
 
 \item{id}{The unique identifier for this process object.}
 
 \item{hints}{Any or a list for the workflow engine.}
 
-\item{arguments}{Command line bindings which are not directly associated with input parameters.}
+\item{arguments}{Command line bindings which are not directly
+associated with input parameters.}
 
 \item{inputs}{A object of `InputParamList`.}
 
 \item{outputs}{A object of `OutputParamList`.}
 
-\item{stdout}{Capture the command's standard output stream to a file written to the designated output directory.}
+\item{stdout}{Capture the command's standard output stream to a
+file written to the designated output directory.}
 
 \item{steps}{A list of `stepParamList`.}
 }
 \description{
-cwlStepParam
-
-cwlStepParam
-A workflow steps paramter, which connect multiple command line steps into a workflow. More details: stepInParamList.
+A workflow steps paramter, which connect multiple command line
+steps into a workflow. More details: stepInParamList.
 }

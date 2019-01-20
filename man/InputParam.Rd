@@ -23,19 +23,27 @@ InputParam(id, label = "", type = "string", doc = character(),
 
 \item{label}{A short, human-readable label of this object.}
 
-\item{type}{valid types of data that may be assigned to this parameter.}
+\item{type}{valid types of data that may be assigned to this
+parameter.}
 
 \item{doc}{A documentation string for this type.}
 
-\item{secondaryFiles}{Only valid when type: File or is an array of items: File. Provides a pattern or expression specifying files or directories that must be included alongside the primary file.}
+\item{secondaryFiles}{Only valid when type: File or is an array of
+items: File. Provides a pattern or expression specifying files
+or directories that must be included alongside the primary
+file.}
 
 \item{position}{The position for this parameter.}
 
 \item{prefix}{Command line prefix to add before the value.}
 
-\item{separate}{If true (default), then the prefix and value must be added as separate command line arguments; if false, prefix and value must be concatenated into a single command line argument.}
+\item{separate}{If true (default), then the prefix and value must
+be added as separate command line arguments; if false, prefix
+and value must be concatenated into a single command line
+argument.}
 
-\item{itemSeparator}{Join the array elements into a single string with the elements separated by by itemSeparator.}
+\item{itemSeparator}{Join the array elements into a single string
+with the elements separated by by itemSeparator.}
 
 \item{valueFrom}{String or Expression.}
 
@@ -48,12 +56,6 @@ InputParam(id, label = "", type = "string", doc = character(),
 \item{name}{One one of input list}
 }
 \description{
-InputParam
-
-InputParam
-parameter for a command tool. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
-
-Extract input values by name
-
-Set input values by name
+parameter for a command tool. More details:
+https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
 }

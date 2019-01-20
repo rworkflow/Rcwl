@@ -3,8 +3,7 @@
 \docType{methods}
 \name{+,cwlStepParam,stepParam-method}
 \alias{+,cwlStepParam,stepParam-method}
-\title{Pipeline
-To build a pipeline by connecting multiple `stepParam` to a `cwlStepParam` object.}
+\title{Pipeline}
 \usage{
 \S4method{+}{cwlStepParam,stepParam}(e1, e2)
 }
@@ -14,6 +13,6 @@ To build a pipeline by connecting multiple `stepParam` to a `cwlStepParam` objec
 \item{e2}{A `stepParam` object.}
 }
 \description{
-Pipeline
-To build a pipeline by connecting multiple `stepParam` to a `cwlStepParam` object.
+To build a pipeline by connecting multiple `stepParam` to a
+`cwlStepParam` object.
 }

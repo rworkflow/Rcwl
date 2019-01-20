@@ -12,17 +12,19 @@ stepInParam(id, source = character(), linkMerge = character(),
 \arguments{
 \item{id}{A unique identifier for this workflow input parameter.}
 
-\item{source}{Specifies one or more workflow parameters that will provide input to the underlying step parameter.}
+\item{source}{Specifies one or more workflow parameters that will
+provide input to the underlying step parameter.}
 
-\item{linkMerge}{The method to use to merge multiple inbound links into a single array.}
+\item{linkMerge}{The method to use to merge multiple inbound links
+into a single array.}
 
-\item{default}{The default value for this parameter to use if either there is no source field, or the value produced by the source is null.}
+\item{default}{The default value for this parameter to use if
+either there is no source field, or the value produced by the
+source is null.}
 
 \item{valueFrom}{value from string or expression.}
 }
 \description{
-stepInParam
-
-stepInParam
-The input parameter of a workflow step. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
+The input parameter of a workflow step. More details:
+https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
 }

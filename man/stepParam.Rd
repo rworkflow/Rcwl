@@ -20,11 +20,12 @@ stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list(),
 
 \item{scatter}{character or a list. The inputs to be scattered.}
 
-\item{scatterMethod}{required if scatter is an array of more than one element. It can be one of "dotproduct", "nested_crossproduct" and "flat_crossproduct". Details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
+\item{scatterMethod}{required if scatter is an array of more than
+one element. It can be one of "dotproduct",
+"nested_crossproduct" and "flat_crossproduct". Details:
+https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
 }
 \description{
-stepParam
-
-stepParam
-A workflow step parameters. More details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+A workflow step parameters. More details:
+https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 }

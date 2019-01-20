@@ -1,13 +1,18 @@
 
 #' Step function
+#' 
 #' Function to assign value to `stepParam` object.
 #' @param id The id of `stepParam` object.
 #' @param run A `cwlParam` object for command tool.
 #' @param In one or two layes of list.
 #' @param scatter character or a list. The inputs to be scattered.
-#' @param scatterMethod required if scatter is an array of more than one element. It can be one of "dotproduct", "nested_crossproduct" and "flat_crossproduct". Details: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+#' @param scatterMethod required if scatter is an array of more than
+#'     one element. It can be one of "dotproduct",
+#'     "nested_crossproduct" and "flat_crossproduct". Details:
+#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
-Step <- function(id, run = cwlParam(), In = list(), scatter = character(), scatterMethod = character()) {
+Step <- function(id, run = cwlParam(), In = list(),
+                 scatter = character(), scatterMethod = character()) {
     stopifnot(names(In) %in% names(inputs(run)))
     slist <- list()
     for(i in seq(In)) {
@@ -30,7 +35,9 @@ Step <- function(id, run = cwlParam(), In = list(), scatter = character(), scatt
 }
 
 #' Pipeline
-#' To build a pipeline by connecting multiple `stepParam` to a `cwlStepParam` object.
+#' 
+#' To build a pipeline by connecting multiple `stepParam` to a
+#' `cwlStepParam` object.
 #' @param e1 A `cwlStepParam` object.
 #' @param e2 A `stepParam` object.
 #' @export

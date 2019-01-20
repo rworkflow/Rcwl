@@ -2,8 +2,7 @@
 % Please edit documentation in R/writeCWL.R
 \name{writeCWL}
 \alias{writeCWL}
-\title{Write CWL
-write `cwlParam` to cwl and yml.}
+\title{Write CWL}
 \usage{
 writeCWL(cwl, prefix, noDocker = FALSE, ...)
 }
@@ -17,6 +16,5 @@ writeCWL(cwl, prefix, noDocker = FALSE, ...)
 \item{...}{Other options from `yaml::write_yaml`.}
 }
 \description{
-Write CWL
 write `cwlParam` to cwl and yml.
 }

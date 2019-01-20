@@ -71,6 +71,7 @@ allRun <- function(cwl){
 }
 
 #' Write CWL
+#' 
 #' write `cwlParam` to cwl and yml.
 #' @param cwl A `cwlParam` or `cwlStepParam` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
@@ -109,12 +110,6 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
         cList <- cwlToList(cwl, noDocker)
     }
     write_yaml(cList, file = paste0(prefix, ".cwl"), handlers = handlers, ...)
-    ## ## fix "["
-    ## cfile <- readLines(paste0(prefix, ".cwl"))
-    ## cfile <- gsub("'\\[", "\\[", cfile)
-    ## cfile <- gsub("\\]'", "\\]", cfile)
-    ## writeLines(cfile, paste0(prefix, ".cwl"))
-    
     write_yaml(yml, file = paste0(prefix, ".yml"), handlers = handlers, ...)
 }
 

@@ -16,23 +16,28 @@ OutputParam(id = "output", label = character(), type = "stdout",
 
 \item{label}{A short, human-readable label of this object.}
 
-\item{type}{Specify valid types of data that may be assigned to this parameter.}
+\item{type}{Specify valid types of data that may be assigned to
+this parameter.}
 
-\item{secondaryFiles}{Provides a pattern or expression specifying files or directories. Only valid when type: File or is an array of items: File.}
+\item{secondaryFiles}{Provides a pattern or expression specifying
+files or directories. Only valid when type: File or is an array
+of items: File.}
 
-\item{streamable}{A value of true indicates that the file is read or written sequentially without seeking. Only valid when type: File or is an array of items: File.}
+\item{streamable}{A value of true indicates that the file is read
+or written sequentially without seeking. Only valid when type:
+File or is an array of items: File.}
 
 \item{glob}{Pattern to find files relative to the output directory.}
 
 \item{loadContents}{Read text from globbed file.}
 
-\item{outputEval}{Evaluate an expression to generate the output value.}
+\item{outputEval}{Evaluate an expression to generate the output
+value.}
 
-\item{outputSource}{Specifies one or more workflow parameters that supply the value of to the output parameter.}
+\item{outputSource}{Specifies one or more workflow parameters that
+supply the value of to the output parameter.}
 }
 \description{
-Output parameters
-
-Output parameters
-An output parameter for a Command Line Tool. More details: https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
+An output parameter for a Command Line Tool. More details:
+https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
 }

@@ -4,8 +4,7 @@
 \name{cwlParam-class}
 \alias{cwlParam-class}
 \alias{cwlParam}
-\title{Parameters for CWL
-The main CWL parameter class and constructor for command tools. More details: https://www.commonwl.org/v1.0/CommandLineTool.html}
+\title{Parameters for CWL}
 \usage{
 cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
   baseCommand = character(), requirements = list(), hints = list(),
@@ -20,11 +19,13 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 
 \item{baseCommand}{Specifies the program to execute}
 
-\item{requirements}{A list of Requirement lists that apply to either the runtime environment or the workflow engine.}
+\item{requirements}{A list of Requirement lists that apply to
+either the runtime environment or the workflow engine.}
 
 \item{hints}{Any or a list for the workflow engine.}
 
-\item{arguments}{Command line bindings which are not directly associated with input parameters.}
+\item{arguments}{Command line bindings which are not directly
+associated with input parameters.}
 
 \item{id}{The unique identifier for this process object.}
 
@@ -34,11 +35,13 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 
 \item{outputs}{A object of `OutputParamList`.}
 
-\item{stdout}{Capture the command's standard output stream to a file written to the designated output directory.}
+\item{stdout}{Capture the command's standard output stream to a
+file written to the designated output directory.}
 }
 \description{
-Parameters for CWL
-The main CWL parameter class and constructor for command tools. More details: https://www.commonwl.org/v1.0/CommandLineTool.html
+The main CWL parameter class and constructor for command
+tools. More details:
+https://www.commonwl.org/v1.0/CommandLineTool.html
 }
 \details{
 https://www.commonwl.org/v1.0/CommandLineTool.html
