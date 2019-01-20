@@ -44,10 +44,20 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
             message("Find cwltool: ", cr)
         }else{
             message("Install cwltool ...")
-            py_install("virtualenv")
-            py_install("cwltool",
-                       envname = "r-reticulate",
-                       method = "virtualenv")
+            inres <- tryCatch({
+                py_install("cwltool",
+                           envname = "r-reticulate",
+                           method = "virtualenv")
+            }, error = function(e)e)
+            if(is(inres, "error")){
+                if(grepl("virtualenv", inres)){
+                    message("Install virtualenv ...")
+                    system("pip install --user virtualenv")
+                    py_install("cwltool",
+                               envname = "r-reticulate",
+                               method = "virtualenv")
+                }
+            }
         }
         cwlRunner <- cr
     }
