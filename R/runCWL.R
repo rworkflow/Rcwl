@@ -36,7 +36,17 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     if(cwlRunner != "cwltool" & cwlRunner != "cwl-runner"){
         if(length(ext)==0) stop(cwlRunner, " not exist!")
     }else if(length(ext)==0){
-        config <- reticulate:::virtualenv_config()
+        inres <- tryCatch({
+            reticulate:::virtualenv_config()
+        }, error = function(e)e)
+        if(is(inres, "error")){
+            if(grepl("virtualenv", inres)){
+                message("Install virtualenv ...")
+                system("pip install --user virtualenv")
+            }
+        }
+
+        config <- reticulate:::virtualenv_config() 
         virtualenv_path <- file.path(config$root, "r-reticulate")
         cr <- path.expand(file.path(virtualenv_path, 
                                     "bin", "cwltool"))
@@ -44,20 +54,9 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
             message("Find cwltool: ", cr)
         }else{
             message("Install cwltool ...")
-            inres <- tryCatch({
-                py_install("cwltool",
-                           envname = "r-reticulate",
-                           method = "virtualenv")
-            }, error = function(e)e)
-            if(is(inres, "error")){
-                if(grepl("virtualenv", inres)){
-                    message("Install virtualenv ...")
-                    system("pip install --user virtualenv")
-                    py_install("cwltool",
-                               envname = "r-reticulate",
-                               method = "virtualenv")
-                }
-            }
+            py_install("cwltool",
+                       envname = "r-reticulate",
+                       method = "virtualenv")
         }
         cwlRunner <- cr
     }
