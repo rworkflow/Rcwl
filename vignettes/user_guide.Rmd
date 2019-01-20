@@ -228,7 +228,7 @@ We can connect multiple tools together into a pipeline. Here is an example to un
 Here we define a simple `Rscript` tool without using docker.
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
-Rs <- cwlParam(baseCommand = "/usr/bin/Rscript",
+Rs <- cwlParam(baseCommand = "Rscript",
                inputs = InputParamList(d1))
 Rs
 ```

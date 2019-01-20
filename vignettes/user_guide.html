@@ -11,7 +11,7 @@
 
 <meta name="author" content="Qiang Hu" />
 
-<meta name="date" content="2019-01-04" />
+<meta name="date" content="2019-01-20" />
 
 <title>User Guide for Rcwl</title>
 
@@ -4256,7 +4256,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">User Guide for Rcwl</h1>
 <p class="author-name">Qiang Hu</p>
-<h4 class="date"><em>2019-01-04</em></h4>
+<h4 class="date"><em>2019-01-20</em></h4>
 
 </div>
 
@@ -4290,6 +4290,7 @@ echo</code></pre>
 ##     type: stdout</code></pre>
 <p>Let’s run it. A list including the command executed, temporary output and logs. All standard out and standard error stream can also be printed by setting <code>stderr = &quot;&quot;</code>.</p>
 <pre class="r"><code>r1 &lt;- runCWL(echo)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r1</code></pre>
 <pre><code>## List of length 3
@@ -4321,15 +4322,17 @@ write(&quot;World&quot;, tmpfile)
 echoA$file &lt;- tmpfile
 
 r2 &lt;- runCWL(echoA)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r2$command</code></pre>
-<pre><code>## [1] &quot;[job fileba422524bb26.cwl] /tmp/tmp5ybbrr$ echo \\&quot;                                   
-## [2] &quot;    --file=/tmp/tmp1X7fMR/stgf789dff7-0013-4e8c-b32d-eed8f6aab4b9/fileba4218cd29f6 \\&quot;
-## [3] &quot;    -f \\&quot;                                                                            
-## [4] &quot;    -i \\&quot;                                                                            
-## [5] &quot;    1 \\&quot;                                                                             
-## [6] &quot;    -s \\&quot;                                                                            
-## [7] &quot;    Hello &gt; /tmp/tmp5ybbrr/output.txt&quot;</code></pre>
+<pre><code>## [1] &quot;[job filebd2b3fb7a169.cwl] /private/tmp/docker_tmpzSm2Pt$ echo \\&quot;                                                                       
+## [2] &quot;    --file=/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/tmpk51gQi/stg6a0b68af-90a9-4bb7-b115-8263dc6af41e/filebd2bc09707b \\&quot;
+## [3] &quot;    -f \\&quot;                                                                                                                               
+## [4] &quot;    -i \\&quot;                                                                                                                               
+## [5] &quot;    1 \\&quot;                                                                                                                                
+## [6] &quot;    -s \\&quot;                                                                                                                               
+## [7] &quot;    Hello &gt; /private/tmp/docker_tmpzSm2Pt/output.txt&quot;                                                                                    
+## [8] &quot;Could not collect memory usage, job ended before monitoring began.&quot;</code></pre>
 </div>
 <div id="array-inputs" class="section level2">
 <h2><span class="header-section-number">2.2</span> Array Inputs</h2>
@@ -4362,17 +4365,19 @@ echoB</code></pre>
 ##     type: stdout</code></pre>
 <p>Now we can check whether the command behaves as we expected.</p>
 <pre class="r"><code>r3 &lt;- runCWL(echoB)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r3$command</code></pre>
-<pre><code>## [1] &quot;[job fileba4220321fa5.cwl] /tmp/tmpbRhlii$ echo \\&quot;                    
-## [2] &quot;    -A \\&quot;                                                             
-## [3] &quot;    a \\&quot;                                                              
-## [4] &quot;    b \\&quot;                                                              
-## [5] &quot;    c \\&quot;                                                              
-## [6] &quot;    -B=d \\&quot;                                                           
-## [7] &quot;    -B=e \\&quot;                                                           
-## [8] &quot;    -B=f \\&quot;                                                           
-## [9] &quot;    -C=g,h,i &gt; /tmp/tmpbRhlii/251251d940fd01fb023e59d39127d3a4eb50c694&quot;</code></pre>
+<pre><code>##  [1] &quot;[job filebd2b1627bc16.cwl] /private/tmp/docker_tmpDmwvCF$ echo \\&quot;                    
+##  [2] &quot;    -A \\&quot;                                                                            
+##  [3] &quot;    a \\&quot;                                                                             
+##  [4] &quot;    b \\&quot;                                                                             
+##  [5] &quot;    c \\&quot;                                                                             
+##  [6] &quot;    -B=d \\&quot;                                                                          
+##  [7] &quot;    -B=e \\&quot;                                                                          
+##  [8] &quot;    -B=f \\&quot;                                                                          
+##  [9] &quot;    -C=g,h,i &gt; /private/tmp/docker_tmpDmwvCF/934b3a9f502141fed788c0c7fddf8e2e4a87af31&quot;
+## [10] &quot;Could not collect memory usage, job ended before monitoring began.&quot;</code></pre>
 </div>
 </div>
 <div id="output-parameters" class="section level1">
@@ -4400,9 +4405,10 @@ gz &lt;- cwlParam(baseCommand = &quot;gzip&quot;,
 gz$out &lt;- TRUE
 gz$zfile &lt;- zzfil
 r4 &lt;- runCWL(gz)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r4$output</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpHNi2en/sample.R&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/Rtmp0leg53/sample.R&quot;</code></pre>
 <p>Or we can use <code>arguments</code> to set some default parameters.</p>
 <pre class="r"><code>z1 &lt;- InputParam(id = &quot;zfile&quot;, type = &quot;File&quot;)
 o1 &lt;- OutputParam(id = &quot;rfile&quot;, type = &quot;File&quot;, glob = ofile)
@@ -4426,9 +4432,10 @@ Gz</code></pre>
 ## stdout: sample.R</code></pre>
 <pre class="r"><code>Gz$zfile &lt;- zzfil
 r4a &lt;- runCWL(Gz)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <p>To make it for general usage, we can define a pattern with javascript to glob the output, which require <code>node</code> to be installed in your system PATH.</p>
-<pre class="r"><code>pfile &lt;- &quot;$(inputs.zfile.path.split(&#39;/&#39;).slice(-1)[0].split(&#39;.&#39;).slice(0,-1).join(&#39;.&#39;))&quot;
+<pre class="r"><code>pfile &lt;- &quot;$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))&quot;
 o2 &lt;- OutputParam(id = &quot;rfile&quot;, type = &quot;File&quot;, glob = pfile)
 req1 &lt;- list(class = &quot;InlineJavascriptRequirement&quot;)
 GZ &lt;- cwlParam(baseCommand = c(&quot;gzip&quot;, &quot;-d&quot;, &quot;-c&quot;),
@@ -4438,6 +4445,7 @@ GZ &lt;- cwlParam(baseCommand = c(&quot;gzip&quot;, &quot;-d&quot;, &quot;-c&quo
                stdout = pfile)
 GZ$zfile &lt;- zzfil
 r4b &lt;- runCWL(GZ)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 </div>
 <div id="array-outputs" class="section level2">
@@ -4448,9 +4456,11 @@ b &lt;- OutputParam(id = &quot;b&quot;, type = OutputArrayParam(items = &quot;Fi
 touch &lt;- cwlParam(baseCommand = &quot;touch&quot;, inputs = InputParamList(a), outputs = OutputParamList(b))
 touch$a &lt;- c(&quot;a.txt&quot;, &quot;b.gz&quot;, &quot;c.txt&quot;)
 r5 &lt;- runCWL(touch)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r5$output</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpHNi2en/a.txt&quot; &quot;/tmp/RtmpHNi2en/c.txt&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/Rtmp0leg53/a.txt&quot;
+## [2] &quot;/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/Rtmp0leg53/c.txt&quot;</code></pre>
 </div>
 </div>
 <div id="running-tools-in-docker" class="section level1">
@@ -4467,6 +4477,7 @@ doc$rfile &lt;- r4$output</code></pre>
 <pre class="r"><code>r6 &lt;- runCWL(doc)</code></pre>
 <p>The tools defined with docker requirements can also be run locally by disabling the docker option. In case your <code>Rscript</code> depends some local libraries to run, an option from <code>cwltools</code>, “–preserve-entire-environment”, can be used to pass all environment variables.</p>
 <pre class="r"><code>r6a &lt;- runCWL(doc, noDocker = TRUE, Args = &quot;--preserve-entire-environment&quot;)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 </div>
 <div id="running-tools-in-cluster-server" class="section level1">
@@ -4490,13 +4501,13 @@ result2 &lt;- runCWLBatch(cwl = echo, wdir = tempdir(), inputList = list(sth = s
 <p>We can connect multiple tools together into a pipeline. Here is an example to uncompress an R script and execute it with <code>Rscript</code>.</p>
 <p>Here we define a simple <code>Rscript</code> tool without using docker.</p>
 <pre class="r"><code>d1 &lt;- InputParam(id = &quot;rfile&quot;, type = &quot;File&quot;)
-Rs &lt;- cwlParam(baseCommand = &quot;/usr/bin/Rscript&quot;,
+Rs &lt;- cwlParam(baseCommand = &quot;Rscript&quot;,
                inputs = InputParamList(d1))
 Rs</code></pre>
 <pre><code>## class: cwlParam 
 ## cwlClass: CommandLineTool 
 ## cwlVersion: v1.0 
-## baseCommand: /usr/bin/Rscript 
+## baseCommand: Rscript 
 ## inputs:
 ##   rfile (File):  
 ## outputs:
@@ -4505,9 +4516,10 @@ Rs</code></pre>
 <p>Test run:</p>
 <pre class="r"><code>Rs$rfile &lt;- r4$output
 tres &lt;- runCWL(Rs)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>readLines(tres$output)</code></pre>
-<pre><code>## [1] &quot;[1] 9 3 7 5 4&quot;</code></pre>
+<pre><code>## [1] &quot;[1]  9  7 10  5  8&quot;</code></pre>
 <p>The pipeline includes two steps, decompressed by <code>GZ</code> and compiled by <code>Rs</code>. The input file is a compressed file and the output would be the output <code>Rout</code> from <code>Rs</code>.</p>
 <p>First we need to define the direct inputs and outputs from <code>GZ</code> and <code>Rs</code>.</p>
 <pre class="r"><code>i1 &lt;- InputParam(id = &quot;cwl_zfile&quot;, type = &quot;File&quot;)
@@ -4543,9 +4555,10 @@ cwl</code></pre>
 <p>Let’s run the pipeline.</p>
 <pre class="r"><code>cwl$cwl_zfile &lt;- zzfil
 r7 &lt;- runCWL(cwl)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>readLines(r7$output)</code></pre>
-<pre><code>## [1] &quot;[1] 1 4 5 8 7&quot;</code></pre>
+<pre><code>## [1] &quot;[1] 10  5  8  1  2&quot;</code></pre>
 <div id="scattering-pipeline" class="section level2">
 <h2><span class="header-section-number">6.1</span> Scattering pipeline</h2>
 <p>The scattering feature can specifies the associated workflow step or subworkflow to execute separately over a list of input elements. To use this feature, <code>ScatterFeatureRequirement</code> must be specified in the workflow requirements. Different <code>scatter</code> methods can be used in the associated step to decompose the input into a discrete set of jobs. More details can be found at: <a href="https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep" class="uri">https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep</a>.</p>
@@ -4582,74 +4595,70 @@ cwl2</code></pre>
 <p>Multiple R scripts can be assigned to the workflow inputs and executed.</p>
 <pre class="r"><code>cwl2$cwl_rfiles &lt;- c(r4b$output, r4b$output)
 r8 &lt;- runCWL(cwl2)</code></pre>
+<pre><code>## Find cwltool: /Users/bios/.virtualenvs/r-reticulate/bin/cwltool</code></pre>
 <pre><code>## Final process status is success</code></pre>
 <pre class="r"><code>r8$output</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpHNi2en/fb1fb8153565a50f3c9ded970f186499f210dce5&quot;
-## [2] &quot;/tmp/RtmpHNi2en/fb1fb8153565a50f3c9ded970f186499f210dce5&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/Rtmp0leg53/bd54ad9e4e8208990b3ce090def21e16021980b8&quot;
+## [2] &quot;/private/var/folders/nc/ytv95vvj04l66bn2jlgs6bh00000gn/T/Rtmp0leg53/bd54ad9e4e8208990b3ce090def21e16021980b8&quot;</code></pre>
 </div>
 <div id="pipeline-plot" class="section level2">
 <h2><span class="header-section-number">6.2</span> Pipeline plot</h2>
 <p>The function <code>plotCWL</code> can be used to visualize the relationship of inputs, outputs and the analysis for a pipeline.</p>
 <pre class="r"><code>plotCWL(cwl)</code></pre>
-<div id="htmlwidget-85337f71fb5c6e09a324" style="width:768px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-85337f71fb5c6e09a324">{"x":{"diagram":"graph TB\nA(cwl_zfile)-->C{Uncomp}\nC{Uncomp}-->|rfile|D{Compile}\nD{Compile}-->B((cwl_cout))"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-7ecf2800ffb5c02c0b3f" style="width:768px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7ecf2800ffb5c02c0b3f">{"x":{"diagram":"graph TB\nA(cwl_zfile)-->C{Uncomp}\nC{Uncomp}-->|rfile|D{Compile}\nD{Compile}-->B((cwl_cout))"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="sessioninfo" class="section level1">
 <h1><span class="header-section-number">7</span> SessionInfo</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 Patched (2018-12-31 r75935)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: CentOS release 6.4 (Final)
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin18.2.0 (64-bit)
+## Running under: macOS Mojave 10.14.1
 ## 
 ## Matrix products: default
-## BLAS: /home/qhu/usr/R-3.5/lib64/R/lib/libRblas.so
-## LAPACK: /home/qhu/usr/R-3.5/lib64/R/lib/libRlapack.so
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] Rcwl_0.99.7         BiocStyle_2.10.0    rmarkdown_1.11     
-## [4] testthat_2.0.1      S4Vectors_0.20.1    BiocGenerics_0.28.0
-## [7] yaml_2.2.0          usethis_1.4.0       devtools_2.0.1     
+##  [1] BiocParallel_1.16.5 Rcwl_0.99.7         BiocStyle_2.10.0   
+##  [4] rmarkdown_1.11      testthat_2.0.1      usethis_1.4.0      
+##  [7] devtools_2.0.1      S4Vectors_0.20.1    BiocGenerics_0.28.0
+## [10] yaml_2.2.0          reticulate_1.10    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] viridis_0.5.1       pkgload_1.0.2       tidyr_0.8.2        
-##  [4] jsonlite_1.6        viridisLite_0.3.0   assertthat_0.2.0   
-##  [7] BiocManager_1.30.4  base64url_1.4       remotes_2.0.2      
-## [10] progress_1.2.0      sessioninfo_1.1.1   pillar_1.3.1       
-## [13] backports_1.1.3     glue_1.3.0          downloader_0.4     
-## [16] digest_0.6.18       RColorBrewer_1.1-2  checkmate_1.8.5    
-## [19] colorspace_1.3-2    htmltools_0.3.6     plyr_1.8.4         
-## [22] XML_3.98-1.16       pkgconfig_2.0.2     bookdown_0.9       
-## [25] DiagrammeR_1.0.0    purrr_0.2.5         scales_1.0.0       
-## [28] processx_3.2.1      brew_1.0-6          BiocParallel_1.16.2
-## [31] tibble_1.4.2        ggplot2_3.1.0       influenceR_0.1.0   
-## [34] withr_2.1.2         lazyeval_0.2.1      cli_1.0.1          
-## [37] rgexf_0.15.3        magrittr_1.5        crayon_1.3.4       
-## [40] evaluate_0.12       memoise_1.1.0       ps_1.3.0           
-## [43] fs_1.2.6            xml2_1.2.0          pkgbuild_1.0.2     
-## [46] Rook_1.1-1          tools_3.5.2         data.table_1.11.8  
-## [49] prettyunits_1.0.2   hms_0.4.2           stringr_1.3.1      
-## [52] munsell_0.5.0       bindrcpp_0.2.2      callr_3.1.1        
-## [55] compiler_3.5.2      rlang_0.3.0.1       debugme_1.1.0      
-## [58] grid_3.5.2          rstudioapi_0.8      rappdirs_0.3.1     
-## [61] htmlwidgets_1.3     visNetwork_2.0.5    igraph_1.2.2       
-## [64] gtable_0.2.0        roxygen2_6.1.1      R6_2.3.0           
-## [67] gridExtra_2.3       knitr_1.21          dplyr_0.7.8        
-## [70] commonmark_1.7      bindr_0.1.1         rprojroot_1.3-2    
-## [73] readr_1.3.1         desc_1.2.0          stringi_1.2.4      
-## [76] Rcpp_1.0.0          xfun_0.4            batchtools_0.9.11  
+##  [1] viridis_0.5.1      pkgload_1.0.2      tidyr_0.8.2       
+##  [4] jsonlite_1.6       viridisLite_0.3.0  assertthat_0.2.0  
+##  [7] BiocManager_1.30.4 base64url_1.4      remotes_2.0.2     
+## [10] progress_1.2.0     sessioninfo_1.1.1  pillar_1.3.1      
+## [13] backports_1.1.3    lattice_0.20-38    glue_1.3.0        
+## [16] downloader_0.4     digest_0.6.18      RColorBrewer_1.1-2
+## [19] checkmate_1.9.1    colorspace_1.4-0   htmltools_0.3.6   
+## [22] Matrix_1.2-15      plyr_1.8.4         XML_3.98-1.16     
+## [25] pkgconfig_2.0.2    bookdown_0.9       DiagrammeR_1.0.0  
+## [28] purrr_0.2.5        scales_1.0.0       processx_3.2.1    
+## [31] brew_1.0-6         tibble_2.0.1       ggplot2_3.1.0     
+## [34] influenceR_0.1.0   withr_2.1.2        lazyeval_0.2.1    
+## [37] cli_1.0.1          rgexf_0.15.3       magrittr_1.5      
+## [40] crayon_1.3.4       evaluate_0.12      memoise_1.1.0     
+## [43] ps_1.3.0           fs_1.2.6           xml2_1.2.0        
+## [46] pkgbuild_1.0.2     Rook_1.1-1         tools_3.5.2       
+## [49] data.table_1.12.0  prettyunits_1.0.2  hms_0.4.2         
+## [52] stringr_1.3.1      munsell_0.5.0      bindrcpp_0.2.2    
+## [55] callr_3.1.1        compiler_3.5.2     rlang_0.3.1       
+## [58] grid_3.5.2         rstudioapi_0.9.0   rappdirs_0.3.1    
+## [61] htmlwidgets_1.3    visNetwork_2.0.5   igraph_1.2.2      
+## [64] gtable_0.2.0       roxygen2_6.1.1     R6_2.3.0          
+## [67] gridExtra_2.3      knitr_1.21         dplyr_0.7.8       
+## [70] commonmark_1.7     bindr_0.1.1        rprojroot_1.3-2   
+## [73] readr_1.3.1        desc_1.2.0         stringi_1.2.4     
+## [76] Rcpp_1.0.0         xfun_0.4           batchtools_0.9.11 
 ## [79] tidyselect_0.2.5</code></pre>
 </div>
 

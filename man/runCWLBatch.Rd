@@ -12,9 +12,14 @@ runCWLBatch(cwl, wdir = getwd(), inputList, paramList = list(),
 
 \item{wdir}{Directory to output results}
 
-\item{inputList}{An input list to run in parallel. The list names must be in the inputs of cwl. Jobs will be submitted in parallel for each element in the list. The output directory of each job will be made using the name of each element under the `wdir`.}
+\item{inputList}{An input list to run in parallel. The list names
+must be in the inputs of cwl. Jobs will be submitted in
+parallel for each element in the list. The output directory of
+each job will be made using the name of each element under the
+`wdir`.}
 
-\item{paramList}{A parameter list for the cwl. The list names must be in the inputs of cwl.}
+\item{paramList}{A parameter list for the cwl. The list names must
+be in the inputs of cwl.}
 
 \item{BPPARAM}{The options for `BiocParallelParam`.}
 

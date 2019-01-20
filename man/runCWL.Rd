@@ -2,8 +2,7 @@
 % Please edit documentation in R/runCWL.R
 \name{runCWL}
 \alias{runCWL}
-\title{run cwlParam
-Execute a cwlParam object with assigned inputs.}
+\title{run cwlParam}
 \usage{
 runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
   cwlTemp = FALSE, Args = character(), stdout = TRUE,
@@ -14,21 +13,33 @@ runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 
 \item{prefix}{The prefix of `cwl` and `yml` file to write.}
 
-\item{cwlRunner}{The path to the `cwltool` or `cwl-runner`.}
+\item{cwlRunner}{The path to the `cwltool` or `cwl-runner`. If not
+exists, the cwltool package will be installed by `reticulate`.}
 
-\item{cwlTemp}{Whether to keep temporary files. If true, all temporary files will be kept in a "temp" folder of current output directory.}
+\item{cwlTemp}{Whether to keep temporary files. If true, all
+temporary files will be kept in a "temp" folder of current
+output directory.}
 
-\item{Args}{The arguments for `cwltool` or `cwl-runner`. For example, "--debug" can work with `cwltool` to show debug information.}
+\item{Args}{The arguments for `cwltool` or `cwl-runner`. For
+example, "--debug" can work with `cwltool` to show debug
+information.}
 
 \item{stdout}{standard output from `system2`.}
 
-\item{stderr}{standard error from `system2`. By setting it to "", the detailed running logs will return directly.}
+\item{stderr}{standard error from `system2`. By setting it to "",
+the detailed running logs will return directly.}
 
 \item{noDocker}{Whether to disable docker.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }
 \description{
-run cwlParam
 Execute a cwlParam object with assigned inputs.
+}
+\examples{
+input1 <- InputParam(id = "sth")
+echo <- cwlParam(baseCommand = "echo",
+                 inputs = InputParamList(input1))
+echo$sth <- "Hello World!"
+runCWL(echo)
 }

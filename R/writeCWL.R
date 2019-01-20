@@ -91,27 +91,6 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
     yml <- .removeEmpty(.cwl2yml(cwl))
 
     if(cwlClass(cwl) == "Workflow") {
-        ## Steps <- steps(cwl)
-        ## lapply(seq(Steps), function(i) {
-        ##     run1 <- Steps[[i]]@run
-        ##     if(class(run1)=="cwlParam"){
-        ##         write_yaml(cwlToList(run1),
-        ##                    file = paste0(file.path(dirname(prefix),
-        ##                                            names(Steps)[[i]]), ".cwl"),
-        ##                    handlers = handlers, ...)
-        ##     }else if(class(run1)=="cwlStepParam"){
-        ##     ## nested two layer
-        ##         step1 <- steps(run1)
-        ##         lapply(seq(step1), function(j){
-        ##             run1sub <- step1[[j]]@run
-        ##             if(is(run1sub, "cwlParam")){
-        ##                 write_yaml(cwlToList(run1sub),
-        ##                            file = paste0(file.path(dirname(prefix), names(step1)[[j]]), ".cwl"),
-        ##                            handlers = handlers, ...)
-        ##             }
-        ##         })
-        ##     }
-        ## })
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
             write_yaml(cwlToList(Runs[[i]], noDocker),
@@ -161,9 +140,14 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
         }else{
             v <- NULL
         }
-        if(is(v, "character") && x@type == "int"){
+        if(class(x@type)=="InputArrayParam"){
+            Type <- x@type@items
+        }else{
+            Type <- x@type
+        }        
+        if(is(v, "character") && Type == "int"){
             v <- as.integer(v)
-        }else if(is(v, "character") && x@type == "boolean"){
+        }else if(is(v, "character") && Type == "boolean"){
             v <- as.logical(v)
         }
         v
