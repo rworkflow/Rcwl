@@ -160,6 +160,11 @@ r4a <- runCWL(Gz)
 To make it for general usage, we can define a pattern with javascript to glob the output, which require `node` to be installed in your system PATH.
 ```{r}
 pfile <- "$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))"
+```
+
+Or we can use the CWL built in file property, `nameroot`, directly.
+```{r}
+pfile <- "$(inputs.zfile.nameroot)"
 o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
 req1 <- list(class = "InlineJavascriptRequirement")
 GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
