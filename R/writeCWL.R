@@ -77,7 +77,7 @@ allRun <- function(cwl){
 #' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param noDocker Whether to disable docker. 
 #' @param ... Other options from `yaml::write_yaml`.
-#' @importFrom yaml write_yaml
+#' @import yaml
 #' @export
 writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
     stopifnot(is(cwl, "cwlParam"))

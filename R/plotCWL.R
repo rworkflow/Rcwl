@@ -4,6 +4,7 @@
 #' @param cwl A cwlStepParam object to plot
 #' @param ... other parameters from `mermaid` function
 #' @importFrom DiagrammeR mermaid
+#' @importFrom stats na.omit
 #' @export
 plotCWL <- function(cwl, ...){
     Inputs <- names(inputs(cwl))

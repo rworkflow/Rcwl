@@ -247,11 +247,11 @@ setMethod(show, "cwlParam", function(object){
     cat("baseCommand:", baseCommand(object), "\n")
     if(length(object@requirements) > 0){
         cat("requirements:\n")
-        cat(yaml::as.yaml(object@requirements))
+        cat(as.yaml(object@requirements))
     }
     if(length(object@hints) > 0){
         cat("hints:\n")
-        cat(yaml::as.yaml(object@hints))
+        cat(as.yaml(object@hints))
     }
     if(length(object@arguments) > 0){
         cat("arguments:", unlist(object@arguments), "\n")
@@ -270,11 +270,11 @@ setMethod(show, "cwlStepParam", function(object){
     cat("cwlVersion:", cwlVersion(object), "\n")
     if(length(object@requirements) > 0){
         cat("requirements:\n")
-        cat(yaml::as.yaml(object@requirements))
+        cat(as.yaml(object@requirements))
     }
     if(length(object@hints) > 0){
         cat("hints:\n")
-        cat(yaml::as.yaml(object@hints))
+        cat(as.yaml(object@hints))
     }
     if(length(object@arguments) > 0){
         cat("arguments:", unlist(object@arguments), "\n")

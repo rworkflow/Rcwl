@@ -168,7 +168,7 @@ pfile <- "$(inputs.zfile.nameroot)"
 o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
 req1 <- list(class = "InlineJavascriptRequirement")
 GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
-               requirements = list(req1),
+               requirements = list(), ## assign list(req1) if node installed.
                inputs = InputParamList(z1),
                outputs = OutputParamList(o2),
                stdout = pfile)
