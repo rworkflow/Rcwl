@@ -38,6 +38,9 @@ associated with input parameters.}
 \item{stdout}{Capture the command's standard output stream to a
 file written to the designated output directory.}
 }
+\value{
+A `cwlParam` class object.
+}
 \description{
 The main CWL parameter class and constructor for command
 tools. More details:

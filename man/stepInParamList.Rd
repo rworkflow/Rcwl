@@ -11,8 +11,15 @@ stepInParamList(...)
 \arguments{
 \item{...}{A list of `stepInParam` objects.}
 }
+\value{
+An object of class `stepInParamList`.
+}
 \description{
 stepInParamList
 
 stepInParamList
+}
+\examples{
+s1 <- stepInParam(id = "s1")
+stepInParamList(s1)
 }

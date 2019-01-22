@@ -21,6 +21,12 @@ one element. It can be one of "dotproduct",
 "nested_crossproduct" and "flat_crossproduct". Details:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
 }
+\value{
+An object of `stepParam`.
+}
 \description{
 Function to assign value to `stepParam` object.
+}
+\seealso{
+\code{\link{cwlStepParam}}
 }

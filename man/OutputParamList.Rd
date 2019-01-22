@@ -18,6 +18,11 @@ outputs(cwl)
 
 \item{cwl}{A cwlParam object}
 }
+\value{
+An object of class `OutputParamList`.
+
+outputs: A list of `OutputParam`.
+}
 \description{
 OutputParamList
 
@@ -26,4 +31,11 @@ OutputParamList
 
 outputs
 The outputs of a cwlParam object
+}
+\examples{
+o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
+OutputParamList(o1)
+input1 <- InputParam(id = "sth")
+echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+outputs(echo) 
 }

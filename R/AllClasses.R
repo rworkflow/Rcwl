@@ -39,6 +39,9 @@ setClass("InputArrayParam",
 #' @param itemSeparator Join the array elements into a single string
 #'     with separator.
 #' @param valueFrom String or Expression.
+#' @return An object of class `InputArrayParam`.
+#' @examples
+#' InputArrayParam(items = "string", prefix="-B=", separate = FALSE)
 InputArrayParam <- function(label = "", type = "array",
                             items = character(), prefix = "",
                             separate = TRUE, itemSeparator = character(),
@@ -112,6 +115,9 @@ setClass("InputParam",
 #' @param default The default value for this parameter
 #' @param value Assigned value for this parameter
 #' @export
+#' @return An object of class `InputParam`.
+#' @examples
+#' input1 <- InputParam(id = "sth")
 InputParam <- function(id, label= "", type = "string",
                        doc = character(), secondaryFiles = character(),
                        position = 0L, prefix = "",
@@ -145,8 +151,13 @@ setClass("InputParamList", representation(inputs = "SimpleList"),
 #' @param ... The InputParam objects.
 #' @rdname InputParamList
 #' @export
+#' @return An object of class `InputParamList`.
+#' @examples
+#' input1 <- InputParam(id = "sth")
+#' InputParamList(input1)
 InputParamList <- function(...){
     iList <- SimpleList(...)
+    stopifnot(all(sapply(iList, is, "InputParam")))
     names(iList) <- lapply(iList, function(x)x@id)
     new("InputParamList", inputs = iList)
 }
@@ -183,6 +194,9 @@ setClass("OutputArrayParam",
 #' @param outputEval Evaluate an expression to generate the output
 #'     value.
 #' @export
+#' @return An object of class `OutputArrayParam`.
+#' @examples
+#' b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
 OutputArrayParam <- function(label= character(), type = "array",
                              items = character(), glob = character(),
                              loadContents = logical(),
@@ -244,6 +258,9 @@ setClass("OutputParam",
 #'     supply the value of to the output parameter.
 #' @rdname OutputParam
 #' @export
+#' @return An object of class `OutputParam`.
+#' @examples
+#' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
 OutputParam <- function(id = "output", label = character(), type = "stdout",
                         secondaryFiles = character(), streamable = logical(),
                         glob = character(), loadContents = logical(),
@@ -275,6 +292,10 @@ setClass("OutputParamList", representation(outputs = "SimpleList"),
 #' @param ... The InputParam objects.
 #' @rdname OutputParamList
 #' @export
+#' @return An object of class `OutputParamList`.
+#' @examples
+#' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
+#' OutputParamList(o1)
 OutputParamList <- function(out = OutputParam(), ...){
     oList <- SimpleList(out, ...)
     names(oList) <- lapply(oList, function(x)x@id)
@@ -337,6 +358,7 @@ setClass("cwlParam",
 #'     file written to the designated output directory.
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
+#' @return A `cwlParam` class object.
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
@@ -378,6 +400,9 @@ setClass("stepInParam",
 #'     source is null.
 #' @param valueFrom value from string or expression.
 #' @export
+#' @return An object of class `stepInParam`.
+#' @examples
+#' s1 <- stepInParam(id = "s1")
 stepInParam <- function(id, source = character(),
                         linkMerge = character(), default = character(),
                         valueFrom = character()){
@@ -397,8 +422,13 @@ setClass("stepInParamList", representation(Ins = "SimpleList"),
 #' @rdname stepInParamList
 #' @param ... A list of `stepInParam` objects.
 #' @export
+#' @return An object of class `stepInParamList`.
+#' @examples
+#' s1 <- stepInParam(id = "s1")
+#' stepInParamList(s1)
 stepInParamList <- function(...){
     iList <- SimpleList(...)
+    stopifnot(all(sapply(iList, is, "stepInParam")))
     names(iList) <- lapply(iList, function(x)x@id)
     new("stepInParamList", Ins = iList)
 }
@@ -430,6 +460,9 @@ setClass("stepParam",
 #'     "nested_crossproduct" and "flat_crossproduct". Details:
 #'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
+#' @return An object of class `stepParam`.
+#' @examples
+#' s1 <- stepParam(id = "s1")
 stepParam <- function(id, run = cwlParam(),
                       In = stepInParamList(), Out = list(),
                       scatter = character(), scatterMethod = character()) {
@@ -453,6 +486,10 @@ setClass("stepParamList", representation(steps = "SimpleList"),
 #' @rdname stepParamList
 #' @param ... A list of `stepParam`.
 #' @export
+#' @return An object of class `stepParamList`.
+#' @examples
+#' s1 <- stepParam(id = "s1")
+#' stepParamList(s1)
 stepParamList <- function(...){
     iList <- SimpleList(...)
     names(iList) <- lapply(iList, function(x)x@id)
@@ -487,6 +524,22 @@ setClass("cwlStepParam",
 #' @param steps A list of `stepParamList`.
 #' @rdname cwlStepParam
 #' @export
+#' @return An object of class `cwlStepParam`.
+#' @examples
+#' input1 <- InputParam(id = "sth")
+#' echo1 <- cwlParam(baseCommand = "echo",
+#'                   inputs = InputParamList(input1))
+#' input2 <- InputParam(id = "sthout", type = "File")
+#' echo2 <- cwlParam(baseCommand = "echo",
+#'                   inputs = InputParamList(input2),
+#'                   stdout = "out.txt")
+#' i1 <- InputParam(id = "sth")
+#' o1 <- OutputParam(id = "out", type = "File", outputSource = "echo2/output")
+#' wf <- cwlStepParam(inputs = InputParamList(i1),
+#'                    outputs = OutputParamList(o1))
+#' s1 <- Step(id = "echo1", run = echo1, In = list(sth = "sth"))
+#' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
+#' wf <- wf + s1 + s2
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
                      requirements = list(), id = character(),
                      hints = list(), arguments = list(),

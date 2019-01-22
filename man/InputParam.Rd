@@ -55,7 +55,13 @@ with the elements separated by by itemSeparator.}
 
 \item{name}{One one of input list}
 }
+\value{
+An object of class `InputParam`.
+}
 \description{
 parameter for a command tool. More details:
 https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
+}
+\examples{
+input1 <- InputParam(id = "sth")
 }

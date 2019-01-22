@@ -16,6 +16,11 @@ inputs(cwl)
 
 \item{cwl}{A cwlParam object}
 }
+\value{
+An object of class `InputParamList`.
+
+inputs: A list of `InputParam`.
+}
 \description{
 InputParamList
 
@@ -23,4 +28,12 @@ InputParamList
 A list of InputParam
 
 inputs
+}
+\examples{
+input1 <- InputParam(id = "sth")
+InputParamList(input1)
+## Inputs
+input1 <- InputParam(id = "sth")
+echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+inputs(echo)
 }

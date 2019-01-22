@@ -15,6 +15,16 @@ writeCWL(cwl, prefix, noDocker = FALSE, ...)
 
 \item{...}{Other options from `yaml::write_yaml`.}
 }
+\value{
+A CWL file and A YML file.
+}
 \description{
 write `cwlParam` to cwl and yml.
+}
+\examples{
+input1 <- InputParam(id = "sth")
+echo <- cwlParam(baseCommand = "echo",
+                 inputs = InputParamList(input1))
+tf <- tempfile()
+writeCWL(echo, tf)
 }

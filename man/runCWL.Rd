@@ -33,6 +33,9 @@ the detailed running logs will return directly.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }
+\value{
+A list of outputs from tools and logs from cwltool.
+}
 \description{
 Execute a cwlParam object with assigned inputs.
 }

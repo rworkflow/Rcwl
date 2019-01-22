@@ -29,10 +29,16 @@ with separator.}
 
 \item{valueFrom}{String or Expression.}
 }
+\value{
+An object of class `InputArrayParam`.
+}
 \description{
 Parameters for array inputs. To specify an array parameter, the
 array definition is nested under the type field with 'type: array'
 and items defining the valid data types that may appear in the
 array. More details:
 https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
+}
+\examples{
+InputArrayParam(items = "string", prefix="-B=", separate = FALSE)
 }

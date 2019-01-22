@@ -24,7 +24,13 @@ OutputArrayParam(label = character(), type = "array",
 \item{outputEval}{Evaluate an expression to generate the output
 value.}
 }
+\value{
+An object of class `OutputArrayParam`.
+}
 \description{
 Parameters for array outputs. More details:
 https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
+}
+\examples{
+b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
 }

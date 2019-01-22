@@ -18,6 +18,7 @@
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @import reticulate
 #' @export
+#' @return A list of outputs from tools and logs from cwltool.
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo",
@@ -103,12 +104,12 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
     wdir <- file.path(wdir, sname[idx])
     dir.create(wdir, showWarnings = FALSE, recursive = TRUE)
     ## assign inputs
-    for(i in 1:length(inputList)){
+    for(i in seq_along(inputList)){
         input1 <- inputList[[i]][[idx]]
         cwl <- .assignInput(cwl, names(inputList)[i], input1)
     }
     if(length(paramList) > 0){
-        for(j in 1:length(paramList)){
+        for(j in seq_along(paramList)){
             cwl <- .assignInput(cwl, names(paramList)[j], paramList[[j]])
         }
     }
@@ -132,6 +133,7 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
 #' @import BiocParallel
 #' @import batchtools
 #' @export
+#' @return Results from computing nodes and logs from cwltool.
 runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
                         BPPARAM = BatchtoolsParam(
                             workers = lengths(inputList)[1]), ...){

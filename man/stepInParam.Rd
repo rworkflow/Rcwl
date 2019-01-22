@@ -24,7 +24,13 @@ source is null.}
 
 \item{valueFrom}{value from string or expression.}
 }
+\value{
+An object of class `stepInParam`.
+}
 \description{
 The input parameter of a workflow step. More details:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
+}
+\examples{
+s1 <- stepInParam(id = "s1")
 }

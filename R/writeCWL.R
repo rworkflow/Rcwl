@@ -54,11 +54,11 @@ allRun <- function(cwl){
         nm1 <- names(Steps)[i]
         run1 <- Steps[[i]]@run
 
-        if(class(run1) == "cwlParam"){
+        if(is(run1, "cwlParam") & !is(run1, "cwlStepParam")){
             nn <- names(Run)
             Run <- c(Run, run1)
             names(Run) <- c(nn, nm1)
-        }else if(class(run1) == "cwlStepParam"){
+        }else if(is(run1, "cwlStepParam")){
             ## record cwlStepParam
             nn <- names(Run)
             Run <- c(Run, run1)
@@ -79,6 +79,13 @@ allRun <- function(cwl){
 #' @param ... Other options from `yaml::write_yaml`.
 #' @import yaml
 #' @export
+#' @return A CWL file and A YML file.
+#' @examples
+#' input1 <- InputParam(id = "sth")
+#' echo <- cwlParam(baseCommand = "echo",
+#'                  inputs = InputParamList(input1))
+#' tf <- tempfile()
+#' writeCWL(echo, tf)
 writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
     stopifnot(is(cwl, "cwlParam"))
     ## logical to true/false
@@ -135,7 +142,7 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
         }else{
             v <- NULL
         }
-        if(class(x@type)=="InputArrayParam"){
+        if(is(x@type, "InputArrayParam")){
             Type <- x@type@items
         }else{
             Type <- x@type

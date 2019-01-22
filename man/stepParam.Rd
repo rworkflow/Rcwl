@@ -25,7 +25,13 @@ one element. It can be one of "dotproduct",
 "nested_crossproduct" and "flat_crossproduct". Details:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
 }
+\value{
+An object of class `stepParam`.
+}
 \description{
 A workflow step parameters. More details:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+}
+\examples{
+s1 <- stepParam(id = "s1")
 }

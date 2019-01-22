@@ -25,6 +25,9 @@ be in the inputs of cwl.}
 
 \item{...}{The options from runCWL.}
 }
+\value{
+Results from computing nodes and logs from cwltool.
+}
 \description{
 run CWL with batchtools
 }

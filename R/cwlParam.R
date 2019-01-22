@@ -1,7 +1,7 @@
-
 #' cwlParam methods
 #' @rdname cwlParam-methods
 #' @export
+#' @return cwlVersion: cwl version
 cwlVersion <- function(cwl) cwl@cwlVersion
 
 #' cwlVersion
@@ -18,6 +18,7 @@ cwlVersion <- function(cwl) cwl@cwlVersion
 #' cwlClass
 #' @rdname cwlParam-methods
 #' @export
+#' @return cwlClass: CWL Class
 cwlClass <- function(cwl) cwl@cwlClass
 #' cwlClass
 #' @rdname cwlParam-methods
@@ -30,6 +31,7 @@ cwlClass <- function(cwl) cwl@cwlClass
 #' baseCommand
 #' @rdname cwlParam-methods
 #' @export
+#' @return baseCommand: CWL baseCommand
 baseCommand <- function(cwl) cwl@baseCommand
 #' baseCommand
 #' @rdname cwlParam-methods
@@ -42,6 +44,7 @@ baseCommand <- function(cwl) cwl@baseCommand
 #' arguments
 #' @rdname cwlParam-methods
 #' @export
+#' @return arguments: CWL arguments
 arguments <- function(cwl) cwl@arguments
 #' arguments
 #' @rdname cwlParam-methods
@@ -54,6 +57,7 @@ arguments <- function(cwl) cwl@arguments
 #' hints
 #' @export
 #' @rdname cwlParam-methods
+#' @return hints: CWL hints
 hints <- function(cwl) cwl@hints
 #' hints
 #' @rdname cwlParam-methods
@@ -66,6 +70,7 @@ hints <- function(cwl) cwl@hints
 #' requirements
 #' @rdname cwlParam-methods
 #' @export
+#' @return requirements: CWL requirments
 requirements <- function(cwl) cwl@requirements
 #' requirements
 #' @rdname cwlParam-methods
@@ -79,6 +84,12 @@ requirements <- function(cwl) cwl@requirements
 #' @rdname InputParamList
 #' @param cwl A cwlParam object
 #' @export
+#' @return inputs: A list of `InputParam`.
+#' @examples
+#' ## Inputs
+#' input1 <- InputParam(id = "sth")
+#' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+#' inputs(echo)
 inputs <- function(cwl) cwl@inputs@inputs
 
 .assignInput <- function(x, name, value){
@@ -142,6 +153,11 @@ setGeneric("$")
 #' @param cwl A cwlParam object
 #' @rdname OutputParamList
 #' @export
+#' @return outputs: A list of `OutputParam`.
+#' @examples
+#' input1 <- InputParam(id = "sth")
+#' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+#' outputs(echo) 
 outputs <- function(cwl) {
     if(is(cwl@outputs, "list")) {
         cwl@outputs
@@ -153,6 +169,7 @@ outputs <- function(cwl) {
 #' stdout of cwlParam
 #' @rdname cwlParam-methods
 #' @export
+#' @return stdOut: CWL stdout
 stdOut <- function(cwl) cwl@stdout
 #' stdout of cwlParam
 #' @rdname cwlParam-methods
@@ -292,8 +309,11 @@ setMethod(show, "cwlStepParam", function(object){
 #' 
 #' The function to show short summary of cwlParam or cwlStepParam
 #' @param object An cwlParam or cwlStepParam object
-#' @rdname cwlParam-methods
 #' @export
+#' @return A short summary of an object of cwlParam or cwlStepParam.
+#' @examples
+#' s1 <- cwlStepParam()
+#' short(s1)
 short <- function(object){
     if(is(object, "cwlParam")){
         cat(as.yaml(list(inputs = names(inputs(object)))))
@@ -307,8 +327,12 @@ short <- function(object){
 #' runs
 #'
 #' The function to access all runs of a cwlStepParam object
-#' @rdname cwlParam-methods
+#' @param object A cwlStepParam object.
 #' @export
+#' @return cwlParam objects or paths of CWL file.
+#' @examples
+#' s1 <- cwlStepParam()
+#' runs(s1)
 runs <- function(object){
     stopifnot(is(object, "cwlStepParam"))
     SimpleList(lapply(steps(object), function(x)x@run))

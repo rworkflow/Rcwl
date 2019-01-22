@@ -2,7 +2,7 @@
 .readInputs <- function(cwl.origin, cwl){
     inputList <- cwl.origin$inputs
     iList <- SimpleList()
-    for(i in 1:length(inputList)){
+    for(i in seq_along(inputList)){
         if(cwlClass(cwl) == "Workflow"){
             ilist <- c(id = names(inputList)[i], inputList[[i]])
         }else{
@@ -36,7 +36,7 @@
     if(length(outputList) == 0){
         return(oList)
     }
-    for(i in 1:length(outputList)){
+    for(i in seq_along(outputList)){
         if(cwlClass(cwl) == "Workflow"){
             olist <- c(id = names(outputList)[i], outputList[[i]])
         }else{
@@ -65,7 +65,7 @@
 
 .readSteps <- function(cwl.origin, pwd, cwl){
     Steps <- cwl.origin$steps
-    for(i in 1:length(Steps)){
+    for(i in seq_along(Steps)){
         id <- names(Steps)[i]
         sList <- c(id = id, Steps[[i]])
         run <- Steps[[i]]$run
@@ -101,6 +101,14 @@
 #' Function to read CWL command or workflow files.
 #' @param cwlfile The cwl file to read.
 #' @export
+#' @return A object of class `cwlParam` or `cwlStepParam`.
+#' @examples
+#' input1 <- InputParam(id = "sth")
+#' echo <- cwlParam(baseCommand = "echo",
+#'                  inputs = InputParamList(input1))
+#' tf <- tempfile()
+#' writeCWL(echo, tf)
+#' readCWL(paste0(tf, ".cwl"))
 readCWL <- function(cwlfile){
     cwl.origin <- read_yaml(cwlfile)
     names(cwl.origin)[names(cwl.origin)=="class"] <- "cwlClass"

@@ -12,7 +12,13 @@
 
 \item{e2}{A `stepParam` object.}
 }
+\value{
+A `cwlStepParam` object.
+}
 \description{
 To build a pipeline by connecting multiple `stepParam` to a
 `cwlStepParam` object.
+}
+\seealso{
+\code{\link{cwlStepParam}}
 }

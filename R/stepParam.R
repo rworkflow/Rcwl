@@ -11,6 +11,8 @@
 #'     "nested_crossproduct" and "flat_crossproduct". Details:
 #'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
+#' @return An object of `stepParam`.
+#' @seealso \code{\link{cwlStepParam}}
 Step <- function(id, run = cwlParam(), In = list(),
                  scatter = character(), scatterMethod = character()) {
     stopifnot(names(In) %in% names(inputs(run)))
@@ -41,6 +43,8 @@ Step <- function(id, run = cwlParam(), In = list(),
 #' @param e1 A `cwlStepParam` object.
 #' @param e2 A `stepParam` object.
 #' @export
+#' @seealso \code{\link{cwlStepParam}}
+#' @return A `cwlStepParam` object.
 setMethod("+", c("cwlStepParam", "stepParam"), function(e1, e2) {
     pp <- unlist(c(unlist(e1@steps@steps), e2))
     e1@steps <- stepParamList(pp)
@@ -50,14 +54,20 @@ setMethod("+", c("cwlStepParam", "stepParam"), function(e1, e2) {
 setGeneric("+")
 
 #' Steps
+#' 
 #' Function to extract step slots
-#' @rdname cwlParam-methods
+#' @param cwl A cwlStepParam object.
 #' @export
+#' @return steps: A list of stepParam objects.
+#' @rdname steps
+#' @seealso \code{\link{cwlStepParam}}
 steps <- function(cwl) cwl@steps@steps
 
 #' Steps
-#' @rdname cwlParam-methods
+#' 
 #' @export
+#' @param value A list of steps.
+#' @rdname steps
 "steps<-" <- function(cwl, value){
     cwl@steps@steps  <- value
     cwl

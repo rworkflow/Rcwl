@@ -37,7 +37,13 @@ value.}
 \item{outputSource}{Specifies one or more workflow parameters that
 supply the value of to the output parameter.}
 }
+\value{
+An object of class `OutputParam`.
+}
 \description{
 An output parameter for a Command Line Tool. More details:
 https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
+}
+\examples{
+o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
 }
