@@ -79,10 +79,10 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
             command <- NULL
         }
         if(!any(grepl("path", res)) & any(grepl("location", res))){
-            path <- read.table(textConnection(res[grep("location", res)]),
+            path <- read.table(textConnection(res[grep('\"location\":', res)]),
                                stringsAsFactors = FALSE)[,3]
         }else if(any(grepl("path", res))){
-            path <- read.table(textConnection(res[grep("path", res)]),
+            path <- read.table(textConnection(res[grep('\"path\":', res)]),
                                stringsAsFactors = FALSE)[,3]
         }else{
             path <- NULL
