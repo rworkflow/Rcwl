@@ -16,7 +16,6 @@
 #'     the detailed running logs will return directly.
 #' @param noDocker Whether to disable docker.
 #' @param ... The other options from `writeCWL` and `system2`.
-#' @import reticulate
 #' @export
 #' @return A list of outputs from tools and logs from cwltool.
 #' @examples
@@ -34,32 +33,10 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     ## check cwltool
     ext <- suppressWarnings(system(paste("which", cwlRunner),
                                    intern = TRUE))
-    if(cwlRunner != "cwltool" & cwlRunner != "cwl-runner"){
-        if(length(ext)==0) stop(cwlRunner, " not exist!")
-    }else if(length(ext)==0){
-        inres <- tryCatch({
-            reticulate:::virtualenv_config()
-        }, error = function(e)e)
-        if(is(inres, "error")){
-            if(grepl("virtualenv", inres)){
-                message("Install virtualenv ...")
-                system("pip install --user virtualenv")
-            }
-        }
-
-        config <- reticulate:::virtualenv_config() 
-        virtualenv_path <- file.path(config$root, "r-reticulate")
-        cr <- path.expand(file.path(virtualenv_path, 
-                                    "bin", "cwltool"))
-        if(file.exists(cr)){
-            message("Find cwltool: ", cr)
-        }else{
-            message("Install cwltool ...")
-            py_install("cwltool",
-                       envname = "r-reticulate",
-                       method = "virtualenv")
-        }
-        cwlRunner <- cr
+    if(length(ext)==0){
+        stop(cwlRunner, " is not found! ",
+            "Please install cwltool first!\n",
+             "$pip install --user cwltool")
     }
     
     if(cwlTemp){
