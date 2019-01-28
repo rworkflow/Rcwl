@@ -34,9 +34,9 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     ext <- suppressWarnings(system(paste("which", cwlRunner),
                                    intern = TRUE))
     if(length(ext)==0){
-        stop(cwlRunner, " is not found! ",
+        stop(cwlRunner, " is not found, ",
             "Please install cwltool first!\n",
-             "$pip install --user cwltool")
+             "https://github.com/common-workflow-language/cwltool#install")
     }
     
     if(cwlTemp){
