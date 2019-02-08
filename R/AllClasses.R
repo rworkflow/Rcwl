@@ -157,7 +157,7 @@ setClass("InputParamList", representation(inputs = "SimpleList"),
 #' InputParamList(input1)
 InputParamList <- function(...){
     iList <- SimpleList(...)
-    stopifnot(all(sapply(iList, is, "InputParam")))
+    stopifnot(all(vapply(iList, is, character(1)) == "InputParam"))
     names(iList) <- lapply(iList, function(x)x@id)
     new("InputParamList", inputs = iList)
 }
@@ -266,7 +266,6 @@ OutputParam <- function(id = "output", label = character(), type = "stdout",
                         glob = character(), loadContents = logical(),
                         outputEval = character(),
                         outputSource = character()){
-    ##if(items %in% c("File", "Directory") && type != "array") stop("type must be array!")
     new("OutputParam",
         id = id,
         label = label,
@@ -428,12 +427,11 @@ setClass("stepInParamList", representation(Ins = "SimpleList"),
 #' stepInParamList(s1)
 stepInParamList <- function(...){
     iList <- SimpleList(...)
-    stopifnot(all(sapply(iList, is, "stepInParam")))
+    stopifnot(all(vapply(iList, is, character(1)) == "stepInParam"))
     names(iList) <- lapply(iList, function(x)x@id)
     new("stepInParamList", Ins = iList)
 }
 
-##setClassUnion("characterORlist", c("character", "list"))
 setClassUnion("cwlParamORcharacter", c("cwlParam", "character"))
 #' stepParam
 #' @rdname stepParam

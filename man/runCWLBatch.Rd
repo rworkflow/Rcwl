@@ -4,19 +4,19 @@
 \alias{runCWLBatch}
 \title{run CWL with batchtools}
 \usage{
-runCWLBatch(cwl, wdir = getwd(), inputList, paramList = list(),
+runCWLBatch(cwl, outdir = getwd(), inputList, paramList = list(),
   BPPARAM = BatchtoolsParam(workers = lengths(inputList)[1]), ...)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
 
-\item{wdir}{Directory to output results}
+\item{outdir}{Directory to output results}
 
 \item{inputList}{An input list to run in parallel. The list names
 must be in the inputs of cwl. Jobs will be submitted in
 parallel for each element in the list. The output directory of
 each job will be made using the name of each element under the
-`wdir`.}
+`outdir`.}
 
 \item{paramList}{A parameter list for the cwl. The list names must
 be in the inputs of cwl.}

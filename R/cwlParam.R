@@ -96,7 +96,12 @@ inputs <- function(cwl) cwl@inputs@inputs
     stopifnot(name %in% names(inputs(x)))
     itype <- inputs(x)[[name]]@type
     if(is(itype, "InputArrayParam")){
-        v <- value
+        if(inputs(x)[[name]]@type@items == "File"){
+            v <- lapply(value, function(x)list(class="File",
+                                               path=normalizePath(x)))
+        }else{
+            v <- value
+        }
     }else if(is(itype, "character")){
         ## optional type
         if(grepl("?", itype)){
@@ -110,7 +115,6 @@ inputs <- function(cwl) cwl@inputs@inputs
         }else if(itype == "File[]"){
             v <- lapply(value, function(x)list(class="File",
                                                path=normalizePath(x)))
-            ##v <- unlist(v, recursive = FALSE)
         }else{
             v <- value
         }
@@ -134,7 +138,6 @@ setMethod("$", "cwlParam", function(x, name){
     }else{
         stop(wmsg("the '", name, "' does not exist"))
     }
-    ##inputs(x)[[name]]@value
 })
 
 #' Set input values by name
@@ -179,14 +182,6 @@ stdOut <- function(cwl) cwl@stdout
     cwl
 }
 
-## #' Assign values to input params
-## assignOutputGlob <- function(cwl, name="output", value){
-##     itype <- cwl@outputs$output@type
-##     stopifnot(itype != "File")
-##     cwl@outputs$output@outputBinding$glob <- value
-##     cwl
-## }
-
 setMethod(show, "InputParamList", function(object) {
     cat("inputs:\n")
     lapply(seq(object@inputs), function(i){
@@ -208,9 +203,6 @@ setMethod(show, "InputParamList", function(object) {
                     v <- object@inputs[[i]]@value
                 }
             }
-            ## }else{
-            ##     v <- object@inputs[[i]]@value
-            ## }
 
             cat("  ", iname, " (", object@inputs[[i]]@type, "): ",
                 object@inputs[[i]]@inputBinding$prefix, " ",
@@ -259,10 +251,10 @@ setMethod(show, "OutputParamList", function(object) {
 })
 
 setMethod(show, "cwlParam", function(object){
-    cat("class:", class(object), "\n")
-    cat("cwlClass:", cwlClass(object), "\n")
-    cat("cwlVersion:", cwlVersion(object), "\n")
-    cat("baseCommand:", baseCommand(object), "\n")
+    cat("class:", class(object), "\n",
+        "cwlClass:", cwlClass(object), "\n",
+        "cwlVersion:", cwlVersion(object), "\n",
+        "baseCommand:", baseCommand(object), "\n")
     if(length(object@requirements) > 0){
         cat("requirements:\n")
         cat(as.yaml(object@requirements))
@@ -277,15 +269,12 @@ setMethod(show, "cwlParam", function(object){
     show(object@inputs)
     show(object@outputs)
     if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
-    ## if(cwlClass(object) == "Workflow") {
-    ##     show(object@steps)
-    ## }
 })
 
 setMethod(show, "cwlStepParam", function(object){
-    cat("class:", class(object), "\n")
-    cat("cwlClass:", cwlClass(object), "\n")
-    cat("cwlVersion:", cwlVersion(object), "\n")
+    cat("class:", class(object), "\n",
+        "cwlClass:", cwlClass(object), "\n",
+        "cwlVersion:", cwlVersion(object), "\n")
     if(length(object@requirements) > 0){
         cat("requirements:\n")
         cat(as.yaml(object@requirements))

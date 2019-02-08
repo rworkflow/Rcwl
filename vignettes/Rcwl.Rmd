@@ -22,14 +22,31 @@ vignette: >
 knitr::opts_knit$set(root.dir = tempdir())
 ```
 
-The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at [http://www.commonwl.org]().
+The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at <http://www.commonwl.org>.
+
+# Installation
+1. Download the package. 
+
+```{r getPackage, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Rcwl")
+```
+The development version is also available to download from Github. 
+```{r getDevel, eval=FALSE}
+BiocManager::install("hubentu/Rcwl")
+```
+
+2. Load the package into the R session.
+```{r Load, message=FALSE}
+library(Rcwl)
+```
 
 # First Example
 The main class and constructor function is `cwlParam`, which wrap a command line tool and its parameters in a `cwlParam` object. Let's start with a simple example, `echo hello world`.
 
 First, we load the package and then define the input parameter for "echo", a string without a prefix. Just an `id` option required.
 ```{r}
-library(Rcwl)
 input1 <- InputParam(id = "sth")
 ```
 
@@ -44,9 +61,9 @@ echo$sth <- "Hello World!"
 echo
 ```
 
-Let's run it. A list including the command executed, temporary output and logs. All standard out and standard error stream can also be printed by setting `stderr = ""`.
+Let's run it. A list including the command executed, temporary output and logs. The output directory is the current folder by default, but it can be changed by setting `outdir` option. All standard out and standard error stream can also be printed by setting `stderr = ""`.
 ```{r}
-r1 <- runCWL(echo)
+r1 <- runCWL(echo, outdir = tempdir())
 r1
 readLines(r1$output)
 ```
@@ -55,7 +72,7 @@ The `writeCWL` function will write the cwlParam object to a CWL file for the com
 
 # Input Parameters
 ## Essential Input parameters
-For the input parameters, three options need to be defined usually, *id*, *type*, and *prefix*. The type can be *string*, *int*, *long*, *float*, *double*, and so on. More detail can be found at: [https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType]().
+For the input parameters, three options need to be defined usually, *id*, *type*, and *prefix*. The type can be *string*, *int*, *long*, *float*, *double*, and so on. More detail can be found at: <https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType>.
 
 Here is an example from [CWL user guide](http://www.commonwl.org/user_guide/03-input/). Here we defined an `echo` with different type of input parameters by `InputParam`. The `stdout` option can be used to caputre the standard output stream to a file.
 ```{r}
@@ -78,7 +95,7 @@ tmpfile <- tempfile()
 write("World", tmpfile)
 echoA$file <- tmpfile
 
-r2 <- runCWL(echoA)
+r2 <- runCWL(echoA, outdir = tempdir())
 r2$command
 ```
 
@@ -105,7 +122,7 @@ echoB
 
 Now we can check whether the command behaves as we expected.
 ```{r}
-r3 <- runCWL(echoB)
+r3 <- runCWL(echoB, outdir = tempdir())
 r3$command
 ```
 
@@ -139,7 +156,7 @@ Now the `gz` object can be used to uncompress the previous generated compressed 
 gz$uncomp <- TRUE
 gz$out <- TRUE
 gz$zfile <- zzfil
-r4 <- runCWL(gz)
+r4 <- runCWL(gz, outdir = tempdir())
 r4$output
 ```
 
@@ -154,7 +171,7 @@ Gz <- cwlParam(baseCommand = "gzip",
                stdout = ofile)
 Gz
 Gz$zfile <- zzfil
-r4a <- runCWL(Gz)
+r4a <- runCWL(Gz, outdir = tempdir())
 ```
 
 To make it for general usage, we can define a pattern with javascript to glob the output, which require `node` to be installed in your system PATH.
@@ -173,7 +190,7 @@ GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
                outputs = OutputParamList(o2),
                stdout = pfile)
 GZ$zfile <- zzfil
-r4b <- runCWL(GZ)
+r4b <- runCWL(GZ, outdir = tempdir())
 ```
 
 ## Array Outputs
@@ -184,7 +201,7 @@ a <- InputParam(id = "a", type = InputArrayParam(items = "string"))
 b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
 touch <- cwlParam(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
 touch$a <- c("a.txt", "b.gz", "c.txt")
-r5 <- runCWL(touch)
+r5 <- runCWL(touch, outdir = tempdir())
 r5$output
 ```
 
@@ -206,7 +223,8 @@ r6 <- runCWL(doc)
 
 The tools defined with docker requirements can also be run locally by disabling the docker option. In case your `Rscript` depends some local libraries to run, an option from `cwltools`, "--preserve-entire-environment", can be used to pass all environment variables.
 ```{r}
-r6a <- runCWL(doc, noDocker = TRUE, Args = "--preserve-entire-environment")
+r6a <- runCWL(doc, noDocker = TRUE, outdir = tempdir(),
+              Args = "--preserve-entire-environment")
 ```
 
 # Running Tools in Cluster server
@@ -241,7 +259,7 @@ Rs
 Test run:
 ```{r}
 Rs$rfile <- r4$output
-tres <- runCWL(Rs)
+tres <- runCWL(Rs, outdir = tempdir())
 readLines(tres$output)
 ```
 
@@ -269,7 +287,7 @@ cwl
 Let's run the pipeline.
 ```{r}
 cwl$cwl_zfile <- zzfil
-r7 <- runCWL(cwl)
+r7 <- runCWL(cwl, outdir = tempdir())
 readLines(r7$output)
 ```
 
@@ -295,7 +313,7 @@ cwl2
 Multiple R scripts can be assigned to the workflow inputs and executed.
 ```{r}
 cwl2$cwl_rfiles <- c(r4b$output, r4b$output)
-r8 <- runCWL(cwl2)
+r8 <- runCWL(cwl2, outdir = tempdir())
 r8$output
 ```
 
@@ -306,6 +324,35 @@ The function `plotCWL` can be used to visualize the relationship of inputs, outp
 plotCWL(cwl)
 ```
 
+# Resources
+## RcwlPipelines
+
+The `Rcwl` package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNASeq alignment, quality control and quantification, DNASeq alignment and variant calling, have been developed based on the tool in an R package `RcwlPipelines`, which contains the CWL recipes and the scripts to create the recipes. Examples to analyze real data are also included. 
+
+Here is the link.
+
+* <https://github.com/hubentu/RcwlPipelines>
+
+To install the package.
+```{r, eval=FALSE}
+BiocManager::install("hubentu/RcwlPipelines")
+```
+
+More recipes will be collected in this package and we would like to invite community to submit more pipelines to this package.
+
+## Tool collections in CWL format
+Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to `cwlParam` object by `readCWL` function, or can be used directly.
+
+* <https://github.com/common-workflow-language/workflows>
+* <https://github.com/Duke-GCB/GGR-cwl>
+* <https://github.com/pitagora-galaxy/cwl>
+
+## Docker for Bioinformatics tools
+Most of the Bioinformatics software are available in docker containers, which can be very convenient to be adopted to build portable CWL tools and pipelines.
+
+* <https://dockstore.org>
+* <https://biocontainers.pro>
+  
 # SessionInfo
 ```{r}
 sessionInfo()

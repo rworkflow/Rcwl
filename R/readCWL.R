@@ -21,11 +21,6 @@
         iList[[i]] <- do.call(InputParam, ilist)
     }
     names(iList) <- names(inputList)
-    ## if(cwlClass(cwl) == "Workflow"){
-    ##     names(iList) <- names(inputList)
-    ## }else{
-    ##     names(iList) <- lapply(inputList, "[[", "id")
-    ## }
     return(iList)
 }
 
@@ -55,11 +50,6 @@
         oList[[i]] <- do.call(OutputParam, olist)
     }
     names(oList) <- names(outputList)
-    ## if(cwlClass(cwl) == "Workflow"){
-    ##     names(oList) <- names(outputList)
-    ## }else{
-    ##     names(oList) <- lapply(outputList, "[[", "id")
-    ## }
     return(oList)
 }
 

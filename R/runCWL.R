@@ -8,6 +8,7 @@
 #' @param cwlTemp Whether to keep temporary files. If true, all
 #'     temporary files will be kept in a "temp" folder of current
 #'     output directory.
+#' @param outdir Output directory, default current directory.
 #' @param Args The arguments for `cwltool` or `cwl-runner`. For
 #'     example, "--debug" can work with `cwltool` to show debug
 #'     information.
@@ -25,8 +26,8 @@
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-                   cwlTemp = FALSE, Args = character(), stdout = TRUE,
-                   stderr = TRUE, noDocker = FALSE, ...){
+                   cwlTemp = FALSE, outdir = ".", Args = character(),
+                   stdout = TRUE, stderr = TRUE, noDocker = FALSE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     writeCWL(cwl, prefix = prefix, noDocker = noDocker, ...)
 
@@ -43,7 +44,8 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
         Args <- paste("--tmp-outdir-prefix temp/", Args)
     }
     res <- system2(cwlRunner,
-                   args = paste0(Args, " ", prefix, ".cwl ", prefix, ".yml"),
+                   args = paste0("--outdir ", outdir, " ", Args, " ",
+                                 prefix, ".cwl ", prefix, ".yml"),
                    stdout = stdout, stderr = stderr, ...)
     ##return(res)
     message(tail(res, 1))
@@ -73,13 +75,13 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 }
 
 
-runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
+runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
     library(Rcwl)
     stopifnot(all(names(inputList) %in% names(inputs(cwl))))
-    ## change work directory
+    ## change output directory
     sname <- names(inputList[[1]])
-    wdir <- file.path(wdir, sname[idx])
-    dir.create(wdir, showWarnings = FALSE, recursive = TRUE)
+    outdir <- file.path(outdir, sname[idx])
+    dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
     ## assign inputs
     for(i in seq_along(inputList)){
         input1 <- inputList[[i]][[idx]]
@@ -90,19 +92,18 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
             cwl <- .assignInput(cwl, names(paramList)[j], paramList[[j]])
         }
     }
-    setwd(wdir)
-    runCWL(cwl, ...)
+    runCWL(cwl, outdir = outdir, ...)
 }
 
 #' run CWL with batchtools
 #' 
 #' @param cwl A `cwlParam` or `cwlStepParam` object.
-#' @param wdir Directory to output results
+#' @param outdir Directory to output results
 #' @param inputList An input list to run in parallel. The list names
 #'     must be in the inputs of cwl. Jobs will be submitted in
 #'     parallel for each element in the list. The output directory of
 #'     each job will be made using the name of each element under the
-#'     `wdir`.
+#'     `outdir`.
 #' @param paramList A parameter list for the cwl. The list names must
 #'     be in the inputs of cwl.
 #' @param BPPARAM The options for `BiocParallelParam`.
@@ -111,14 +112,13 @@ runFun <- function(idx, cwl, wdir, inputList, paramList = list(), ...){
 #' @import batchtools
 #' @export
 #' @return Results from computing nodes and logs from cwltool.
-runCWLBatch <- function(cwl, wdir = getwd(), inputList, paramList = list(),
+runCWLBatch <- function(cwl, outdir = getwd(), inputList, paramList = list(),
                         BPPARAM = BatchtoolsParam(
                             workers = lengths(inputList)[1]), ...){
     nsample <- lengths(inputList)[1]
-    ##param <- do.call(BatchtoolsParam, c(list(workers = nsample), BPoptions))
-    if(!dir.exists(wdir)) dir.create(wdir, recursive = TRUE)
+    if(!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
     bptry(bplapply(seq(nsample), runFun, BPPARAM = BPPARAM,
-                   cwl = cwl, wdir = normalizePath(wdir),
+                   cwl = cwl, outdir = normalizePath(outdir),
                    inputList = inputList,
                    paramList = paramList, ...))
 }

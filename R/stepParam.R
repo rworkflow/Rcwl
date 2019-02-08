@@ -30,7 +30,6 @@ Step <- function(id, run = cwlParam(), In = list(),
         slist[[i]] <- si
     }
     names(slist) <- names(In)
-    ##sout <- paste0("[", paste(names(outputs(run)), collapse = ", "), "]")
     sout <- as.list(names(outputs(run)))
     stepParam(id = id, run = run, In = stepInParamList(slist), Out = sout,
               scatter = scatter, scatterMethod = scatterMethod)

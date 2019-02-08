@@ -59,7 +59,6 @@ plotCWL <- function(cwl, ...){
                 mIn[j] <- paste0(id1, "((", in2os, "))-->",
                                  sid1, "{", Snames[i], "}")
             }else{
-                ## message("Orphan inputs ", mIn[j])
                 sIn <- unlist(strsplit(input1[j], split = "/"))
                 id1 <- names(nodes)[match(sIn[1], nodes)]
                 mIn[j] <- paste0(id1, "{", sIn[1], "}-->|", sIn[2],

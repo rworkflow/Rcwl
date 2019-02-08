@@ -9,3 +9,8 @@
 An R package to wrap command line tools and build pipelines with
 Common Workflow Language.
 }
+\seealso{
+\code{\link{cwlParam}}
+
+\code{\link{runCWL}}
+}

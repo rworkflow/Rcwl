@@ -31,12 +31,10 @@ cwlToList <- function(cwl, noDocker){
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
                stdout = cwl@stdout)
-    ##CL <- CL[lengths(CL)>0]
     CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps@steps)))
-
         ## remove inputBinding
         for(i in seq(CL$inputs)){
             CL$inputs[[i]]$inputBinding <- NULL
@@ -122,18 +120,6 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
 
 .cwl2yml <- function(cwl){
     lapply(inputs(cwl), function(x) {
-        ## ## remove empty path
-        ## if(grepl("File\\[\\]", x@type)){
-        ##     for(i in seq(x@value)){
-        ##         if(x@value[[i]]$path == ""){
-        ##             x@value[[i]] <- NULL
-        ##         }
-        ##     }
-        ## }else if(x@type=="File?"){
-        ##     if(x@value$path == ""){
-        ##         x@value <- NULL
-        ##     }
-        ## }
 
         if(length(x@value) > 0) {
             v <- x@value
@@ -181,13 +167,9 @@ as.listInputs <- function(Inputs){
         if(alist[[i]]$inputBinding$position == 0){
             alist[[i]]$inputBinding$position <- NULL
         }
-        ## if(alist[[i]]$inputBinding$separate){
-        ##     alist[[i]]$inputBinding$separate <- NULL
-        ## }
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
-        ## alist[[i]]$default <- NULL
         alist[[i]] <- .removeEmpty(alist[[i]])
     }
     return(alist)

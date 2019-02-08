@@ -5,7 +5,7 @@
 \title{run cwlParam}
 \usage{
 runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-  cwlTemp = FALSE, Args = character(), stdout = TRUE,
+  cwlTemp = FALSE, outdir = ".", Args = character(), stdout = TRUE,
   stderr = TRUE, noDocker = FALSE, ...)
 }
 \arguments{
@@ -19,6 +19,8 @@ exists, the cwltool package will be installed by `reticulate`.}
 \item{cwlTemp}{Whether to keep temporary files. If true, all
 temporary files will be kept in a "temp" folder of current
 output directory.}
+
+\item{outdir}{Output directory, default current directory.}
 
 \item{Args}{The arguments for `cwltool` or `cwl-runner`. For
 example, "--debug" can work with `cwltool` to show debug

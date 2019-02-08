@@ -4,4 +4,6 @@
 #' Common Workflow Language.
 #' @docType package
 #' @name Rcwl
+#' @seealso \code{\link{cwlParam}}
+#' @seealso \code{\link{runCWL}}
 NULL
