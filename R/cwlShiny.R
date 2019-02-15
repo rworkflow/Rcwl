@@ -59,7 +59,6 @@
 #' @param upload Whether to upload file. If FALSE, the upload field
 #'     will be text input (file path) instead of file input.
 #' @param ... More options for `runCWL`.
-#' @import Rcwl
 #' @import shiny
 #' @export
 #' @examples
