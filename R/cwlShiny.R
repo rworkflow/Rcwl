@@ -6,7 +6,7 @@
                              label = paste0(x@id, " (", x@type, ")"),
                              choices = inputList[[x@id]])
         }else{
-            if(class(x@type) == "InputArrayParam"){
+            if(is(x@type, "InputArrayParam")){
                 d <- textAreaInput(inputId = x@id,
                                    label = paste0(x@id, " (array)"),
                                    value = x@default)
@@ -61,13 +61,14 @@
 #' @param ... More options for `runCWL`.
 #' @import shiny
 #' @export
+#' @return A shiny webapp.
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 #' echoApp <- cwlShiny(echo)
 
 cwlShiny <- function(cwl, inputList = list(), upload = FALSE, ...){
-    stopifnot(class(cwl) == "cwlParam")
+    stopifnot(is(cwl, "cwlParam"))
     tList <- titlePanel(cwl@id)
     if(length(cwl@label) > 0) tList <- list(tList, h3(cwl@label))
     divList <- .inputUI(cwl, inputList, upload)
@@ -91,7 +92,7 @@ cwlShiny <- function(cwl, inputList = list(), upload = FALSE, ...){
     server <- function(input, output){
         res <- eventReactive(input$run, {
             for(x in names(ilist)){
-                if(class(ilist[[x]]@type) == "InputArrayParam" ||
+                if(is(ilist[[x]]@type, "InputArrayParam") ||
                    grepl("\\[", ilist[[x]]@type)){
                     v <- unlist(strsplit(input[[x]], split = ","))
                     eval(parse(text=paste0("cwl$",x," <- v")))

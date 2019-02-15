@@ -18,6 +18,9 @@ will be text input (file path) instead of file input.}
 
 \item{...}{More options for `runCWL`.}
 }
+\value{
+A shiny webapp.
+}
 \description{
 Function to generate shiny app automaticlly for a `cwlParam`
 object.
