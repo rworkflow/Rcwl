@@ -45,12 +45,45 @@ baseCommand <- function(cwl) cwl@baseCommand
 #' @rdname cwlParam-methods
 #' @export
 #' @return arguments: CWL arguments
-arguments <- function(cwl) cwl@arguments
+#' @param step To specifiy a step ID when `cwl` is a workflow. It can
+#'     be multiple levels of steps separated by "/" for nested
+#'     workflow.
+arguments <- function(cwl, step = NULL){
+    if(cwlClass(cwl) == "CommandLineTool"){
+        cwl@arguments        
+    }else if(cwlClass(cwl) == "Workflow"){
+        ## allRun(cwl)[[step]]@arguments
+        stopifnot(!is.null(step))
+        Steps <- unlist(strsplit(step, split = "/"))
+        irun <- "cwl@steps@steps[[ Steps[1] ]]@run"
+        if(length(Steps) > 1){
+            for(i in 2:length(Steps)){
+                irun <- paste0(irun, "@steps@steps[[ Steps[", i, "] ]]@run")
+            }
+        }
+        irun <- paste0(irun, "@arguments")
+        eval(parse(text = irun))
+    }
+}
 #' arguments
 #' @rdname cwlParam-methods
 #' @export
-"arguments<-" <- function(cwl, value){
-    cwl@arguments <- value
+"arguments<-" <- function(cwl, step = NULL, value){
+    if(cwlClass(cwl) == "CommandLineTool"){
+        cwl@arguments <- value
+    }else if(cwlClass(cwl) == "Workflow"){
+        stopifnot(!is.null(step))
+        Steps <- unlist(strsplit(step, split = "/"))
+        irun <- "cwl@steps@steps[[ Steps[1] ]]@run"
+        if(length(Steps) > 1){
+            for(i in 2:length(Steps)){
+                irun <- paste0(irun, "@steps@steps[[ Steps[", i, "] ]]@run")
+            }
+        }
+        value <- paste0(unlist(value), collapse = "\", \"")
+        irun <- paste0(irun, "@arguments <- list(\"", value, "\")")
+        eval(parse(text = irun))
+    }
     cwl
 }
 

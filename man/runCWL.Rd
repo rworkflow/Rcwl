@@ -6,7 +6,7 @@
 \usage{
 runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
   cwlTemp = FALSE, outdir = ".", Args = character(), stdout = TRUE,
-  stderr = TRUE, noDocker = FALSE, ...)
+  stderr = TRUE, docker = TRUE, ...)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
@@ -31,7 +31,7 @@ information.}
 \item{stderr}{standard error from `system2`. By setting it to "",
 the detailed running logs will return directly.}
 
-\item{noDocker}{Whether to disable docker.}
+\item{docker}{Whether to use docker.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }

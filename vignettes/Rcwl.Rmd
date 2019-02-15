@@ -223,7 +223,7 @@ r6 <- runCWL(doc)
 
 The tools defined with docker requirements can also be run locally by disabling the docker option. In case your `Rscript` depends some local libraries to run, an option from `cwltools`, "--preserve-entire-environment", can be used to pass all environment variables.
 ```{r}
-r6a <- runCWL(doc, noDocker = TRUE, outdir = tempdir(),
+r6a <- runCWL(doc, docker = FALSE, outdir = tempdir(),
               Args = "--preserve-entire-environment")
 ```
 
@@ -236,11 +236,11 @@ sth.list <- as.list(LETTERS)
 names(sth.list) <- LETTERS
 
 ## submit with mutlicore
-result1 <- runCWLBatch(cwl = echo, wdir = tempdir(), inputList = list(sth = sth.list),
+result1 <- runCWLBatch(cwl = echo, outdir = tempdir(), inputList = list(sth = sth.list),
                        BPPARAM = MulticoreParam(26))
 
 ## submit with SGE
-result2 <- runCWLBatch(cwl = echo, wdir = tempdir(), inputList = list(sth = sth.list),
+result2 <- runCWLBatch(cwl = echo, outdir = tempdir(), inputList = list(sth = sth.list),
                        BPPARAM = BatchtoolsParam(workers = 26, cluster = "sge",
                                                  resources = list(queue = "all.q")))
 ```
@@ -318,18 +318,47 @@ r8$output
 ```
 
 ## Pipeline plot
-The function `plotCWL` can be used to visualize the relationship of inputs, outputs and the analysis for a pipeline.
+The function `plotCWL` can be used to visualize the relationship of inputs, outputs and the analysis for a tool or pipeline.
 
 ```{r}
 plotCWL(cwl)
 ```
 
+# Web Application
+## cwlParam example
+Here we build a tool with different types of input parameters.
+```{r}
+e1 <- InputParam(id = "flag", type = "boolean",
+                 prefix = "-f", doc = "boolean flag")
+e2 <- InputParam(id = "string", type = "string", prefix = "-s")
+e3 <- InputParam(id = "option", type = "string", prefix = "-o")
+e4 <- InputParam(id = "int", type = "int", prefix = "-i", default = 123)
+e5 <- InputParam(id = "file", type = "File",
+                 prefix = "--file=", separate = FALSE)
+e6 <- InputParam(id = "array", type = "string[]", prefix = "-A",
+                 doc = "separated by comma")
+mulEcho <- cwlParam(baseCommand = "echo", id = "mulEcho",
+                 label = "Test parameter types",
+                 inputs = InputParamList(e1, e2, e3, e4, e5, e6),
+                 stdout = "output.txt")
+mulEcho
+```
+
+## cwlParam to Shiny App
+Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An `upload` parameter can be used to defined wether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.
+```{r, eval=FALSE}
+inputList <- list(option = c("option1", "option2"))
+app <- cwlShiny(mulEcho, inputList, upload = TRUE)
+runApp(app)
+```
+![shinyApp](cwlShiny.png)
+
 # Resources
 ## RcwlPipelines
 
-The `Rcwl` package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNASeq alignment, quality control and quantification, DNASeq alignment and variant calling, have been developed based on the tool in an R package `RcwlPipelines`, which contains the CWL recipes and the scripts to create the recipes. Examples to analyze real data are also included. 
+The `Rcwl` package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNASeq alignment, quality control and quantification, DNASeq alignment and variant calling, have been developed based on the tool in an R package `RcwlPipelines`, which contains the CWL recipes and the scripts to create the pipelines. Examples to analyze real data are also included. 
 
-Here is the link.
+The package is currently available in github.
 
 * <https://github.com/hubentu/RcwlPipelines>
 

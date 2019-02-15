@@ -29,9 +29,9 @@ baseCommand(cwl)
 
 baseCommand(cwl) <- value
 
-arguments(cwl)
+arguments(cwl, step = NULL)
 
-arguments(cwl) <- value
+arguments(cwl, step = NULL) <- value
 
 hints(cwl)
 
@@ -49,6 +49,10 @@ stdOut(cwl) <- value
 \item{cwl}{A `cwlParam` object.}
 
 \item{value}{Assign value to the `cwlParam` object.}
+
+\item{step}{To specifiy a step ID when `cwl` is a workflow. It can
+be multiple levels of steps separated by "/" for nested
+workflow.}
 }
 \value{
 cwlVersion: cwl version
