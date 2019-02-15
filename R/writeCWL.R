@@ -17,9 +17,9 @@
     return(cwl)
 }
 
-cwlToList <- function(cwl, noDocker){
+cwlToList <- function(cwl, docker){
     stopifnot(is(cwl, "cwlParam"))
-    if(noDocker) cwl <- .rmDocker(cwl)
+    if(!docker) cwl <- .rmDocker(cwl)
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
                baseCommand = baseCommand(cwl),
@@ -73,7 +73,7 @@ allRun <- function(cwl){
 #' write `cwlParam` to cwl and yml.
 #' @param cwl A `cwlParam` or `cwlStepParam` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
-#' @param noDocker Whether to disable docker. 
+#' @param docker Whether to use docker. 
 #' @param ... Other options from `yaml::write_yaml`.
 #' @import yaml
 #' @export
@@ -84,7 +84,7 @@ allRun <- function(cwl){
 #'                  inputs = InputParamList(input1))
 #' tf <- tempfile()
 #' writeCWL(echo, tf)
-writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
+writeCWL <- function(cwl, prefix, docker = TRUE, ...){
     stopifnot(is(cwl, "cwlParam"))
     ## logical to true/false
     handlers  <-  list(
@@ -99,20 +99,20 @@ writeCWL <- function(cwl, prefix, noDocker = FALSE, ...){
     if(cwlClass(cwl) == "Workflow") {
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
-            write_yaml(cwlToList(Runs[[i]], noDocker),
+            write_yaml(cwlToList(Runs[[i]], docker),
                        file = paste0(file.path(dirname(prefix),
                                                names(Runs)[[i]]), ".cwl"),
                        handlers = handlers, ...)
         })
         
-        cList <- cwlToList(cwl, noDocker)
+        cList <- cwlToList(cwl, docker)
         for(i in seq(cList$steps)){
             if(!grepl("^/", cList$steps[[i]]$run)){
                 cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
             }
         }
     }else{
-        cList <- cwlToList(cwl, noDocker)
+        cList <- cwlToList(cwl, docker)
     }
     write_yaml(cList, file = paste0(prefix, ".cwl"), handlers = handlers, ...)
     write_yaml(yml, file = paste0(prefix, ".yml"), handlers = handlers, ...)

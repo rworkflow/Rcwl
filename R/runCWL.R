@@ -15,7 +15,7 @@
 #' @param stdout standard output from `system2`.
 #' @param stderr standard error from `system2`. By setting it to "",
 #'     the detailed running logs will return directly.
-#' @param noDocker Whether to disable docker.
+#' @param docker Whether to use docker.
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @export
 #' @return A list of outputs from tools and logs from cwltool.
@@ -27,9 +27,9 @@
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    cwlTemp = FALSE, outdir = ".", Args = character(),
-                   stdout = TRUE, stderr = TRUE, noDocker = FALSE, ...){
+                   stdout = TRUE, stderr = TRUE, docker = TRUE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
-    writeCWL(cwl, prefix = prefix, noDocker = noDocker, ...)
+    writeCWL(cwl, prefix = prefix, docker = docker, ...)
 
     ## check cwltool
     ext <- suppressWarnings(system(paste("which", cwlRunner),
