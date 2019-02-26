@@ -4,11 +4,15 @@ The Rcwl package can be a simple and user-friendly way to manage command line to
 
 ## Installation
 
-You can install Rcwl from github with:
+The package can be installed from Bioconductor (>= 3.9):
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("hubentu/Rcwl")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Rcwl")
+	
+# Or from github
+BiocManager::install("hubentu/Rcwl")
 ```
 
 ## User Guide
