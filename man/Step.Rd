@@ -10,7 +10,8 @@ Step(id, run = cwlParam(), In = list(), scatter = character(),
 \arguments{
 \item{id}{The id of `stepParam` object.}
 
-\item{run}{A `cwlParam` object for command tool.}
+\item{run}{A `cwlParam` object for command tool, or path to a CWL
+file.}
 
 \item{In}{one or two layes of list.}
 

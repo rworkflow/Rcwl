@@ -1,9 +1,10 @@
-
 #' Step function
 #' 
 #' Function to assign value to `stepParam` object.
+#' 
 #' @param id The id of `stepParam` object.
-#' @param run A `cwlParam` object for command tool.
+#' @param run A `cwlParam` object for command tool, or path to a CWL
+#'     file.
 #' @param In one or two layes of list.
 #' @param scatter character or a list. The inputs to be scattered.
 #' @param scatterMethod required if scatter is an array of more than
@@ -15,7 +16,15 @@
 #' @seealso \code{\link{cwlStepParam}}
 Step <- function(id, run = cwlParam(), In = list(),
                  scatter = character(), scatterMethod = character()) {
-    stopifnot(names(In) %in% names(inputs(run)))
+    if(is(run, "cwlParam")){
+        stopifnot(names(In) %in% names(inputs(run)))
+        sout <- as.list(names(outputs(run)))
+    }else if(is(run, "character")){
+        stopifnot(file.exists(run))
+        clist <- read_yaml(run)
+        stopifnot(names(In) %in% names(clist$inputs))
+        sout <- as.list(names(clist$outputs))
+    }
     slist <- list()
     for(i in seq(In)) {
         if(is.list(In[[i]])) {
@@ -30,7 +39,6 @@ Step <- function(id, run = cwlParam(), In = list(),
         slist[[i]] <- si
     }
     names(slist) <- names(In)
-    sout <- as.list(names(outputs(run)))
     stepParam(id = id, run = run, In = stepInParamList(slist), Out = sout,
               scatter = scatter, scatterMethod = scatterMethod)
 }

@@ -17,6 +17,10 @@
             warning(names(ilist)[!idx], " not imported")
             ilist <- ilist[idx]
         }
+        if(is(ilist$type, "list")){
+            idx <- names(ilist$type) %in% formalArgs(InputArrayParam)
+            ilist$type <- do.call(InputArrayParam, ilist$type[idx])
+        }
         ilist$id <- names(inputList)[i]
         iList[[i]] <- do.call(InputParam, ilist)
     }

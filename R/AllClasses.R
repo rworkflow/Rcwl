@@ -80,11 +80,13 @@ setClass("InputParam",
              doc = character(),
              type = character(),
              secondaryFiles = character(),
-             inputBinding = list(position = integer(),
+             inputBinding = list(loadContents = logical(),
+                                 position = integer(),
                                  prefix = character(),
                                  separate = logical(),
                                  itemSeparator = character(),
-                                 valueFrom = character()),
+                                 valueFrom = character(),
+                                 shellQuote = logical()),
              default = character(),
              value = character())
          )
@@ -103,6 +105,8 @@ setClass("InputParam",
 #'     items: File. Provides a pattern or expression specifying files
 #'     or directories that must be included alongside the primary
 #'     file.
+#' @param loadContents Only valid when type: File or is an array of
+#'     items: File.
 #' @param position The position for this parameter.
 #' @param prefix Command line prefix to add before the value.
 #' @param separate If true (default), then the prefix and value must
@@ -112,6 +116,9 @@ setClass("InputParam",
 #' @param itemSeparator Join the array elements into a single string
 #'     with the elements separated by by itemSeparator.
 #' @param valueFrom String or Expression.
+#' @param shellQuote If ShellCommandRequirement is in the requirements
+#'     for the current command, this controls whether the value is
+#'     quoted on the command line (default is true).
 #' @param default The default value for this parameter
 #' @param value Assigned value for this parameter
 #' @export
@@ -120,21 +127,23 @@ setClass("InputParam",
 #' input1 <- InputParam(id = "sth")
 InputParam <- function(id, label= "", type = "string",
                        doc = character(), secondaryFiles = character(),
-                       position = 0L, prefix = "",
+                       loadContents = logical(), position = 0L, prefix = "",
                        separate = TRUE, itemSeparator = character(),
-                       valueFrom = character(), default = character(),
-                       value = character()){
+                       valueFrom = character(), shellQuote = logical(),
+                       default = character(), value = character()){
     new("InputParam",
         id = id,
         label = label,
         doc = doc,
         type = type,
         secondaryFiles = secondaryFiles,
-        inputBinding = list(position = as.integer(position),
+        inputBinding = list(loadContents = loadContents,
+                            position = as.integer(position),
                             prefix = prefix,
                             separate = separate,
                             itemSeparator = itemSeparator,
-                            valueFrom = valueFrom),
+                            valueFrom = valueFrom,
+                            shellQuote = shellQuote),
         default = default,
         value = value)
 }

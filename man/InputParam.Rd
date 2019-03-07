@@ -9,10 +9,10 @@
 \title{InputParam}
 \usage{
 InputParam(id, label = "", type = "string", doc = character(),
-  secondaryFiles = character(), position = 0L, prefix = "",
-  separate = TRUE, itemSeparator = character(),
-  valueFrom = character(), default = character(),
-  value = character())
+  secondaryFiles = character(), loadContents = logical(),
+  position = 0L, prefix = "", separate = TRUE,
+  itemSeparator = character(), valueFrom = character(),
+  shellQuote = logical(), default = character(), value = character())
 
 \S4method{$}{cwlParam}(x, name)
 
@@ -33,6 +33,9 @@ items: File. Provides a pattern or expression specifying files
 or directories that must be included alongside the primary
 file.}
 
+\item{loadContents}{Only valid when type: File or is an array of
+items: File.}
+
 \item{position}{The position for this parameter.}
 
 \item{prefix}{Command line prefix to add before the value.}
@@ -46,6 +49,10 @@ argument.}
 with the elements separated by by itemSeparator.}
 
 \item{valueFrom}{String or Expression.}
+
+\item{shellQuote}{If ShellCommandRequirement is in the requirements
+for the current command, this controls whether the value is
+quoted on the command line (default is true).}
 
 \item{default}{The default value for this parameter}
 
