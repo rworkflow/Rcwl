@@ -270,9 +270,9 @@ First we need to define the direct inputs and outputs from `GZ` and `Rs`.
 i1 <- InputParam(id = "cwl_zfile", type = "File")
 o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
 ```
-For the input cwl_zifle, it refers to the `GZ` input `zfile`.  The output "cwl_cout" will be the outcome of `Rs` output `Rout`.
+For the input "cwl_zifle", it refers to the `GZ` input `zfile`.  The output "cwl_cout" will be the outcome of `Rs` output `Rout`.
 
-The pipeline contains two steps, "Uncomp" to uncompress file with `GZ` and "Compile" to run script with `Rs`. First, we use `cwlStepParam` to define `inputs` and `outputs` from previous step. Then it connects with the two steps with `Step` function. The `run` option refer to the corresponding `cwlParam` object and the `In` option in steps should be linked to the input parameters defined by `cwlStepParam`. In the end, we use `+` to connect all steps.
+The `cwlStepParam` is used to define `inputs` and `outputs` from previous step. Then it connects with the two steps with `Step` function. The `run` option refer to the corresponding `cwlParam` object and the `In` option in steps should be linked to the input parameters defined by `cwlStepParam`. In the end, we use `+` to connect all steps.
 ```{r}
 cwl <- cwlStepParam(inputs = InputParamList(i1),
                     outputs = OutputParamList(o1))
