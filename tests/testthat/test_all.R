@@ -10,3 +10,15 @@ test_that("simple echo", {
 out1 <- readLines(r1$output)
 test_that("simple echo", {
     expect_equal(out1, "Hello World!")})
+
+## no inputBinding
+p1 <- InputParam(id = "infiles", type = "File[]")
+p2 <- InputParam(id = "outfile", type = "string",
+                 default = "catout.txt", position = -1)
+Cat <- cwlParam(baseCommand = "cat",
+                inputs = InputParamList(p1, p2),
+                stdout = "$(inputs.outfile)")
+writeCWL(Cat, file.path(tempdir(), "cat"))
+Cat1 <- readCWL(file.path(tempdir(), "cat.cwl"))
+test_that("negative position", {
+    expect_equal(inputs(Cat1)$outfile@inputBinding$position, -1)})

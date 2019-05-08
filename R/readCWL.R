@@ -11,6 +11,8 @@
         if("inputBinding" %in% names(ilist)){
             idx <- match("inputBinding", names(ilist))
             ilist <- c(ilist[-idx], ilist[[idx]])
+        }else{
+            ilist$position = -1
         }
         if(any(!names(ilist) %in% formalArgs(InputParam))){
             idx <- names(ilist) %in% formalArgs(InputParam)

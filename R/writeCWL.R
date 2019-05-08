@@ -166,7 +166,10 @@ as.listInputs <- function(Inputs){
         
         if(alist[[i]]$inputBinding$position == 0){
             alist[[i]]$inputBinding$position <- NULL
+        }else if(alist[[i]]$inputBinding$position < 0){
+            alist[[i]]$inputBinding <- NULL
         }
+
         alist[[i]]$inputBinding <- .removeEmpty(alist[[i]]$inputBinding)
         alist[[i]]$value <- NULL
         alist[[i]]$id <- NULL
