@@ -229,7 +229,7 @@ setClass("OutputParam",
              id = "character",
              label = "character",
              type = "characterOROutputArrayParam",
-             secondaryFiles = "character",
+             secondaryFiles = "characterORlist",
              streamable = "logical",
              outputBinding = "list",
              outputSource = "character"
