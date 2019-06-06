@@ -156,17 +156,18 @@ inputs <- function(cwl) cwl@inputs@inputs
     x
 }
 
+#' @importFrom utils .DollarNames
+#' @export
+.DollarNames.cwlParam <- function(x, pattern = "") {
+    grep(pattern, names(inputs(x)), value = TRUE)
+}
+
 #' Extract input values by name
 #' @rdname InputParam
 #' @importFrom S4Vectors wmsg
 #' @export
 setMethod("$", "cwlParam", function(x, name){
-    ## check if exist
-    ins <- names(inputs(x))
-    ins <- ins[startsWith(ins, name)]
-    pattern <- sprintf("(%s*)/.*$", name)
-    
-    if(name %in% sub(pattern, "\\1", ins)){
+    if(name %in% names(inputs(x))){
         inputs(x)[[name]]@value
     }else{
         stop(wmsg("the '", name, "' does not exist"))
