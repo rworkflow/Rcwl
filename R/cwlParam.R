@@ -123,7 +123,7 @@ requirements <- function(cwl) cwl@requirements
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 #' inputs(echo)
-inputs <- function(cwl) cwl@inputs@inputs
+inputs <- function(cwl) cwl@inputs
 
 .assignInput <- function(x, name, value){
     stopifnot(name %in% names(inputs(x)))
@@ -152,7 +152,7 @@ inputs <- function(cwl) cwl@inputs@inputs
             v <- value
         }
     }
-    x@inputs@inputs[[name]]@value <- v
+    x@inputs[[name]]@value <- v
     x
 }
 
@@ -218,43 +218,43 @@ stdOut <- function(cwl) cwl@stdout
 
 setMethod(show, "InputParamList", function(object) {
     cat("inputs:\n")
-    lapply(seq(object@inputs), function(i){
-        if(object@inputs[[i]]@label != ""){
-            iname <- paste0(names(object@inputs)[i], " (", object@inputs[[i]]@label, ") ")
+    lapply(seq(object), function(i){
+        if(object[[i]]@label != ""){
+            iname <- paste0(names(object)[i], " (", object[[i]]@label, ") ")
         }else{
-            iname <- names(object@inputs)[i]
+            iname <- names(object)[i]
         }
-        if(is(object@inputs[[i]]@type, "character")){
-            if(length(object@inputs[[i]]@value) > 0){
-                v <- object@inputs[[i]]@value
+        if(is(object[[i]]@type, "character")){
+            if(length(object[[i]]@value) > 0){
+                v <- object[[i]]@value
             }else{
-                v <- object@inputs[[i]]@default
+                v <- object[[i]]@default
             }
-            if(object@inputs[[i]]@type %in% c("File", "Directory")){
-                if(length(object@inputs[[i]]@value) > 0){
-                    v <- object@inputs[[i]]@value$path
+            if(object[[i]]@type %in% c("File", "Directory")){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
                 }else{
-                    v <- object@inputs[[i]]@value
+                    v <- object[[i]]@value
                 }
             }
 
-            cat("  ", iname, " (", object@inputs[[i]]@type, "): ",
-                object@inputs[[i]]@inputBinding$prefix, " ",
+            cat("  ", iname, " (", object[[i]]@type, "): ",
+                object[[i]]@inputBinding$prefix, " ",
                 paste(unlist(v), collapse = " "), "\n", sep = "")
-        }else if(is(object@inputs[[i]]@type, "InputArrayParam")){
-            if(object@inputs[[i]]@type@items %in% c("File", "Directory")){
-                if(length(object@inputs[[i]]@value) > 0){
-                    v <- object@inputs[[i]]@value$path
+        }else if(is(object[[i]]@type, "InputArrayParam")){
+            if(object[[i]]@type@items %in% c("File", "Directory")){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
                 }else{
-                    v <- object@inputs[[i]]@value
+                    v <- object[[i]]@value
                 }
             }else{
-                v <- object@inputs[[i]]@value
+                v <- object[[i]]@value
             }
             cat("  ", iname, ":\n", sep = "")
-            cat("    type: ", object@inputs[[i]]@type@type, "\n", sep = "")
+            cat("    type: ", object[[i]]@type@type, "\n", sep = "")
             cat("    prefix: ",
-                object@inputs[[i]]@type@inputBinding$prefix, " ",
+                object[[i]]@type@inputBinding$prefix, " ",
                 paste(unlist(v), collapse=" "), "\n", sep = "")
         }
     })

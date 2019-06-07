@@ -1,7 +1,7 @@
 
 .readInputs <- function(cwl.origin, cwl){
     inputList <- cwl.origin$inputs
-    iList <- SimpleList()
+    iList <- list()
     for(i in seq_along(inputList)){
         if(cwlClass(cwl) == "Workflow"){
             ilist <- c(id = names(inputList)[i], inputList[[i]])
@@ -122,7 +122,7 @@ readCWL <- function(cwlfile){
     }else{
         cwl <- do.call(cwlStepParam, cwl.list1[idx])
     }
-    cwl@inputs@inputs <- .readInputs(cwl.origin, cwl)
+    cwl@inputs@listData <- .readInputs(cwl.origin, cwl)
     cwl@outputs@outputs <- .readOutputs(cwl.origin, cwl)
 
     if(cwl.origin$cwlClass == "Workflow"){

@@ -151,7 +151,8 @@ InputParam <- function(id, label= "", type = "string",
 #' InputParamList
 #' @rdname InputParamList
 #' @export
-setClass("InputParamList", representation(inputs = "SimpleList"),
+setClass("InputParamList",
+         ## representation(inputs = "SimpleList"),
          prototype = list(elementType = "InputParam"),
          contains = "SimpleList")
 
@@ -165,10 +166,10 @@ setClass("InputParamList", representation(inputs = "SimpleList"),
 #' input1 <- InputParam(id = "sth")
 #' InputParamList(input1)
 InputParamList <- function(...){
-    iList <- SimpleList(...)
-    stopifnot(all(vapply(iList, is, character(1)) == "InputParam"))
+    iList <- list(...)
     names(iList) <- lapply(iList, function(x)x@id)
-    new("InputParamList", inputs = iList)
+    ## new("InputParamList", inputs = iList)
+    new("InputParamList", listData = iList)
 }
 
 

@@ -22,3 +22,16 @@ writeCWL(Cat, file.path(tempdir(), "cat"))
 Cat1 <- readCWL(file.path(tempdir(), "cat.cwl"))
 test_that("negative position", {
     expect_equal(inputs(Cat1)$outfile@inputBinding$position, -1)})
+
+## inputParam
+test_that("InputParam class", {
+    expect_error(InputParam())
+})
+
+test_that("InputParamList class and element type", {
+    expect_true(is(echo@inputs, "SimpleList"))
+    expect_true(is(echo@inputs, "InputParamList"))
+    expect_true(validObject(InputParamList()))
+    expect_error(InputParamList(p1, p2, "test"))
+    expect_error(InputParamList(p1, p2, OuputParam(id = "test")))
+})
