@@ -33,7 +33,7 @@
 
 .readOutputs <- function(cwl.origin, cwl){
     outputList <- cwl.origin$outputs
-    oList <- SimpleList()
+    oList <- list()
     if(length(outputList) == 0){
         return(oList)
     }
@@ -123,7 +123,7 @@ readCWL <- function(cwlfile){
         cwl <- do.call(cwlStepParam, cwl.list1[idx])
     }
     cwl@inputs@listData <- .readInputs(cwl.origin, cwl)
-    cwl@outputs@outputs <- .readOutputs(cwl.origin, cwl)
+    cwl@outputs@listData <- .readOutputs(cwl.origin, cwl)
 
     if(cwl.origin$cwlClass == "Workflow"){
         pwd <- dirname(normalizePath(cwlfile))

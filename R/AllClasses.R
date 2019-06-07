@@ -291,7 +291,8 @@ OutputParam <- function(id = "output", label = character(), type = "stdout",
 #' OutputParamList
 #' @rdname OutputParamList
 #' @export
-setClass("OutputParamList", representation(outputs = "SimpleList"),
+setClass("OutputParamList",
+         ## representation(outputs = "SimpleList"),
          prototype = list(elementType = "OutputParam"),
          contains = "SimpleList")
 
@@ -306,9 +307,9 @@ setClass("OutputParamList", representation(outputs = "SimpleList"),
 #' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
 #' OutputParamList(o1)
 OutputParamList <- function(out = OutputParam(), ...){
-    oList <- SimpleList(out, ...)
+    oList <- list(out, ...)
     names(oList) <- lapply(oList, function(x)x@id)
-    new("OutputParamList", outputs = oList)
+    new("OutputParamList", listData = oList)
 }
 
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))

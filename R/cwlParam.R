@@ -196,11 +196,12 @@ setGeneric("$")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 #' outputs(echo) 
 outputs <- function(cwl) {
-    if(is(cwl@outputs, "list")) {
-        cwl@outputs
-    }else{
-        cwl@outputs@outputs
-    }
+    cwl@outputs
+    ## if(is(cwl@outputs, "list")) {
+    ##     cwl@outputs
+    ## }else{
+    ##     cwl@outputs@outputs
+    ## }
 }
 
 #' stdout of cwlParam
@@ -262,27 +263,7 @@ setMethod(show, "InputParamList", function(object) {
 
 setMethod(show, "OutputParamList", function(object) {
     cat("outputs:\n")
-    cat(as.yaml(as.listOutputs(object@outputs)))
-    ## lapply(seq(object@outputs), function(j){
-    ##     cat("  ", object@outputs[[j]]@id, ":\n", sep = "")
-        
-    ##     if(is(object@outputs[[j]]@type, "OutputArrayParam")){
-    ##         cat("    type: array\n")
-    ##     }else{
-    ##         cat("    type: ", object@outputs[[j]]@type, "\n", sep = "")
-    ##         if(object@outputs[[j]]@type != "stdout"){
-    ##             if(length(object@outputs[[j]]@outputBinding$glob) > 0){
-    ##                 cat("      glob: ", object@outputs[[j]]@outputBinding$glob, "\n", sep = "")
-    ##             }
-    ##             if(length(object@outputs[[j]]@secondaryFiles) > 0){
-    ##                 cat("      secondaryFiles: ", object@outputs[[j]]@secondaryFiles, "\n", sep = "")
-    ##             }
-    ##             if(length(object@outputs[[j]]@outputSource) > 0){
-    ##                 cat("    outputSource: ", object@outputs[[j]]@outputSource, "\n", sep = "")
-    ##             }
-    ##         }
-    ##     }
-    ## })
+    cat(as.yaml(as.listOutputs(object)))
 })
 
 setMethod(show, "cwlParam", function(object){
