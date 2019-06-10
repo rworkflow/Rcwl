@@ -34,7 +34,7 @@ cwlToList <- function(cwl, docker){
     CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
-        CL <- c(CL, list(steps = as.listSteps(cwl@steps@steps)))
+        CL <- c(CL, list(steps = as.listSteps(cwl@steps)))
         ## remove inputBinding
         for(i in seq(CL$inputs)){
             CL$inputs[[i]]$inputBinding <- NULL
@@ -196,7 +196,7 @@ as.listOutputs <- function(Outputs){
 
 as.listSteps <- function(Steps){
     slist <- lapply(Steps, function(st) {
-        sIns <- lapply(st@In@Ins, function(x) {
+        sIns <- lapply(st@In, function(x) {
             ilist1 <- .slot2list(x)
             ilist1 <- ilist1[lengths(ilist1) > 0]
             ilist1$id <- NULL

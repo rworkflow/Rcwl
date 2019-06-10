@@ -55,10 +55,10 @@ arguments <- function(cwl, step = NULL){
         ## allRun(cwl)[[step]]@arguments
         stopifnot(!is.null(step))
         Steps <- unlist(strsplit(step, split = "/"))
-        irun <- "cwl@steps@steps[[ Steps[1] ]]@run"
+        irun <- "cwl@steps[[ Steps[1] ]]@run"
         if(length(Steps) > 1){
             for(i in 2:length(Steps)){
-                irun <- paste0(irun, "@steps@steps[[ Steps[", i, "] ]]@run")
+                irun <- paste0(irun, "@steps[[ Steps[", i, "] ]]@run")
             }
         }
         irun <- paste0(irun, "@arguments")
@@ -74,10 +74,10 @@ arguments <- function(cwl, step = NULL){
     }else if(cwlClass(cwl) == "Workflow"){
         stopifnot(!is.null(step))
         Steps <- unlist(strsplit(step, split = "/"))
-        irun <- "cwl@steps@steps[[ Steps[1] ]]@run"
+        irun <- "cwl@steps[[ Steps[1] ]]@run"
         if(length(Steps) > 1){
             for(i in 2:length(Steps)){
-                irun <- paste0(irun, "@steps@steps[[ Steps[", i, "] ]]@run")
+                irun <- paste0(irun, "@steps[[ Steps[", i, "] ]]@run")
             }
         }
         value <- paste0(unlist(value), collapse = "\", \"")
