@@ -46,7 +46,7 @@ plotCWL <- function(cwl, ...){
         sid1 <- names(nodes)[match(Snames[i], nodes)]
 
         ## inputs
-        input1 <- unlist(lapply(s1@In@Ins, function(x)x@source))
+        input1 <- unlist(lapply(s1@In, function(x)x@source))
         mIn <- c()
         for(j in seq_along(input1)){
             if(input1[j] %in% Inputs){

@@ -422,7 +422,8 @@ stepInParam <- function(id, source = character(),
 #' stepInParamList
 #' @rdname stepInParamList
 #' @export
-setClass("stepInParamList", representation(Ins = "SimpleList"),
+setClass("stepInParamList",
+         ## representation(Ins = "SimpleList"),
          prototype = list(elementType = "stepInParam"),
          contains = "SimpleList")
 
@@ -435,10 +436,10 @@ setClass("stepInParamList", representation(Ins = "SimpleList"),
 #' s1 <- stepInParam(id = "s1")
 #' stepInParamList(s1)
 stepInParamList <- function(...){
-    iList <- SimpleList(...)
-    stopifnot(all(vapply(iList, is, character(1)) == "stepInParam"))
+    iList <- list(...)
+    ## stopifnot(all(vapply(iList, is, character(1)) == "stepInParam"))
     names(iList) <- lapply(iList, function(x)x@id)
-    new("stepInParamList", Ins = iList)
+    new("stepInParamList", listData = iList)
 }
 
 setClassUnion("cwlParamORcharacter", c("cwlParam", "character"))
@@ -485,7 +486,8 @@ stepParam <- function(id, run = cwlParam(),
 #' stepParamList
 #' @rdname stepParamList
 #' @export
-setClass("stepParamList", representation(steps = "SimpleList"),
+setClass("stepParamList",
+         ## representation(steps = "SimpleList"),
          prototype = list(elementType = "stepParam"),
          contains = "SimpleList")
 
@@ -498,9 +500,9 @@ setClass("stepParamList", representation(steps = "SimpleList"),
 #' s1 <- stepParam(id = "s1")
 #' stepParamList(s1)
 stepParamList <- function(...){
-    iList <- SimpleList(...)
+    iList <- list(...)
     names(iList) <- lapply(iList, function(x)x@id)
-    new("stepParamList", steps = iList)
+    new("stepParamList", listData = iList)
 }
 
 #' cwlStepParam
@@ -562,7 +564,7 @@ cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
 setMethod(show, "stepParam", function(object) {
     cat("  ", object@id, ":\n", sep = "")
     cat("    run: ", paste0(object@id, ".cwl"), "\n", sep = "")
-    lapply(object@In@Ins, function(y) {
+    lapply(object@In, function(y) {
         cat("    ", paste0(y@id, ": ", y@source), "\n", sep = "")
     })
     cat("    out: ", paste(unlist(object@Out), collapse=" "), "\n", sep = "")
@@ -576,7 +578,7 @@ setMethod(show, "stepParam", function(object) {
 
 setMethod(show, "stepParamList", function(object) {
     cat("steps:\n")
-    lapply(object@steps, function(x) {
+    lapply(object, function(x) {
         show(x)
     })
 })

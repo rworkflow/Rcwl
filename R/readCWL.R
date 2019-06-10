@@ -84,7 +84,7 @@
             slist[[i]] <- si
         }
         names(slist) <- names(In)
-        sList$In <- stepInParamList(slist)
+        sList$In <- do.call(stepInParamList, slist)
         sList$Out <- as.list(sList$out)
         sList$"in" <- NULL
         sList$"out" <- NULL

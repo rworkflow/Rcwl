@@ -39,7 +39,7 @@ Step <- function(id, run = cwlParam(), In = list(),
         slist[[i]] <- si
     }
     names(slist) <- names(In)
-    stepParam(id = id, run = run, In = stepInParamList(slist), Out = sout,
+    stepParam(id = id, run = run, In = do.call(stepInParamList, slist), Out = sout,
               scatter = scatter, scatterMethod = scatterMethod)
 }
 
@@ -53,8 +53,11 @@ Step <- function(id, run = cwlParam(), In = list(),
 #' @seealso \code{\link{cwlStepParam}}
 #' @return A `cwlStepParam` object.
 setMethod("+", c("cwlStepParam", "stepParam"), function(e1, e2) {
-    pp <- unlist(c(unlist(e1@steps@steps), e2))
-    e1@steps <- stepParamList(pp)
+    ##if (length(e1@steps) == 0) {
+    ##    e1@steps <- stepParamList(e2)
+    ##} else {
+    e1@steps <- do.call(stepParamList, c(e1@steps@listData, e2))
+    ##}
     return(e1)
 })
 
@@ -68,7 +71,7 @@ setGeneric("+")
 #' @return steps: A list of stepParam objects.
 #' @rdname steps
 #' @seealso \code{\link{cwlStepParam}}
-steps <- function(cwl) cwl@steps@steps
+steps <- function(cwl) cwl@steps
 
 #' Steps
 #' 
@@ -76,6 +79,6 @@ steps <- function(cwl) cwl@steps@steps
 #' @param value A list of steps.
 #' @rdname steps
 "steps<-" <- function(cwl, value){
-    cwl@steps@steps  <- value
+    cwl@steps  <- value
     cwl
 }
