@@ -151,7 +151,8 @@ InputParam <- function(id, label= "", type = "string",
 #' InputParamList
 #' @rdname InputParamList
 #' @export
-setClass("InputParamList", representation(inputs = "SimpleList"),
+setClass("InputParamList",
+         ## representation(inputs = "SimpleList"),
          prototype = list(elementType = "InputParam"),
          contains = "SimpleList")
 
@@ -165,10 +166,10 @@ setClass("InputParamList", representation(inputs = "SimpleList"),
 #' input1 <- InputParam(id = "sth")
 #' InputParamList(input1)
 InputParamList <- function(...){
-    iList <- SimpleList(...)
-    stopifnot(all(vapply(iList, is, character(1)) == "InputParam"))
+    iList <- list(...)
     names(iList) <- lapply(iList, function(x)x@id)
-    new("InputParamList", inputs = iList)
+    ## new("InputParamList", inputs = iList)
+    new("InputParamList", listData = iList)
 }
 
 
@@ -290,7 +291,8 @@ OutputParam <- function(id = "output", label = character(), type = "stdout",
 #' OutputParamList
 #' @rdname OutputParamList
 #' @export
-setClass("OutputParamList", representation(outputs = "SimpleList"),
+setClass("OutputParamList",
+         ## representation(outputs = "SimpleList"),
          prototype = list(elementType = "OutputParam"),
          contains = "SimpleList")
 
@@ -305,9 +307,9 @@ setClass("OutputParamList", representation(outputs = "SimpleList"),
 #' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
 #' OutputParamList(o1)
 OutputParamList <- function(out = OutputParam(), ...){
-    oList <- SimpleList(out, ...)
+    oList <- list(out, ...)
     names(oList) <- lapply(oList, function(x)x@id)
-    new("OutputParamList", outputs = oList)
+    new("OutputParamList", listData = oList)
 }
 
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))

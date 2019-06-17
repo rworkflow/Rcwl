@@ -123,7 +123,7 @@ requirements <- function(cwl) cwl@requirements
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 #' inputs(echo)
-inputs <- function(cwl) cwl@inputs@inputs
+inputs <- function(cwl) cwl@inputs
 
 .assignInput <- function(x, name, value){
     stopifnot(name %in% names(inputs(x)))
@@ -152,7 +152,7 @@ inputs <- function(cwl) cwl@inputs@inputs
             v <- value
         }
     }
-    x@inputs@inputs[[name]]@value <- v
+    x@inputs[[name]]@value <- v
     x
 }
 
@@ -196,11 +196,12 @@ setGeneric("$")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 #' outputs(echo) 
 outputs <- function(cwl) {
-    if(is(cwl@outputs, "list")) {
-        cwl@outputs
-    }else{
-        cwl@outputs@outputs
-    }
+    cwl@outputs
+    ## if(is(cwl@outputs, "list")) {
+    ##     cwl@outputs
+    ## }else{
+    ##     cwl@outputs@outputs
+    ## }
 }
 
 #' stdout of cwlParam
@@ -218,43 +219,43 @@ stdOut <- function(cwl) cwl@stdout
 
 setMethod(show, "InputParamList", function(object) {
     cat("inputs:\n")
-    lapply(seq(object@inputs), function(i){
-        if(object@inputs[[i]]@label != ""){
-            iname <- paste0(names(object@inputs)[i], " (", object@inputs[[i]]@label, ") ")
+    lapply(seq(object), function(i){
+        if(object[[i]]@label != ""){
+            iname <- paste0(names(object)[i], " (", object[[i]]@label, ") ")
         }else{
-            iname <- names(object@inputs)[i]
+            iname <- names(object)[i]
         }
-        if(is(object@inputs[[i]]@type, "character")){
-            if(length(object@inputs[[i]]@value) > 0){
-                v <- object@inputs[[i]]@value
+        if(is(object[[i]]@type, "character")){
+            if(length(object[[i]]@value) > 0){
+                v <- object[[i]]@value
             }else{
-                v <- object@inputs[[i]]@default
+                v <- object[[i]]@default
             }
-            if(object@inputs[[i]]@type %in% c("File", "Directory")){
-                if(length(object@inputs[[i]]@value) > 0){
-                    v <- object@inputs[[i]]@value$path
+            if(object[[i]]@type %in% c("File", "Directory")){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
                 }else{
-                    v <- object@inputs[[i]]@value
+                    v <- object[[i]]@value
                 }
             }
 
-            cat("  ", iname, " (", object@inputs[[i]]@type, "): ",
-                object@inputs[[i]]@inputBinding$prefix, " ",
+            cat("  ", iname, " (", object[[i]]@type, "): ",
+                object[[i]]@inputBinding$prefix, " ",
                 paste(unlist(v), collapse = " "), "\n", sep = "")
-        }else if(is(object@inputs[[i]]@type, "InputArrayParam")){
-            if(object@inputs[[i]]@type@items %in% c("File", "Directory")){
-                if(length(object@inputs[[i]]@value) > 0){
-                    v <- object@inputs[[i]]@value$path
+        }else if(is(object[[i]]@type, "InputArrayParam")){
+            if(object[[i]]@type@items %in% c("File", "Directory")){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
                 }else{
-                    v <- object@inputs[[i]]@value
+                    v <- object[[i]]@value
                 }
             }else{
-                v <- object@inputs[[i]]@value
+                v <- object[[i]]@value
             }
             cat("  ", iname, ":\n", sep = "")
-            cat("    type: ", object@inputs[[i]]@type@type, "\n", sep = "")
+            cat("    type: ", object[[i]]@type@type, "\n", sep = "")
             cat("    prefix: ",
-                object@inputs[[i]]@type@inputBinding$prefix, " ",
+                object[[i]]@type@inputBinding$prefix, " ",
                 paste(unlist(v), collapse=" "), "\n", sep = "")
         }
     })
@@ -262,27 +263,7 @@ setMethod(show, "InputParamList", function(object) {
 
 setMethod(show, "OutputParamList", function(object) {
     cat("outputs:\n")
-    cat(as.yaml(as.listOutputs(object@outputs)))
-    ## lapply(seq(object@outputs), function(j){
-    ##     cat("  ", object@outputs[[j]]@id, ":\n", sep = "")
-        
-    ##     if(is(object@outputs[[j]]@type, "OutputArrayParam")){
-    ##         cat("    type: array\n")
-    ##     }else{
-    ##         cat("    type: ", object@outputs[[j]]@type, "\n", sep = "")
-    ##         if(object@outputs[[j]]@type != "stdout"){
-    ##             if(length(object@outputs[[j]]@outputBinding$glob) > 0){
-    ##                 cat("      glob: ", object@outputs[[j]]@outputBinding$glob, "\n", sep = "")
-    ##             }
-    ##             if(length(object@outputs[[j]]@secondaryFiles) > 0){
-    ##                 cat("      secondaryFiles: ", object@outputs[[j]]@secondaryFiles, "\n", sep = "")
-    ##             }
-    ##             if(length(object@outputs[[j]]@outputSource) > 0){
-    ##                 cat("    outputSource: ", object@outputs[[j]]@outputSource, "\n", sep = "")
-    ##             }
-    ##         }
-    ##     }
-    ## })
+    cat(as.yaml(as.listOutputs(object)))
 })
 
 setMethod(show, "cwlParam", function(object){
