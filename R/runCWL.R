@@ -52,7 +52,7 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 
     if(stderr == TRUE) {
         if(cwlClass(cwl) == "CommandLineTool"){
-            idx <- grep("^\\[job", res)
+            idx <- grep("\\[job", res)
             command <- res[idx[1] : (idx[2]-1)]
         }else{
             command <- NULL
