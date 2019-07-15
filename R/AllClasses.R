@@ -391,7 +391,7 @@ cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 #' @export
 setClass("stepInParam",
          slots = c(id = "character",
-                   source = "character",
+                   source = "characterORlist",
                    linkMerge = "character",
                    default = "ANY",
                    valueFrom = "character"))
