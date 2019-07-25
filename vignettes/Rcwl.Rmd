@@ -353,6 +353,31 @@ runApp(app)
 ```
 ![shinyApp](cwlShiny.png)
 
+# Working with R functions
+We can wrap an R function to `cwlParam` object by simply assigning the R function to `baseCommand`. This could be useful to summarize results from other tools in a pipeline. It can also be used to benchmark different parameters for a method written in R. Please note that this feature is only implemented by `Rcwl`, but not available in the common workflow language.
+
+```{r}
+fun1 <- function(x)x*2
+testFun <- function(a, b){
+    cat(fun1(a) + b^2, sep="\n")
+}
+assign("fun1", fun1, envir = .GlobalEnv)
+assign("testFun", testFun, envir = .GlobalEnv)
+p1 <- InputParam(id = "a", type = "int", prefix = "a=", separate = F)
+p2 <- InputParam(id = "b", type = "int", prefix = "b=", separate = F)
+o1 <- OutputParam(id = "o", type = "File", glob = "rout.txt")
+TestFun <- cwlParam(baseCommand = testFun,
+                    inputs = InputParamList(p1, p2),
+                    outputs = OutputParamList(o1),
+                    stdout = "rout.txt")
+TestFun$a <- 1
+TestFun$b <- 2
+r1 <- runCWL(TestFun, Args = "--preserve-entire-environment")
+readLines(r1$output)
+```
+
+The `runCWL` function wrote the `testFun` function and its dependencies into an R script file automatically and call `Rscript` to run the script with parameters. Each parameter requires a prefix from corresponding argument in the R function with "=" and without a separator. Here we assigned the R function and its dependencies into the global environment because it will start a new environment when the vignette compiled.
+
 # Resources
 ## RcwlPipelines
 

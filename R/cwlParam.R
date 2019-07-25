@@ -267,10 +267,15 @@ setMethod(show, "OutputParamList", function(object) {
 })
 
 setMethod(show, "cwlParam", function(object){
+    if(is(baseCommand(object)[1], "function")){
+        bc <- c("baseCommand: R function", "\n")
+    }else{
+        bc <- c("baseCommand:", baseCommand(object), "\n")
+    }
     cat("class:", class(object), "\n",
         "cwlClass:", cwlClass(object), "\n",
         "cwlVersion:", cwlVersion(object), "\n",
-        "baseCommand:", baseCommand(object), "\n")
+        bc)
     if(length(object@requirements) > 0){
         cat("requirements:\n")
         cat(as.yaml(object@requirements))

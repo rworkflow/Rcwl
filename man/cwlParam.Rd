@@ -17,7 +17,7 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
 
 \item{cwlClass}{"CommandLineTool"}
 
-\item{baseCommand}{Specifies the program to execute}
+\item{baseCommand}{Specifies the program or R function to execute}
 
 \item{requirements}{A list of Requirement lists that apply to
 either the runtime environment or the workflow engine.}

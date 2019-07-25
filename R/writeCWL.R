@@ -20,9 +20,15 @@
 cwlToList <- function(cwl, docker){
     stopifnot(is(cwl, "cwlParam"))
     if(!docker) cwl <- .rmDocker(cwl)
+    if(is(baseCommand(cwl), "function")){
+        rfile <- writeFun(cwl)
+        bc <- c("Rscript", rfile)
+    }else{
+        bc <- baseCommand(cwl)
+    }
     CL <- list(cwlVersion = cwlVersion(cwl),
                class = cwlClass(cwl),
-               baseCommand = baseCommand(cwl),
+               baseCommand = bc,
                requirements = cwl@requirements,
                hints = cwl@hints,
                arguments = cwl@arguments,
