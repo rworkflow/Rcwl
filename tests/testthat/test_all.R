@@ -50,23 +50,3 @@ test_that("OutputParamList class and element type", {
     expect_error(OutputParamList(o1, InputParam(id = "test")))
 })
 
-## test R function
-test_that("R function as command", {
-    fun1 <- function(x)x*2
-    testFun <- function(a, b){
-        cat(fun1(a) + b^2, sep="\n")
-    }
-    assign("fun1", fun1, envir = .GlobalEnv)
-    assign("testFun", testFun, envir = .GlobalEnv)
-    p1 <- InputParam(id = "a", type = "int", prefix = "a=", separate = F)
-    p2 <- InputParam(id = "b", type = "int", prefix = "b=", separate = F)
-    o1 <- OutputParam(id = "o", type = "File", glob = "rout.txt")
-    TestFun <- cwlParam(baseCommand = testFun,
-                        inputs = InputParamList(p1, p2),
-                        outputs = OutputParamList(o1),
-                        stdout = "rout.txt")
-    TestFun$a <- 1
-    TestFun$b <- 2
-    r1 <- runCWL(TestFun, Args = "--preserve-entire-environment")
-    expect_equal(readLines(r1$output), "6")
-})
