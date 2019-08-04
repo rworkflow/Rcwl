@@ -5,7 +5,7 @@ echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
 echo$sth <- "Hello World!"
 r1 <- runCWL(echo)
 test_that("simple echo", {
-    expect_equal(tail(r1$logs, 1), "Final process status is success")})
+    expect_match(tail(r1$logs, 1), "success")})
 
 out1 <- readLines(r1$output)
 test_that("simple echo", {
@@ -49,3 +49,4 @@ test_that("OutputParamList class and element type", {
     expect_error(OutputParamList(o1, "test"))
     expect_error(OutputParamList(o1, InputParam(id = "test")))
 })
+

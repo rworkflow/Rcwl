@@ -313,6 +313,7 @@ OutputParamList <- function(out = OutputParam(), ...){
 }
 
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))
+setClassUnion("characterORfunction", c("character", "function"))
 
 #' @rdname cwlParam
 #' @export
@@ -320,7 +321,7 @@ setClass("cwlParam",
          slots = c(
              cwlVersion = "character",
              cwlClass = "character",
-             baseCommand = "character",
+             baseCommand = "characterORfunction",
              requirements = "list",
              hints = "list",
              arguments = "list",
@@ -354,7 +355,7 @@ setClass("cwlParam",
 #' @import utils
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
-#' @param baseCommand Specifies the program to execute
+#' @param baseCommand Specifies the program or R function to execute
 #' @param requirements A list of Requirement lists that apply to
 #'     either the runtime environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
