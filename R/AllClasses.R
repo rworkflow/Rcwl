@@ -56,10 +56,9 @@ InputArrayParam <- function(label = "", type = "array",
                             valueFrom = valueFrom))
 }
 
-#' Input parameters
-setClassUnion("characterORInputArrayParam", c("character", "InputArrayParam"))
+setClassUnion("characterORInputArrayParamORlist", c("character", "InputArrayParam", "list"))
 setClassUnion("characterORlist", c("character", "list"))
-
+#' Input parameters
 #' InputParam
 #' @rdname InputParam
 #' @export
@@ -68,7 +67,7 @@ setClass("InputParam",
              id = "character",
              label = "character",
              doc = "character",
-             type = "characterORInputArrayParam",
+             type = "characterORInputArrayParamORlist",
              secondaryFiles = "characterORlist",
              inputBinding = "list",
              default = "ANY",
@@ -327,9 +326,11 @@ setClass("cwlParam",
              arguments = "list",
              id = "character",
              label = "character",
+             doc = "characterORlist",
              inputs = "InputParamList",
              outputs = "OutputParamListORlist",
-             stdout = "character"
+             stdout = "character",
+             expression = "character"
          ),
          prototype = list(cwlVersion = character(),
                           cwlClass = character(),
@@ -338,10 +339,12 @@ setClass("cwlParam",
                           hints = list(),
                           id = character(),
                           label = character(),
+                          doc = character(),
                           arguments = list(),
                           inputs = InputParamList(),
                           outputs = OutputParamList(),
-                          stdout = character()
+                          stdout = character(),
+                          expression = character()
          ))
 
 #' Parameters for CWL
@@ -367,6 +370,7 @@ setClass("cwlParam",
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a
 #'     file written to the designated output directory.
+#' @param expression Javascripts for ExpressionTool class.
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @return A `cwlParam` class object.
@@ -378,13 +382,14 @@ cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
                      hints = list(), arguments = list(), id = character(),
                      label = character(),
                      inputs = InputParamList(), outputs = OutputParamList(),
-                     stdout = character()){
+                     stdout = character(), expression = character()){
     new("cwlParam", cwlVersion = cwlVersion,
         cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand,
         requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs,
-        outputs = outputs, stdout = stdout)
+        outputs = outputs, stdout = stdout,
+        expression = expression)
 }
 
 #' stepInParam

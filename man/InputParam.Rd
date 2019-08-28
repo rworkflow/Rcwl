@@ -6,7 +6,8 @@
 \alias{InputParam}
 \alias{$,cwlParam-method}
 \alias{$<-,cwlParam-method}
-\title{InputParam}
+\title{Input parameters
+InputParam}
 \usage{
 InputParam(id, label = "", type = "string", doc = character(),
   secondaryFiles = character(), loadContents = logical(),

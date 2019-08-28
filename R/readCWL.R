@@ -114,13 +114,15 @@ readCWL <- function(cwlfile){
     if(any(!idx)){
         warning(names(cwl.list1)[!idx], " not imported")
     }
-    if(cwl.origin$cwlClass == "CommandLineTool"){
+    if(cwl.origin$cwlClass %in% c("CommandLineTool", "ExpressionTool")){
         if(!is.null(cwl.list1$arguments)){
             cwl.list1$arguments <- as.list(cwl.list1$arguments)
         }
         cwl <- do.call(cwlParam, cwl.list1[idx])
-    }else{
+    }else if(cwl.origin$cwlClass == "Workflow"){
         cwl <- do.call(cwlStepParam, cwl.list1[idx])
+    }else {
+        stop(cwl.origin$cwlClass, "is not supported!")
     }
     cwl@inputs@listData <- .readInputs(cwl.origin, cwl)
     cwl@outputs@listData <- .readOutputs(cwl.origin, cwl)

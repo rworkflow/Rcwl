@@ -267,7 +267,7 @@ setMethod(show, "OutputParamList", function(object) {
 })
 
 setMethod(show, "cwlParam", function(object){
-    if(is(baseCommand(object)[1], "function")){
+    if(is(baseCommand(object), "function")){
         bc <- c("baseCommand: R function", "\n")
     }else{
         bc <- c("baseCommand:", baseCommand(object), "\n")

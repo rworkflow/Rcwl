@@ -10,7 +10,7 @@ cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
   baseCommand = character(), requirements = list(), hints = list(),
   arguments = list(), id = character(), label = character(),
   inputs = InputParamList(), outputs = OutputParamList(),
-  stdout = character())
+  stdout = character(), expression = character())
 }
 \arguments{
 \item{cwlVersion}{CWL version}
@@ -37,6 +37,8 @@ associated with input parameters.}
 
 \item{stdout}{Capture the command's standard output stream to a
 file written to the designated output directory.}
+
+\item{expression}{Javascripts for ExpressionTool class.}
 }
 \value{
 A `cwlParam` class object.

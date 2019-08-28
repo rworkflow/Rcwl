@@ -36,12 +36,17 @@ cwlToList <- function(cwl, docker){
                label = cwl@label,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
-               stdout = cwl@stdout)
+               stdout = cwl@stdout,
+               expression = cwl@expression)
     CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps)))
         ## remove inputBinding
+        for(i in seq(CL$inputs)){
+            CL$inputs[[i]]$inputBinding <- NULL
+        }
+    }else if (cwlClass(cwl) == "ExpressionTool") {
         for(i in seq(CL$inputs)){
             CL$inputs[[i]]$inputBinding <- NULL
         }

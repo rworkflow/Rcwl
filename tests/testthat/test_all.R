@@ -50,3 +50,30 @@ test_that("OutputParamList class and element type", {
     expect_error(OutputParamList(o1, InputParam(id = "test")))
 })
 
+## ExpressionTool
+p1 <- InputParam(id = "file1", type = "File")
+p2 <- InputParam(id = "file2", type = "File")
+o1 <- OutputParam(id = "out", type = "Directory")
+expression <- '${
+    return {"out": {
+        "class": "Directory",
+        "basename": "group",
+        "listing": [inputs.file1, inputs.file2]
+    }};
+}'
+req <- list(class = "InlineJavascriptRequirement")
+groupFiles <- cwlParam(cwlClass = "ExpressionTool",
+                       requirements = list(req),
+                       inputs = InputParamList(p1, p2),
+                       outputs = OutputParamList(o1),
+                       expression = expression)
+f1 <- tempfile()
+f2 <- tempfile()
+file.create(f1, f2)
+groupFiles$file1 <- f1
+groupFiles$file2 <- f2
+r1 <- runCWL(groupFiles, outdir = tempdir())
+test_that("ExpressionTool", {
+    expect_true(all(basename(r1$output) %in%
+                    c("group", basename(f1), basename(f2))))
+})
