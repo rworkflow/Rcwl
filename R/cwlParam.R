@@ -217,6 +217,18 @@ stdOut <- function(cwl) cwl@stdout
     cwl
 }
 
+#' Extensions and metadata of cwlParam
+#' @rdname cwlParam-methods
+#' @return extensions: A list of extensions or metadata
+#' @export
+extensions <- function(cwl) cwl@extensions
+#' @rdname cwlParam-methods
+#' @export
+"extensions<-" <- function(cwl, value){
+    cwl@extensions <- value
+    cwl
+}
+
 setMethod(show, "InputParamList", function(object) {
     cat("inputs:\n")
     lapply(seq(object), function(i){

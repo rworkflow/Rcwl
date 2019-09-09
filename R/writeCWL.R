@@ -38,6 +38,7 @@ cwlToList <- function(cwl, docker){
                outputs = as.listOutputs(outputs(cwl)),
                stdout = cwl@stdout,
                expression = cwl@expression)
+    CL <- c(CL, cwl@extensions)
     CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){

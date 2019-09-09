@@ -6,7 +6,8 @@
 \alias{OutputParam}
 \title{Output parameters}
 \usage{
-OutputParam(id = "output", label = character(), type = "stdout",
+OutputParam(id = "output", label = character(), doc = character(),
+  type = "stdout", format = character(),
   secondaryFiles = character(), streamable = logical(),
   glob = character(), loadContents = logical(),
   outputEval = character(), outputSource = character())
@@ -16,8 +17,15 @@ OutputParam(id = "output", label = character(), type = "stdout",
 
 \item{label}{A short, human-readable label of this object.}
 
+\item{doc}{A documentation string for this object, or an array of
+strings which should be concatenated.}
+
 \item{type}{Specify valid types of data that may be assigned to
 this parameter.}
+
+\item{format}{Only valid when type: File or is an array of items:
+File. This is the file format that will be assigned to the
+output File object.}
 
 \item{secondaryFiles}{Provides a pattern or expression specifying
 files or directories. Only valid when type: File or is an array

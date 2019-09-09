@@ -77,3 +77,19 @@ test_that("OutputParamList class and element type", {
 ##     expect_true(all(basename(r1$output) %in%
 ##                     c("group", basename(f1), basename(f2))))
 ## })
+
+## extensions and metadata
+test_that("extensions", {
+    ext <- list("$namespaces" = list(
+                    s = "https://schema.org/"),
+                "s:author" = list(
+                    class = "s:Person",
+                    "s:name" = "Qiang H"
+                ))
+    extensions(echo) <- ext
+    r1 <- runCWL(echo)
+    cwlfile <- unlist(strsplit(r1$logs[2], split="'"))[2]
+
+    expect_match(tail(r1$logs, 1), "success")
+    expect_true(all(ext %in% read_yaml(cwlfile)))
+})
