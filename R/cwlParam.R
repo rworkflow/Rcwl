@@ -151,6 +151,14 @@ inputs <- function(cwl) cwl@inputs
         }else{
             v <- value
         }
+    }else if(is(itype, "list")){
+        if(file_test("-d", value)) {
+            v <- list(class = "Directory", path = normalizePath(value))
+        }else if(file_test("-f", value)){
+            v <- list(class = "File", path = normalizePath(value))
+        }else{
+            v <- value
+        }
     }
     x@inputs[[name]]@value <- v
     x
@@ -269,6 +277,9 @@ setMethod(show, "InputParamList", function(object) {
             cat("    prefix: ",
                 object[[i]]@type@inputBinding$prefix, " ",
                 paste(unlist(v), collapse=" "), "\n", sep = "")
+        }else if(is(object[[i]]@type, "list")){
+            cat(" ", iname, " (", paste0(unlist(object[[i]]@type),
+                                          collapse = "|"), "): \n")
         }
     })
 })
