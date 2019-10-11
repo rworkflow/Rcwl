@@ -69,6 +69,10 @@ setClass("InputParam",
              doc = "character",
              type = "characterORInputArrayParamORlist",
              secondaryFiles = "characterORlist",
+             streamable = "logical",
+             format = "character",
+             loadContents = "logical",
+             loadListing = "character",
              inputBinding = "list",
              default = "ANY",
              value = "ANY"
@@ -79,8 +83,11 @@ setClass("InputParam",
              doc = character(),
              type = character(),
              secondaryFiles = character(),
-             inputBinding = list(loadContents = logical(),
-                                 position = integer(),
+             streamable = logical(),
+             format = character(),
+             loadContents = logical(),
+             loadListing = character(),
+             inputBinding = list(position = integer(),
                                  prefix = character(),
                                  separate = logical(),
                                  itemSeparator = character(),
@@ -104,8 +111,15 @@ setClass("InputParam",
 #'     items: File. Provides a pattern or expression specifying files
 #'     or directories that must be included alongside the primary
 #'     file.
+#' @param streamable Only valid when type: File or is an array of
+#'     items: File. A value of true indicates that the file is read or
+#'     written sequentially without seeking.
+#' @param format Only valid when type: File or is an array of items:
+#'     File.
 #' @param loadContents Only valid when type: File or is an array of
 #'     items: File.
+#' @param loadListing Only valid when type: Directory or is an array
+#'     of items: Directory.
 #' @param position The position for this parameter.
 #' @param prefix Command line prefix to add before the value.
 #' @param separate If true (default), then the prefix and value must
@@ -126,6 +140,8 @@ setClass("InputParam",
 #' input1 <- InputParam(id = "sth")
 InputParam <- function(id, label= "", type = "string",
                        doc = character(), secondaryFiles = character(),
+                       streamable = logical(), format = character(),
+                       loadListing = character(),
                        loadContents = logical(), position = 0L, prefix = "",
                        separate = TRUE, itemSeparator = character(),
                        valueFrom = character(), shellQuote = logical(),
@@ -136,8 +152,11 @@ InputParam <- function(id, label= "", type = "string",
         doc = doc,
         type = type,
         secondaryFiles = secondaryFiles,
-        inputBinding = list(loadContents = loadContents,
-                            position = as.integer(position),
+        streamable = streamable,
+        format = format,
+        loadContents = loadContents,
+        loadListing = loadListing,
+        inputBinding = list(position = as.integer(position),
                             prefix = prefix,
                             separate = separate,
                             itemSeparator = itemSeparator,
@@ -228,6 +247,8 @@ setClass("OutputParam",
          slots = c(
              id = "character",
              label = "character",
+             doc = "character",
+             format = "character",
              type = "characterOROutputArrayParam",
              secondaryFiles = "characterORlist",
              streamable = "logical",
@@ -236,6 +257,8 @@ setClass("OutputParam",
          ),
          prototype = list(id = character(),
                           label = character(),
+                          doc = character(),
+                          format = character(),
                           type = character(),
                           secondaryFiles = character(),
                           streamable = logical(),
@@ -251,6 +274,11 @@ setClass("OutputParam",
 #' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
+#' @param doc A documentation string for this object, or an array of
+#'     strings which should be concatenated.
+#' @param format Only valid when type: File or is an array of items:
+#'     File. This is the file format that will be assigned to the
+#'     output File object.
 #' @param type Specify valid types of data that may be assigned to
 #'     this parameter.
 #' @param secondaryFiles Provides a pattern or expression specifying
@@ -270,7 +298,8 @@ setClass("OutputParam",
 #' @return An object of class `OutputParam`.
 #' @examples
 #' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
-OutputParam <- function(id = "output", label = character(), type = "stdout",
+OutputParam <- function(id = "output", label = character(), doc = character(),
+                        type = "stdout",  format = character(),
                         secondaryFiles = character(), streamable = logical(),
                         glob = character(), loadContents = logical(),
                         outputEval = character(),
@@ -278,7 +307,9 @@ OutputParam <- function(id = "output", label = character(), type = "stdout",
     new("OutputParam",
         id = id,
         label = label,
+        doc = doc,
         type = type,
+        format = format,
         secondaryFiles = secondaryFiles,
         streamable = streamable,
         outputBinding = list(glob = glob,
@@ -330,7 +361,8 @@ setClass("cwlParam",
              inputs = "InputParamList",
              outputs = "OutputParamListORlist",
              stdout = "character",
-             expression = "character"
+             expression = "character",
+             extensions = "list"
          ),
          prototype = list(cwlVersion = character(),
                           cwlClass = character(),
@@ -344,7 +376,8 @@ setClass("cwlParam",
                           inputs = InputParamList(),
                           outputs = OutputParamList(),
                           stdout = character(),
-                          expression = character()
+                          expression = character(),
+                          extensions = list()
          ))
 
 #' Parameters for CWL
@@ -371,6 +404,7 @@ setClass("cwlParam",
 #' @param stdout Capture the command's standard output stream to a
 #'     file written to the designated output directory.
 #' @param expression Javascripts for ExpressionTool class.
+#' @param extensions A list of extensions and metadata
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @return A `cwlParam` class object.
@@ -382,14 +416,16 @@ cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
                      hints = list(), arguments = list(), id = character(),
                      label = character(),
                      inputs = InputParamList(), outputs = OutputParamList(),
-                     stdout = character(), expression = character()){
+                     stdout = character(), expression = character(),
+                     extensions = list()){
     new("cwlParam", cwlVersion = cwlVersion,
         cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand,
         requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs,
         outputs = outputs, stdout = stdout,
-        expression = expression)
+        expression = expression,
+        extensions = extensions)
 }
 
 #' stepInParam
@@ -531,6 +567,7 @@ setClass("cwlStepParam",
 #' @param requirements Requirements that apply to either the runtime
 #'     environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
+#' @param extensions A list of extensions and metadata.
 #' @param arguments Command line bindings which are not directly
 #'     associated with input parameters.
 #' @param id The unique identifier for this process object.
@@ -559,13 +596,13 @@ setClass("cwlStepParam",
 #' wf <- wf + s1 + s2
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
                      requirements = list(), id = character(),
-                     hints = list(), arguments = list(),
+                     hints = list(), arguments = list(), extensions = list(),
                      inputs = InputParamList(), outputs = OutputParamList(),
                      stdout = character(), steps = stepParamList()){
     new("cwlStepParam", cwlVersion = cwlVersion, cwlClass = cwlClass,
         baseCommand = character(), requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs, outputs = outputs, stdout = stdout,
-        steps = steps)
+        steps = steps, extensions = extensions)
 }
 
 # show methods for stepParam

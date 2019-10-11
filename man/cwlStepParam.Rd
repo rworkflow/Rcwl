@@ -8,7 +8,7 @@
 \usage{
 cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
   requirements = list(), id = character(), hints = list(),
-  arguments = list(), inputs = InputParamList(),
+  arguments = list(), extensions = list(), inputs = InputParamList(),
   outputs = OutputParamList(), stdout = character(),
   steps = stepParamList())
 }
@@ -26,6 +26,8 @@ environment or the workflow engine.}
 
 \item{arguments}{Command line bindings which are not directly
 associated with input parameters.}
+
+\item{extensions}{A list of extensions and metadata.}
 
 \item{inputs}{A object of `InputParamList`.}
 

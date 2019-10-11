@@ -15,6 +15,8 @@
 \alias{requirements<-}
 \alias{stdOut}
 \alias{stdOut<-}
+\alias{extensions}
+\alias{extensions<-}
 \title{cwlParam methods}
 \usage{
 cwlVersion(cwl)
@@ -44,6 +46,10 @@ requirements(cwl) <- value
 stdOut(cwl)
 
 stdOut(cwl) <- value
+
+extensions(cwl)
+
+extensions(cwl) <- value
 }
 \arguments{
 \item{cwl}{A `cwlParam` object.}
@@ -68,6 +74,8 @@ hints: CWL hints
 requirements: CWL requirments
 
 stdOut: CWL stdout
+
+extensions: A list of extensions or metadata
 }
 \description{
 cwlParam methods
@@ -98,4 +106,6 @@ requirements
 stdout of cwlParam
 
 stdout of cwlParam
+
+Extensions and metadata of cwlParam
 }

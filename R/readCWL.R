@@ -111,9 +111,6 @@ readCWL <- function(cwlfile){
     cwl.list1 <- cwl.origin[setdiff(names(cwl.origin),
                                     c("inputs", "outputs", "steps"))]
     idx <- names(cwl.list1) %in% formalArgs(cwlParam)
-    if(any(!idx)){
-        warning(names(cwl.list1)[!idx], " not imported")
-    }
     if(cwl.origin$cwlClass %in% c("CommandLineTool", "ExpressionTool")){
         if(!is.null(cwl.list1$arguments)){
             cwl.list1$arguments <- as.list(cwl.list1$arguments)
@@ -130,6 +127,10 @@ readCWL <- function(cwlfile){
     if(cwl.origin$cwlClass == "Workflow"){
         pwd <- dirname(normalizePath(cwlfile))
         cwl <- .readSteps(cwl.origin, pwd, cwl)
+    }
+    
+    if(any(!idx)){
+        cwl@extensions <- cwl.list1[!idx]
     }
     return(cwl)
 }

@@ -10,10 +10,12 @@
 InputParam}
 \usage{
 InputParam(id, label = "", type = "string", doc = character(),
-  secondaryFiles = character(), loadContents = logical(),
-  position = 0L, prefix = "", separate = TRUE,
-  itemSeparator = character(), valueFrom = character(),
-  shellQuote = logical(), default = character(), value = character())
+  secondaryFiles = character(), streamable = logical(),
+  format = character(), loadListing = character(),
+  loadContents = logical(), position = 0L, prefix = "",
+  separate = TRUE, itemSeparator = character(),
+  valueFrom = character(), shellQuote = logical(),
+  default = character(), value = character())
 
 \S4method{$}{cwlParam}(x, name)
 
@@ -33,6 +35,16 @@ parameter.}
 items: File. Provides a pattern or expression specifying files
 or directories that must be included alongside the primary
 file.}
+
+\item{streamable}{Only valid when type: File or is an array of
+items: File. A value of true indicates that the file is read or
+written sequentially without seeking.}
+
+\item{format}{Only valid when type: File or is an array of items:
+File.}
+
+\item{loadListing}{Only valid when type: Directory or is an array
+of items: Directory.}
 
 \item{loadContents}{Only valid when type: File or is an array of
 items: File.}
