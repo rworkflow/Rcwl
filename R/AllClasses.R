@@ -567,6 +567,7 @@ setClass("cwlStepParam",
 #' @param requirements Requirements that apply to either the runtime
 #'     environment or the workflow engine.
 #' @param hints Any or a list for the workflow engine.
+#' @param extensions A list of extensions and metadata.
 #' @param arguments Command line bindings which are not directly
 #'     associated with input parameters.
 #' @param id The unique identifier for this process object.
@@ -595,13 +596,13 @@ setClass("cwlStepParam",
 #' wf <- wf + s1 + s2
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
                      requirements = list(), id = character(),
-                     hints = list(), arguments = list(),
+                     hints = list(), arguments = list(), extensions = list(),
                      inputs = InputParamList(), outputs = OutputParamList(),
                      stdout = character(), steps = stepParamList()){
     new("cwlStepParam", cwlVersion = cwlVersion, cwlClass = cwlClass,
         baseCommand = character(), requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs, outputs = outputs, stdout = stdout,
-        steps = steps)
+        steps = steps, extensions = extensions)
 }
 
 # show methods for stepParam
