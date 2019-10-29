@@ -1,6 +1,6 @@
 Package: Rcwl
 Title: Wrap Command Tools and Pipelines Using CWL
-Version: 1.1.15
+Version: 1.2.0
 Authors@R: c(person("Qiang", "Hu", email = "qiang.hu@roswellpark.org", role = c("aut", "cre")),
 	     person("Qian", "Liu", email = "qian.liu@roswellpark.org", role = c("aut")))
 Description: The package can be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL).
