@@ -80,8 +80,13 @@ arguments <- function(cwl, step = NULL){
                 irun <- paste0(irun, "@steps[[ Steps[", i, "] ]]@run")
             }
         }
-        value <- paste0(unlist(value), collapse = "\", \"")
-        irun <- paste0(irun, "@arguments <- list(\"", value, "\")")
+        valuec <- as.character(value)
+        idxl <- !grepl("^list", valuec)
+        if(sum(idxl) > 0){
+            valuec[idxl] <- paste0("\"", valuec[idxl], "\"")
+        }
+        value <- paste(valuec, collapse = ",")
+        irun <- paste0(irun, "@arguments <- list(", value, ")")
         eval(parse(text = irun))
     }
     cwl
