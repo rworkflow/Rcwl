@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 11 RNASeq pipeline | Bioinformatics tools and pipelines with R and CWL</title>
+  <meta name="description" content="A manual to wrap Bioinformatics tools and pipeplines with Common Workflow Language using the Rcwl package.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 11 RNASeq pipeline | Bioinformatics tools and pipelines with R and CWL" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A manual to wrap Bioinformatics tools and pipeplines with Common Workflow Language using the Rcwl package." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 11 RNASeq pipeline | Bioinformatics tools and pipelines with R and CWL" />
+  
+  <meta name="twitter:description" content="A manual to wrap Bioinformatics tools and pipeplines with Common Workflow Language using the Rcwl package." />
+  
+
+<meta name="author" content="Qiang Hu">
+
+
+<meta name="date" content="2019-03-13">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="dnaseq-alignment-pipeline.html">
+<link rel="next" href="summarize-qc.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/d3-3.3.8/d3.min.js"></script>
+<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
+<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
+<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/chromatography-0.1/chromatography.js"></script>
+<script src="libs/DiagrammeR-binding-1.0.0/DiagrammeR.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#r-package-installation"><i class="fa fa-check"></i><b>1.1</b> R package installation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#system-requirements"><i class="fa fa-check"></i><b>1.2</b> System requirements</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker"><i class="fa fa-check"></i><b>1.3</b> Docker</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#structure-of-the-book"><i class="fa fa-check"></i><b>1.4</b> Structure of the book</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#r-session-information"><i class="fa fa-check"></i><b>1.5</b> R session information</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#common-workflow-language"><i class="fa fa-check"></i><b>2.1</b> Common Workflow Language</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#first-example"><i class="fa fa-check"></i><b>2.2</b> First example</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#test-run"><i class="fa fa-check"></i><b>2.3</b> Test run</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="input-parameters.html"><a href="input-parameters.html"><i class="fa fa-check"></i><b>3</b> Input Parameters</a><ul>
+<li class="chapter" data-level="3.1" data-path="input-parameters.html"><a href="input-parameters.html#essential-input-parameters"><i class="fa fa-check"></i><b>3.1</b> Essential Input parameters</a></li>
+<li class="chapter" data-level="3.2" data-path="input-parameters.html"><a href="input-parameters.html#array-inputs"><i class="fa fa-check"></i><b>3.2</b> Array Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="output-parameters.html"><a href="output-parameters.html"><i class="fa fa-check"></i><b>4</b> Output Parameters</a><ul>
+<li class="chapter" data-level="4.1" data-path="output-parameters.html"><a href="output-parameters.html#capturing-output"><i class="fa fa-check"></i><b>4.1</b> Capturing Output</a></li>
+<li class="chapter" data-level="4.2" data-path="output-parameters.html"><a href="output-parameters.html#array-outputs"><i class="fa fa-check"></i><b>4.2</b> Array Outputs</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="writing-pipeline.html"><a href="writing-pipeline.html"><i class="fa fa-check"></i><b>5</b> Writing Pipeline</a><ul>
+<li class="chapter" data-level="5.1" data-path="writing-pipeline.html"><a href="writing-pipeline.html#scattering-pipeline"><i class="fa fa-check"></i><b>5.1</b> Scattering pipeline</a></li>
+<li class="chapter" data-level="5.2" data-path="writing-pipeline.html"><a href="writing-pipeline.html#pipeline-plot"><i class="fa fa-check"></i><b>5.2</b> Pipeline plot</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="running-tools-in-docker.html"><a href="running-tools-in-docker.html"><i class="fa fa-check"></i><b>6</b> Running Tools in Docker</a></li>
+<li class="chapter" data-level="7" data-path="running-tools-in-cluster-server.html"><a href="running-tools-in-cluster-server.html"><i class="fa fa-check"></i><b>7</b> Running Tools in Cluster server</a></li>
+<li class="chapter" data-level="8" data-path="web-application.html"><a href="web-application.html"><i class="fa fa-check"></i><b>8</b> Web Application</a><ul>
+<li class="chapter" data-level="8.1" data-path="web-application.html"><a href="web-application.html#cwlparam-example"><i class="fa fa-check"></i><b>8.1</b> cwlParam example</a></li>
+<li class="chapter" data-level="8.2" data-path="web-application.html"><a href="web-application.html#cwlparam-to-shiny-app"><i class="fa fa-check"></i><b>8.2</b> cwlParam to Shiny App</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="rcwlpipelines-tools.html"><a href="rcwlpipelines-tools.html"><i class="fa fa-check"></i><b>9</b> RcwlPipelines tools</a><ul>
+<li class="chapter" data-level="9.1" data-path="rcwlpipelines-tools.html"><a href="rcwlpipelines-tools.html#rcwl-scripts"><i class="fa fa-check"></i><b>9.1</b> Rcwl scripts</a></li>
+<li class="chapter" data-level="9.2" data-path="rcwlpipelines-tools.html"><a href="rcwlpipelines-tools.html#build-a-pipeline"><i class="fa fa-check"></i><b>9.2</b> Build a pipeline</a></li>
+<li class="chapter" data-level="9.3" data-path="rcwlpipelines-tools.html"><a href="rcwlpipelines-tools.html#rcwlpipelines-summary"><i class="fa fa-check"></i><b>9.3</b> RcwlPipelines summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="dnaseq-alignment-pipeline.html"><a href="dnaseq-alignment-pipeline.html"><i class="fa fa-check"></i><b>10</b> DNASeq alignment pipeline</a><ul>
+<li class="chapter" data-level="10.1" data-path="dnaseq-alignment-pipeline.html"><a href="dnaseq-alignment-pipeline.html#summary"><i class="fa fa-check"></i><b>10.1</b> Summary</a></li>
+<li class="chapter" data-level="10.2" data-path="dnaseq-alignment-pipeline.html"><a href="dnaseq-alignment-pipeline.html#prepara-data"><i class="fa fa-check"></i><b>10.2</b> Prepara data</a></li>
+<li class="chapter" data-level="10.3" data-path="dnaseq-alignment-pipeline.html"><a href="dnaseq-alignment-pipeline.html#run-in-cluster"><i class="fa fa-check"></i><b>10.3</b> Run in cluster</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="rnaseq-pipeline.html"><a href="rnaseq-pipeline.html"><i class="fa fa-check"></i><b>11</b> RNASeq pipeline</a><ul>
+<li class="chapter" data-level="11.1" data-path="rnaseq-pipeline.html"><a href="rnaseq-pipeline.html#prepare-data"><i class="fa fa-check"></i><b>11.1</b> Prepare data</a></li>
+<li class="chapter" data-level="11.2" data-path="rnaseq-pipeline.html"><a href="rnaseq-pipeline.html#submit-pipeline-with-sge"><i class="fa fa-check"></i><b>11.2</b> Submit pipeline with SGE</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="summarize-qc.html"><a href="summarize-qc.html"><i class="fa fa-check"></i><b>12</b> Summarize QC</a></li>
+<li class="chapter" data-level="13" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html"><i class="fa fa-check"></i><b>13</b> MC3 somatic variant calling pipeline</a><ul>
+<li class="chapter" data-level="13.1" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#prepare-data-1"><i class="fa fa-check"></i><b>13.1</b> Prepare data</a></li>
+<li class="chapter" data-level="13.2" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#run-mc3-pipeline"><i class="fa fa-check"></i><b>13.2</b> Run MC3 pipeline</a></li>
+<li class="chapter" data-level="13.3" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#gatk4-germline-variant-calling-pipeline"><i class="fa fa-check"></i><b>13.3</b> GATK4 germline variant calling pipeline</a></li>
+<li class="chapter" data-level="13.4" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#gatk-alignment"><i class="fa fa-check"></i><b>13.4</b> GATK Alignment</a></li>
+<li class="chapter" data-level="13.5" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#haplotypecaller"><i class="fa fa-check"></i><b>13.5</b> HaplotypeCaller</a></li>
+<li class="chapter" data-level="13.6" data-path="mc3-somatic-variant-calling-pipeline.html"><a href="mc3-somatic-variant-calling-pipeline.html#joint-discovery"><i class="fa fa-check"></i><b>13.6</b> Joint Discovery</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bioinformatics tools and pipelines with R and CWL</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="rnaseq-pipeline" class="section level1">
+<h1><span class="header-section-number">Chapter 11</span> RNASeq pipeline</h1>
+<p>The pipeline was built with reads quality summary, <code>STAR</code> alignment,
+quantification by <code>featureCounts</code> and <code>RSeQC</code> quality control. Here
+are the inputs.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(rnaseq_Sf)
+<span class="kw">inputs</span>(rnaseq_Sf)</code></pre>
+<pre><code>## List of length 5
+## names(5): in_seqfiles in_prefix in_genomeDir in_GTFfile in_runThreadN</code></pre>
+<p>The pipeline includes 6 steps.</p>
+<ul>
+<li><code>fastqc</code>: To run quality summary for raw fastqs with <code>fastqc</code>.</li>
+<li><code>STAR</code>: To align fastqs with <code>STAR</code>.</li>
+<li><code>samtools_index</code>: To index aligned bam file.</li>
+<li><code>samtools_flagstat</code>: To summary alignment flags.</li>
+<li><code>featureCounts</code>: To quantify gene abundances.</li>
+<li><code>RSeQC</code>: Several steps included.<br />
+
+<ul>
+<li><code>gtfToGenePred</code>: To convert GTF annotation to “genePred” format.</li>
+<li><code>genePredToBed</code>: To convert “genePred” annotation to “bed” format.</li>
+<li><code>r_distribution</code>: To run reads distribution over genome features.</li>
+<li><code>gCoverage</code>: To summarize read coverage over gene body.</li>
+</ul></li>
+</ul>
+<p>The outputs and logs from alignment, quantification and QC steps are
+collected together to the output folder. A final QC report could be
+generated by <code>multiqc</code>, which is also available in the data package.</p>
+<p>Here are the short summary and steps plot.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">short</span>(rnaseq_Sf)</code></pre>
+<pre><code>## inputs:
+## - in_seqfiles
+## - in_prefix
+## - in_genomeDir
+## - in_GTFfile
+## - in_runThreadN
+## outputs:
+## - out_fastqc
+## - out_BAM
+## - out_Log
+## - out_Count
+## - out_idx
+## - out_stat
+## - out_count
+## - out_distribution
+## - out_gCovP
+## - out_gCovT
+## steps:
+## - fastqc
+## - STAR
+## - samtools_index
+## - samtools_flagstat
+## - featureCounts
+## - RSeQC</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotCWL</span>(rnaseq_Sf)</code></pre>
+<div id="htmlwidget-227dea57e821527a0398" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-227dea57e821527a0398">{"x":{"diagram":"graph TB\nA(in_seqfiles)-->P{fastqc}\nP{fastqc}-->F((out_fastqc))\nB(in_prefix)-->Q{STAR}\nC(in_genomeDir)-->Q{STAR}\nD(in_GTFfile)-->Q{STAR}\nA(in_seqfiles)-->Q{STAR}\nE(in_runThreadN)-->Q{STAR}\nQ{STAR}-->G((out_BAM))\nQ{STAR}-->H((out_Log))\nQ{STAR}-->I((out_Count))\nG((out_BAM))-->R{samtools_index}\nR{samtools_index}-->J((out_idx))\nG((out_BAM))-->S{samtools_flagstat}\nS{samtools_flagstat}-->K((out_stat))\nD(in_GTFfile)-->T{featureCounts}\nG((out_BAM))-->T{featureCounts}\nT{featureCounts}-->L((out_count))\nJ((out_idx))-->U{RSeQC}\nD(in_GTFfile)-->U{RSeQC}\nU{RSeQC}-->M((out_distribution))\nU{RSeQC}-->N((out_gCovP))\nU{RSeQC}-->O((out_gCovT))"},"evals":[],"jsHooks":[]}</script>
+<div id="prepare-data" class="section level2">
+<h2><span class="header-section-number">11.1</span> Prepare data</h2>
+<p>An RNASeq test data set can be downloaded from <a href="http://genomedata.org/rnaseq-tutorial/HBR_UHR_ERCC_ds_5pc.tar">genomedata</a>, which includes pair-end fastqs for 6 samples.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;http://genomedata.org/rnaseq-tutorial/HBR_UHR_ERCC_ds_5pc.tar&quot;</span>, <span class="st">&quot;apps/RNASeq/data/HBR_UHR_ERCC_ds_5pc.tar)</span>
+<span class="st">untar(&quot;</span>apps<span class="op">/</span>RNASeq<span class="op">/</span>data<span class="op">/</span>HBR_UHR_ERCC_ds_5pc.tar<span class="st">&quot;, exdir = &quot;</span>apps<span class="op">/</span>RNASeq<span class="op">/</span>data<span class="op">/</span><span class="st">&quot;)</span></code></pre>
+<p>The input data must be in a named list, with the same names as the input list of the pipeline. For this pipeline, 5 inputs are required to be set, including <code>in_seqfiles</code>, <code>in_prefix</code>, <code>in_genomeDir</code>, <code>in_GTFfile</code> and <code>in_runThreadN</code>.</p>
+<p>There are two different input lists, <code>inputList</code> and <code>paramList</code>. The <code>inputList</code> is used to define the inputs for each sample and will be submitted to different cluster nodes. The <code>paramList</code> is used to define parameters which are shared in all jobs.</p>
+<p>Two following inputs should be listed in <code>inputList</code>.</p>
+<ul>
+<li><p><code>in_seqfiles</code>: A list with the fastq files of each sample in each element. The names of the list are also required to be defined and can be the sample IDs. The length of the list will be the same as the number of samples, thus the list will be defined to <code>inputList</code> and assigned to different nodes for parallel computing.</p></li>
+<li><p><code>in_prefix</code> The same as <code>in_seqfiles</code>, which define a list of sample IDs.</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">files &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="kw">list.files</span>(<span class="st">&quot;apps/RNASeq/data/&quot;</span>, <span class="st">&quot;.gz&quot;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))
+files &lt;-<span class="st"> </span><span class="kw">tapply</span>(files, <span class="kw">substring</span>(<span class="kw">basename</span>(files), <span class="dv">1</span>, <span class="dv">8</span>), as.list)
+inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">in_seqfiles =</span> files,
+                  <span class="dt">in_prefix =</span> <span class="kw">as.list</span>(<span class="kw">names</span>(files)))</code></pre>
+<p>These 3 parameter will be defined in <code>paramList</code>.</p>
+<ul>
+<li><p><code>in_genomeDir</code>: The reference genome indexes for STAR.</p></li>
+<li><p><code>in_GTFfile</code>: The gene annotation file in GTF format.</p></li>
+<li><p><code>in_runThreadN</code>: The number of threads to run for each job.</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">paramList &lt;-<span class="st"> </span><span class="kw">list</span>(
+    <span class="dt">in_genomeDir =</span> <span class="st">&quot;apps/data/GRCh38_100/&quot;</span>,
+    <span class="dt">in_GTFfile =</span> <span class="st">&quot;apps/data/gencode.v25.annotation.gtf&quot;</span>,
+    <span class="dt">in_runThreadN =</span> <span class="dv">4</span>
+)</code></pre>
+<p>In some case, we need to modify the default arguments in some steps of a pipeline. For example,</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arguments</span>(rnaseq_Sf, <span class="st">&quot;STAR&quot;</span>)[[<span class="dv">2</span>]] &lt;-<span class="st"> &quot;2&quot;</span>
+<span class="kw">head</span>(<span class="kw">arguments</span>(rnaseq_Sf, <span class="st">&quot;STAR&quot;</span>))</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;--outFilterMultimapNmax&quot;
+## 
+## [[2]]
+## [1] &quot;2&quot;
+## 
+## [[3]]
+## [1] &quot;--outSAMunmapped&quot;
+## 
+## [[4]]
+## [1] &quot;Within&quot;
+## 
+## [[5]]
+## [1] &quot;--outFilterMismatchNmax&quot;
+## 
+## [[6]]
+## [1] &quot;2&quot;</code></pre>
+</div>
+<div id="submit-pipeline-with-sge" class="section level2">
+<h2><span class="header-section-number">11.2</span> Submit pipeline with SGE</h2>
+<p>The function <code>runCWLBatch</code> is used to submit the pipeline to cluster server. In addition to defining <code>inputList</code> and <code>paramList</code>, we need to define parallel parameters from the <code>BiocParallel</code> package. Here, we use “sge” to submit the jobs. The “sge” template is a bash script with some predefined parameters for “qsub”. The nodes queue name and number of slots/threads are variables from the template and can be assigned by the <code>resources</code> list.</p>
+<pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(<span class="dt">cwl =</span> rnaseq_Sf, <span class="dt">outdir =</span> <span class="st">&quot;apps/RNASeq/output/&quot;</span>,
+                   <span class="dt">inputList =</span> inputList, <span class="dt">paramList =</span> paramList,
+                   <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(
+                       <span class="dt">workers =</span> <span class="kw">lengths</span>(inputList)[<span class="dv">1</span>], <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,
+                       <span class="dt">template =</span> <span class="st">&quot;apps/data/sge_centos7.tmpl&quot;</span>,
+                       <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">queue =</span> <span class="st">&quot;centos7.q&quot;</span>,
+                                        <span class="dt">threads =</span> <span class="dv">4</span>)))</code></pre>
+<p>That’s it! The fastqc files of each sample will be submitted to different nodes to run the whole pipeline automatically.</p>
+<p>All the results have been collected to output directory of each sample. For example,</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(<span class="st">&quot;apps/RNASeq/output/HBR_Rep1&quot;</span>)</code></pre>
+<pre><code>##  [1] &quot;HBR_Rep1_ERCC-Mix2_Build37-ErccTranscripts-chr22.read1_fastqc.zip&quot;
+##  [2] &quot;HBR_Rep1_ERCC-Mix2_Build37-ErccTranscripts-chr22.read2_fastqc.zip&quot;
+##  [3] &quot;HBR_Rep1Aligned.sortedByCoord.out.bam&quot;                            
+##  [4] &quot;HBR_Rep1Aligned.sortedByCoord.out.bam.bai&quot;                        
+##  [5] &quot;HBR_Rep1Aligned.sortedByCoord.out.distribution.txt&quot;               
+##  [6] &quot;HBR_Rep1Aligned.sortedByCoord.out.featureCounts.txt&quot;              
+##  [7] &quot;HBR_Rep1Aligned.sortedByCoord.out.featureCounts.txt.summary&quot;      
+##  [8] &quot;HBR_Rep1Aligned.sortedByCoord.out.flagstat.txt&quot;                   
+##  [9] &quot;HBR_Rep1Aligned.sortedByCoord.out.geneBodyCoverage.curves.pdf&quot;    
+## [10] &quot;HBR_Rep1Aligned.sortedByCoord.out.geneBodyCoverage.txt&quot;           
+## [11] &quot;HBR_Rep1Log.final.out&quot;                                            
+## [12] &quot;HBR_Rep1ReadsPerGene.out.tab&quot;</code></pre>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dnaseq-alignment-pipeline.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="summarize-qc.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/05-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

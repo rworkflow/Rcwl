@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 DNA-Seq Variant calling | Bioinformatics tools and pipelines using R and CWL</title>
+  <meta name="description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 DNA-Seq Variant calling | Bioinformatics tools and pipelines using R and CWL" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 DNA-Seq Variant calling | Bioinformatics tools and pipelines using R and CWL" />
+  
+  <meta name="twitter:description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  
+
+<meta name="author" content="Qiang Hu" />
+<meta name="author" content="Qian Liu" />
+
+
+<meta name="date" content="2019-10-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="application.html"/>
+<link rel="next" href="rna-seq-alignment-and-quantification.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/d3-3.3.8/d3.min.js"></script>
+<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
+<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
+<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/chromatography-0.1/chromatography.js"></script>
+<script src="libs/DiagrammeR-binding-1.0.1/DiagrammeR.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Rcwl and Case Study</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#r-package-installation"><i class="fa fa-check"></i><b>0.1</b> R package installation</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#system-requirements"><i class="fa fa-check"></i><b>0.2</b> System requirements</a></li>
+<li class="chapter" data-level="0.3" data-path="index.html"><a href="index.html#docker"><i class="fa fa-check"></i><b>0.3</b> Docker</a></li>
+<li class="chapter" data-level="0.4" data-path="index.html"><a href="index.html#structure-of-the-book"><i class="fa fa-check"></i><b>0.4</b> Structure of the book</a></li>
+<li class="chapter" data-level="0.5" data-path="index.html"><a href="index.html#r-session-information"><i class="fa fa-check"></i><b>0.5</b> R session information</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#common-workflow-language"><i class="fa fa-check"></i><b>1.1</b> Common Workflow Language</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#first-example"><i class="fa fa-check"></i><b>1.2</b> First example</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#test-run"><i class="fa fa-check"></i><b>1.3</b> Test run</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="components.html"><a href="components.html"><i class="fa fa-check"></i><b>2</b> Components</a><ul>
+<li class="chapter" data-level="2.1" data-path="components.html"><a href="components.html#input-parameters"><i class="fa fa-check"></i><b>2.1</b> Input Parameters</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="components.html"><a href="components.html#essential-input-parameters"><i class="fa fa-check"></i><b>2.1.1</b> Essential Input parameters</a></li>
+<li class="chapter" data-level="2.1.2" data-path="components.html"><a href="components.html#array-inputs"><i class="fa fa-check"></i><b>2.1.2</b> Array Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="components.html"><a href="components.html#output-parameters"><i class="fa fa-check"></i><b>2.2</b> Output Parameters</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="components.html"><a href="components.html#capturing-output"><i class="fa fa-check"></i><b>2.2.1</b> Capturing Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="components.html"><a href="components.html#array-outputs"><i class="fa fa-check"></i><b>2.2.2</b> Array Outputs</a></li>
+<li class="chapter" data-level="2.2.3" data-path="components.html"><a href="components.html#standard-output"><i class="fa fa-check"></i><b>2.2.3</b> Standard output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="writing-pipeline.html"><a href="writing-pipeline.html"><i class="fa fa-check"></i><b>3</b> Writing Pipeline</a><ul>
+<li class="chapter" data-level="3.1" data-path="writing-pipeline.html"><a href="writing-pipeline.html#scattering-pipeline"><i class="fa fa-check"></i><b>3.1</b> Scattering pipeline</a></li>
+<li class="chapter" data-level="3.2" data-path="writing-pipeline.html"><a href="writing-pipeline.html#pipeline-plot"><i class="fa fa-check"></i><b>3.2</b> Pipeline plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="run-approaches.html"><a href="run-approaches.html"><i class="fa fa-check"></i><b>4</b> Run approaches</a><ul>
+<li class="chapter" data-level="4.1" data-path="run-approaches.html"><a href="run-approaches.html#running-tools-in-docker"><i class="fa fa-check"></i><b>4.1</b> Running Tools in Docker</a></li>
+<li class="chapter" data-level="4.2" data-path="run-approaches.html"><a href="run-approaches.html#running-tools-in-cluster-server"><i class="fa fa-check"></i><b>4.2</b> Running Tools in Cluster server</a></li>
+<li class="chapter" data-level="4.3" data-path="run-approaches.html"><a href="run-approaches.html#web-application"><i class="fa fa-check"></i><b>4.3</b> Web Application</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="run-approaches.html"><a href="run-approaches.html#cwlparam-example"><i class="fa fa-check"></i><b>4.3.1</b> cwlParam example</a></li>
+<li class="chapter" data-level="4.3.2" data-path="run-approaches.html"><a href="run-approaches.html#cwlparam-to-shiny-app"><i class="fa fa-check"></i><b>4.3.2</b> cwlParam to Shiny App</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i><b>5</b> Application</a><ul>
+<li class="chapter" data-level="5.1" data-path="application.html"><a href="application.html#rcwlpipelines-tools"><i class="fa fa-check"></i><b>5.1</b> RcwlPipelines tools</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="application.html"><a href="application.html#rcwl-scripts"><i class="fa fa-check"></i><b>5.1.1</b> Rcwl scripts</a></li>
+<li class="chapter" data-level="5.1.2" data-path="application.html"><a href="application.html#build-a-pipeline"><i class="fa fa-check"></i><b>5.1.2</b> Build a pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="application.html"><a href="application.html#rcwlpipelines-summary"><i class="fa fa-check"></i><b>5.2</b> RcwlPipelines summary</a></li>
+<li class="chapter" data-level="5.3" data-path="application.html"><a href="application.html#dnaseq-alignment-pipeline"><i class="fa fa-check"></i><b>5.3</b> DNASeq alignment pipeline</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="application.html"><a href="application.html#prepare-data"><i class="fa fa-check"></i><b>5.3.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.3.2" data-path="application.html"><a href="application.html#run-in-cluster"><i class="fa fa-check"></i><b>5.3.2</b> Run in cluster</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="application.html"><a href="application.html#rnaseq-pipeline"><i class="fa fa-check"></i><b>5.4</b> RNASeq pipeline</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="application.html"><a href="application.html#prepare-data-1"><i class="fa fa-check"></i><b>5.4.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.4.2" data-path="application.html"><a href="application.html#submit-pipeline-with-sge"><i class="fa fa-check"></i><b>5.4.2</b> Submit pipeline with SGE</a></li>
+<li class="chapter" data-level="5.4.3" data-path="application.html"><a href="application.html#summarize-qc"><i class="fa fa-check"></i><b>5.4.3</b> Summarize QC</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="application.html"><a href="application.html#mc3-somatic-variant-calling-pipeline"><i class="fa fa-check"></i><b>5.5</b> MC3 somatic variant calling pipeline</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="application.html"><a href="application.html#prepare-data-2"><i class="fa fa-check"></i><b>5.5.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.5.2" data-path="application.html"><a href="application.html#run-mc3-pipeline"><i class="fa fa-check"></i><b>5.5.2</b> Run MC3 pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="application.html"><a href="application.html#gatk4-germline-variant-calling-pipeline"><i class="fa fa-check"></i><b>5.6</b> GATK4 germline variant calling pipeline</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="application.html"><a href="application.html#gatk-alignment"><i class="fa fa-check"></i><b>5.6.1</b> GATK Alignment</a></li>
+<li class="chapter" data-level="5.6.2" data-path="application.html"><a href="application.html#haplotypecaller"><i class="fa fa-check"></i><b>5.6.2</b> HaplotypeCaller</a></li>
+<li class="chapter" data-level="5.6.3" data-path="application.html"><a href="application.html#joint-discovery"><i class="fa fa-check"></i><b>5.6.3</b> Joint Discovery</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html"><i class="fa fa-check"></i><b>6</b> DNA-Seq Variant calling</a><ul>
+<li class="chapter" data-level="6.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#dna-alignment"><i class="fa fa-check"></i><b>6.1</b> DNA alignment</a></li>
+<li class="chapter" data-level="6.2" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#germline-variant-calling"><i class="fa fa-check"></i><b>6.2</b> Germline variant calling</a></li>
+<li class="chapter" data-level="6.3" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#somatic-mutation-calling"><i class="fa fa-check"></i><b>6.3</b> Somatic mutation calling</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#mutect2"><i class="fa fa-check"></i><b>6.3.1</b> MuTect2</a></li>
+<li class="chapter" data-level="6.3.2" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#muse"><i class="fa fa-check"></i><b>6.3.2</b> MuSE</a></li>
+<li class="chapter" data-level="6.3.3" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#strelka2"><i class="fa fa-check"></i><b>6.3.3</b> Strelka2</a></li>
+<li class="chapter" data-level="6.3.4" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#somaticsniper"><i class="fa fa-check"></i><b>6.3.4</b> SomaticSniper</a></li>
+<li class="chapter" data-level="6.3.5" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#vardict"><i class="fa fa-check"></i><b>6.3.5</b> VarDict</a></li>
+<li class="chapter" data-level="6.3.6" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#lofreq"><i class="fa fa-check"></i><b>6.3.6</b> LoFreq</a></li>
+<li class="chapter" data-level="6.3.7" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#varscan2"><i class="fa fa-check"></i><b>6.3.7</b> VarScan2</a></li>
+<li class="chapter" data-level="6.3.8" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#lancet"><i class="fa fa-check"></i><b>6.3.8</b> Lancet</a></li>
+<li class="chapter" data-level="6.3.9" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#neusomatic"><i class="fa fa-check"></i><b>6.3.9</b> Neusomatic</a></li>
+<li class="chapter" data-level="6.3.10" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#combined-somatic-caller-pipeline"><i class="fa fa-check"></i><b>6.3.10</b> Combined somatic caller pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#structural-variation"><i class="fa fa-check"></i><b>6.4</b> Structural variation</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#structural-variation-engine"><i class="fa fa-check"></i><b>6.4.1</b> Structural variation Engine</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#copy-number-variation"><i class="fa fa-check"></i><b>6.5</b> Copy number variation</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#cnvkit"><i class="fa fa-check"></i><b>6.5.1</b> cnvkit</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html"><i class="fa fa-check"></i><b>7</b> RNA-Seq alignment and quantification</a><ul>
+<li class="chapter" data-level="7.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#bulk-mrna"><i class="fa fa-check"></i><b>7.1</b> bulk mRNA</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#prepare-data-3"><i class="fa fa-check"></i><b>7.1.1</b> Prepare data</a></li>
+<li class="chapter" data-level="7.1.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#submit-pipeline-with-sge-1"><i class="fa fa-check"></i><b>7.1.2</b> Submit pipeline with SGE</a></li>
+<li class="chapter" data-level="7.1.3" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#qc-summary"><i class="fa fa-check"></i><b>7.1.3</b> QC Summary</a></li>
+<li class="chapter" data-level="7.1.4" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#abundances-summary"><i class="fa fa-check"></i><b>7.1.4</b> Abundances summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#transcriptome-quantification"><i class="fa fa-check"></i><b>7.2</b> transcriptome quantification</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#kallisto"><i class="fa fa-check"></i><b>7.2.1</b> Kallisto</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#single-cell-rnaseq"><i class="fa fa-check"></i><b>7.3</b> single cell RNAseq</a></li>
+<li class="chapter" data-level="7.4" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#mirna"><i class="fa fa-check"></i><b>7.4</b> miRNA</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#prepare-reference"><i class="fa fa-check"></i><b>7.4.1</b> Prepare reference</a></li>
+<li class="chapter" data-level="7.4.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#run-mirdeep2-pipeline"><i class="fa fa-check"></i><b>7.4.2</b> Run miRDeep2 pipeline</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html"><i class="fa fa-check"></i><b>8</b> Neoantigen prediction</a><ul>
+<li class="chapter" data-level="8.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#input-file-preparation"><i class="fa fa-check"></i><b>8.1</b> Input file preparation</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#annotating-vcf"><i class="fa fa-check"></i><b>8.1.1</b> Annotating VCF</a></li>
+<li class="chapter" data-level="8.1.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#adding-coverage"><i class="fa fa-check"></i><b>8.1.2</b> Adding coverage</a></li>
+<li class="chapter" data-level="8.1.3" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#adding-expression"><i class="fa fa-check"></i><b>8.1.3</b> Adding expression</a></li>
+<li class="chapter" data-level="8.1.4" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#creating-a-phased-vcf"><i class="fa fa-check"></i><b>8.1.4</b> Creating a phased VCF</a></li>
+<li class="chapter" data-level="8.1.5" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#combined-vcf-preparing-pipeline"><i class="fa fa-check"></i><b>8.1.5</b> Combined VCF preparing pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#hla-typing"><i class="fa fa-check"></i><b>8.2</b> HLA typing</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#polysolver"><i class="fa fa-check"></i><b>8.2.1</b> polysolver</a></li>
+<li class="chapter" data-level="8.2.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#optitype"><i class="fa fa-check"></i><b>8.2.2</b> Optitype</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#neoantigen-prediction-by-pvacseq"><i class="fa fa-check"></i><b>8.3</b> Neoantigen prediction by pVACseq</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html"><i class="fa fa-check"></i><b>9</b> Other Sequencing pipelines</a><ul>
+<li class="chapter" data-level="9.1" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#chip-seq"><i class="fa fa-check"></i><b>9.1</b> ChiP-Seq</a></li>
+<li class="chapter" data-level="9.2" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#atac-seq"><i class="fa fa-check"></i><b>9.2</b> ATAC-Seq</a></li>
+<li class="chapter" data-level="9.3" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#microbiome-sequencing"><i class="fa fa-check"></i><b>9.3</b> Microbiome Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bioinformatics tools and pipelines using R and CWL</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dna-seq-variant-calling" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> DNA-Seq Variant calling</h1>
+<p>First, we load the required packages.</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="dna-seq-variant-calling.html#cb159-1"></a><span class="kw">library</span>(RcwlPipelines)</span>
+<span id="cb159-2"><a href="dna-seq-variant-calling.html#cb159-2"></a><span class="kw">library</span>(BiocParallel)</span>
+<span id="cb159-3"><a href="dna-seq-variant-calling.html#cb159-3"></a><span class="kw">library</span>(fs)</span>
+<span id="cb159-4"><a href="dna-seq-variant-calling.html#cb159-4"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb159-5"><a href="dna-seq-variant-calling.html#cb159-5"></a><span class="kw">library</span>(jsonlite)</span>
+<span id="cb159-6"><a href="dna-seq-variant-calling.html#cb159-6"></a><span class="kw">library</span>(conflicted)</span>
+<span id="cb159-7"><a href="dna-seq-variant-calling.html#cb159-7"></a><span class="co">## always use select from dplyr</span></span>
+<span id="cb159-8"><a href="dna-seq-variant-calling.html#cb159-8"></a><span class="kw">conflict_prefer</span>(<span class="st">&quot;select&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>A collection of resource bundle files, including reference, and variants files are required in most of the variant calling steps by different tools and pipelines. We collected a bundle of files in the data folder.</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="dna-seq-variant-calling.html#cb160-1"></a>ref &lt;-<span class="st"> &quot;apps/data/hs37d5.fa&quot;</span></span>
+<span id="cb160-2"><a href="dna-seq-variant-calling.html#cb160-2"></a>dbsnp &lt;-<span class="st"> &quot;apps/data/bundle/dbsnp_138.b37.vcf.gz&quot;</span></span></code></pre></div>
+<div id="dna-alignment" class="section level2">
+<h2><span class="header-section-number">6.1</span> DNA alignment</h2>
+<p>We use the test data sets from the ICGC-TCGA DREAM Mutation Calling challenge for demonstration and performance test. The test sets contains two pairs of BAM files with SNVs and SVs in chr19 and chr20 separately. The ‘Truth’ VCF files are also included.</p>
+<p>Here is the URL to download the test data.</p>
+<ul>
+<li><a href="https://www.synapse.org/#!Synapse:syn2335184" class="uri">https://www.synapse.org/#!Synapse:syn2335184</a></li>
+</ul>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="dna-seq-variant-calling.html#cb161-1"></a><span class="kw">list.files</span>(<span class="st">&quot;apps/data/DREAM/&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;chr19.normal.bam&quot;       &quot;chr19.normal.bam.bai&quot;  
+## [3] &quot;chr19.truth.vcf.gz&quot;     &quot;chr19.truth.vcf.gz.tbi&quot;
+## [5] &quot;chr19.tumor.bam&quot;        &quot;chr19.tumor.bam.bai&quot;   
+## [7] &quot;normal.chr20.bam&quot;       &quot;truth.chr20.vcf.gz&quot;    
+## [9] &quot;tumor.chr20.bam&quot;</code></pre>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="dna-seq-variant-calling.html#cb163-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/data/DREAM&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 9 x 2
+##   path                                          size
+##   &lt;fs::path&gt;                             &lt;fs::bytes&gt;
+## 1 apps/data/DREAM/chr19.normal.bam             3.31G
+## 2 apps/data/DREAM/chr19.normal.bam.bai       171.64K
+## 3 apps/data/DREAM/chr19.truth.vcf.gz           21.6K
+## 4 apps/data/DREAM/chr19.truth.vcf.gz.tbi      11.27K
+## 5 apps/data/DREAM/chr19.tumor.bam              3.38G
+## 6 apps/data/DREAM/chr19.tumor.bam.bai          1.45M
+## 7 apps/data/DREAM/normal.chr20.bam             2.93G
+## 8 apps/data/DREAM/truth.chr20.vcf.gz          16.58K
+## 9 apps/data/DREAM/tumor.chr20.bam               2.9G</code></pre>
+<p>In order to show the variant calling workflow from the very beginning. We convert the BAM files back to fastqs using <code>picard SamToFastq</code> and treat the two BAM files as samples from two patients.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="dna-seq-variant-calling.html#cb165-1"></a><span class="kw">inputs</span>(SamToFastq)</span></code></pre></div>
+<pre><code>## inputs:
+##   bam (File): I= 
+##   fq1 (string): F= 
+##   fq2 (string): F2=</code></pre>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="dna-seq-variant-calling.html#cb167-1"></a><span class="co">## prepare inputs</span></span>
+<span id="cb167-2"><a href="dna-seq-variant-calling.html#cb167-2"></a>bams &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/data/DREAM/&quot;</span>, <span class="st">&quot;.bam$&quot;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb167-3"><a href="dna-seq-variant-calling.html#cb167-3"></a>samples &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;normal19&quot;</span>, <span class="st">&quot;tumor19&quot;</span>, <span class="st">&quot;normal20&quot;</span>, <span class="st">&quot;tumor20&quot;</span>)</span>
+<span id="cb167-4"><a href="dna-seq-variant-calling.html#cb167-4"></a>Bams &lt;-<span class="st"> </span><span class="kw">tapply</span>(bams, samples, as.list)</span>
+<span id="cb167-5"><a href="dna-seq-variant-calling.html#cb167-5"></a>fq1 &lt;-<span class="st"> </span><span class="kw">tapply</span>(<span class="kw">paste0</span>(samples, <span class="st">&quot;_R1.fq&quot;</span>), samples, as.list)</span>
+<span id="cb167-6"><a href="dna-seq-variant-calling.html#cb167-6"></a>fq2 &lt;-<span class="st"> </span><span class="kw">tapply</span>(<span class="kw">paste0</span>(samples, <span class="st">&quot;_R2.fq&quot;</span>), samples, as.list)</span>
+<span id="cb167-7"><a href="dna-seq-variant-calling.html#cb167-7"></a></span>
+<span id="cb167-8"><a href="dna-seq-variant-calling.html#cb167-8"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">bam =</span> Bams,</span>
+<span id="cb167-9"><a href="dna-seq-variant-calling.html#cb167-9"></a>                  <span class="dt">fq1 =</span> fq1,</span>
+<span id="cb167-10"><a href="dna-seq-variant-calling.html#cb167-10"></a>                  <span class="dt">fq2 =</span> fq2)</span>
+<span id="cb167-11"><a href="dna-seq-variant-calling.html#cb167-11"></a><span class="co">## run in HPC using SGE</span></span>
+<span id="cb167-12"><a href="dna-seq-variant-calling.html#cb167-12"></a>res1 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(SamToFastq, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/fastq/&quot;</span>, inputList,</span>
+<span id="cb167-13"><a href="dna-seq-variant-calling.html#cb167-13"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="kw">length</span>(samples), <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb167-14"><a href="dna-seq-variant-calling.html#cb167-14"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb167-15"><a href="dna-seq-variant-calling.html#cb167-15"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">jobname =</span> <span class="st">&quot;sam2fq&quot;</span>,</span>
+<span id="cb167-16"><a href="dna-seq-variant-calling.html#cb167-16"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb167-17"><a href="dna-seq-variant-calling.html#cb167-17"></a>                                                               <span class="dt">threads =</span> <span class="dv">16</span>),</span>
+<span id="cb167-18"><a href="dna-seq-variant-calling.html#cb167-18"></a>                                              <span class="dt">log=</span><span class="ot">TRUE</span>, <span class="dt">logdir=</span><span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> T),</span>
+<span id="cb167-19"><a href="dna-seq-variant-calling.html#cb167-19"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Let’s check the outputs.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="dna-seq-variant-calling.html#cb168-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/fastq/&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>, <span class="dt">glob =</span> <span class="st">&quot;*.fq&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 8 x 2
+##   path                                               size
+##   &lt;fs::path&gt;                                  &lt;fs::bytes&gt;
+## 1 apps/variants/fastq/normal19/normal19_R1.fq       2.17G
+## 2 apps/variants/fastq/normal19/normal19_R2.fq       2.17G
+## 3 apps/variants/fastq/normal20/normal20_R1.fq       2.14G
+## 4 apps/variants/fastq/normal20/normal20_R2.fq       2.14G
+## 5 apps/variants/fastq/tumor19/tumor19_R1.fq         2.18G
+## 6 apps/variants/fastq/tumor19/tumor19_R2.fq         2.18G
+## 7 apps/variants/fastq/tumor20/tumor20_R1.fq         2.14G
+## 8 apps/variants/fastq/tumor20/tumor20_R2.fq         2.14G</code></pre>
+<p>Now, we are ready to run the DNA alignment pipeline, <code>bwaMRecal</code>, including all necessary steps to prepare the analysis-ready BAM files. We can check the required inputs and steps.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="dna-seq-variant-calling.html#cb170-1"></a><span class="kw">inputs</span>(bwaMRecal)</span></code></pre></div>
+<pre><code>## inputs:
+##   outBam (string):  
+##   RG (string):  
+##   threads (int):  
+##   Ref (File):  
+##   FQ1s (File):  
+##   FQ2s (File):  
+##   knowSites:
+##     type: array
+##     prefix:</code></pre>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="dna-seq-variant-calling.html#cb172-1"></a><span class="kw">names</span>(<span class="kw">steps</span>(bwaMRecal))</span></code></pre></div>
+<pre><code>## [1] &quot;bwaAlign&quot;  &quot;markdup&quot;   &quot;BaseRecal&quot;</code></pre>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="dna-seq-variant-calling.html#cb174-1"></a>fqs &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/fastq&quot;</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb174-2"><a href="dna-seq-variant-calling.html#cb174-2"></a>fq1 &lt;-<span class="st"> </span>fqs[<span class="kw">grep</span>(<span class="st">&quot;R1&quot;</span>, fqs)]</span>
+<span id="cb174-3"><a href="dna-seq-variant-calling.html#cb174-3"></a>fq2 &lt;-<span class="st"> </span>fqs[<span class="kw">grep</span>(<span class="st">&quot;R2&quot;</span>, fqs)]</span>
+<span id="cb174-4"><a href="dna-seq-variant-calling.html#cb174-4"></a>ids &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;_.*&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">basename</span>(fq1))</span>
+<span id="cb174-5"><a href="dna-seq-variant-calling.html#cb174-5"></a>fq1L &lt;-<span class="st"> </span><span class="kw">tapply</span>(fq1, ids, as.list)</span>
+<span id="cb174-6"><a href="dna-seq-variant-calling.html#cb174-6"></a>fq2L &lt;-<span class="st"> </span><span class="kw">tapply</span>(fq2, ids, as.list)</span>
+<span id="cb174-7"><a href="dna-seq-variant-calling.html#cb174-7"></a></span>
+<span id="cb174-8"><a href="dna-seq-variant-calling.html#cb174-8"></a>RGs &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;@RG&quot;</span>,</span>
+<span id="cb174-9"><a href="dna-seq-variant-calling.html#cb174-9"></a>             <span class="kw">paste0</span>(<span class="st">&quot;ID:&quot;</span>, ids),</span>
+<span id="cb174-10"><a href="dna-seq-variant-calling.html#cb174-10"></a>             <span class="kw">paste0</span>(<span class="st">&quot;LB:&quot;</span>, ids),</span>
+<span id="cb174-11"><a href="dna-seq-variant-calling.html#cb174-11"></a>             <span class="kw">paste0</span>(<span class="st">&quot;DT:&quot;</span>, <span class="kw">Sys.Date</span>()),</span>
+<span id="cb174-12"><a href="dna-seq-variant-calling.html#cb174-12"></a>             <span class="kw">paste0</span>(<span class="st">&quot;PL:&quot;</span>, <span class="st">&quot;Illumina&quot;</span>),</span>
+<span id="cb174-13"><a href="dna-seq-variant-calling.html#cb174-13"></a>             <span class="st">&quot;CN:RCWL&quot;</span>,</span>
+<span id="cb174-14"><a href="dna-seq-variant-calling.html#cb174-14"></a>             <span class="kw">paste0</span>(<span class="st">&quot;SM:&quot;</span>, ids), <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">t&quot;</span>)</span>
+<span id="cb174-15"><a href="dna-seq-variant-calling.html#cb174-15"></a>RGL &lt;-<span class="st"> </span><span class="kw">tapply</span>(RGs, ids, as.list)</span>
+<span id="cb174-16"><a href="dna-seq-variant-calling.html#cb174-16"></a>outBam &lt;-<span class="st"> </span><span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(RGL), <span class="st">&quot;.bam&quot;</span>))</span>
+<span id="cb174-17"><a href="dna-seq-variant-calling.html#cb174-17"></a></span>
+<span id="cb174-18"><a href="dna-seq-variant-calling.html#cb174-18"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">RG =</span> RGL,</span>
+<span id="cb174-19"><a href="dna-seq-variant-calling.html#cb174-19"></a>                  <span class="dt">outBam =</span> outBam,</span>
+<span id="cb174-20"><a href="dna-seq-variant-calling.html#cb174-20"></a>                  <span class="dt">FQ1s =</span> fq1L,</span>
+<span id="cb174-21"><a href="dna-seq-variant-calling.html#cb174-21"></a>                  <span class="dt">FQ2s =</span> fq2L)</span>
+<span id="cb174-22"><a href="dna-seq-variant-calling.html#cb174-22"></a></span>
+<span id="cb174-23"><a href="dna-seq-variant-calling.html#cb174-23"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb174-24"><a href="dna-seq-variant-calling.html#cb174-24"></a>                  <span class="dt">Ref =</span>ref,</span>
+<span id="cb174-25"><a href="dna-seq-variant-calling.html#cb174-25"></a>                  <span class="dt">knowSites =</span> <span class="kw">list</span>(</span>
+<span id="cb174-26"><a href="dna-seq-variant-calling.html#cb174-26"></a>                      <span class="st">&quot;apps/data/bundle/dbsnp_138.b37.vcf&quot;</span>,</span>
+<span id="cb174-27"><a href="dna-seq-variant-calling.html#cb174-27"></a>                      <span class="st">&quot;apps/data/bundle/Mills_and_1000G_gold_standard.indels.b37.vcf&quot;</span></span>
+<span id="cb174-28"><a href="dna-seq-variant-calling.html#cb174-28"></a>                  ))</span>
+<span id="cb174-29"><a href="dna-seq-variant-calling.html#cb174-29"></a></span>
+<span id="cb174-30"><a href="dna-seq-variant-calling.html#cb174-30"></a>res2 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(bwaMRecal, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/BAM&quot;</span>, inputList, paramList,</span>
+<span id="cb174-31"><a href="dna-seq-variant-calling.html#cb174-31"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="kw">length</span>(samples),</span>
+<span id="cb174-32"><a href="dna-seq-variant-calling.html#cb174-32"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb174-33"><a href="dna-seq-variant-calling.html#cb174-33"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb174-34"><a href="dna-seq-variant-calling.html#cb174-34"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb174-35"><a href="dna-seq-variant-calling.html#cb174-35"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb174-36"><a href="dna-seq-variant-calling.html#cb174-36"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;align&quot;</span>),</span>
+<span id="cb174-37"><a href="dna-seq-variant-calling.html#cb174-37"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb174-38"><a href="dna-seq-variant-calling.html#cb174-38"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the outputs:</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="dna-seq-variant-calling.html#cb175-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/BAM/&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 26 x 2
+##    path                                                       size
+##    &lt;fs::path&gt;                                          &lt;fs::bytes&gt;
+##  1 apps/variants/BAM/normal19                                   4K
+##  2 apps/variants/BAM/normal19/normal19.bai                    2.6M
+##  3 apps/variants/BAM/normal19/normal19.bam                    2.3G
+##  4 apps/variants/BAM/normal19/normal19.bam.bai                2.6M
+##  5 apps/variants/BAM/normal19/normal19.bam.markdup.txt       2.75K
+##  6 apps/variants/BAM/normal19/normal19.flagstat.txt            448
+##  7 apps/variants/BAM/normal19/normal19.stats.txt            95.16K
+##  8 apps/variants/BAM/normal20                                   4K
+##  9 apps/variants/BAM/normal20/normal20.bai                   2.45M
+## 10 apps/variants/BAM/normal20/normal20.bam                   2.23G
+## # … with 16 more rows</code></pre>
+</div>
+<div id="germline-variant-calling" class="section level2">
+<h2><span class="header-section-number">6.2</span> Germline variant calling</h2>
+<p>The GATK germline variant calling pipeline is one of the most popular method to call germline short variants. The latest best practice was implemented with the Workflow Description Language (WDL). The WDL scripts was simply wrapped with <code>Rcwl</code> in the <code>RcwlPipelines</code> package.</p>
+<ul>
+<li><a href="https://github.com/gatk-workflows/gatk4-germline-snps-indels" class="uri">https://github.com/gatk-workflows/gatk4-germline-snps-indels</a></li>
+</ul>
+<p>There are two steps to run the latest GATK pipeline if the BAMs are prepared. First the <code>haplotypecaller</code> step is used to call variants by samples. The “WDL” script and “json” input for this step are also contained in the package.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="dna-seq-variant-calling.html#cb177-1"></a>wdl1 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">package=</span><span class="st">&quot;RcwlPipelines&quot;</span>, <span class="st">&quot;GATK4/gatk4-germline-snps-indels/haplotypecaller-gvcf-gatk4.wdl&quot;</span>)</span>
+<span id="cb177-2"><a href="dna-seq-variant-calling.html#cb177-2"></a>tmpl1 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">package=</span><span class="st">&quot;RcwlPipelines&quot;</span>, <span class="st">&quot;GATK4/gatk4-germline-snps-indels/haplotypecaller-gvcf-gatk4.hg38.inputs.local.json&quot;</span>)</span></code></pre></div>
+<p>We need to modify the reference from “hg38” to “b37”. Please note that all the file paths should be absolute paths for the “WDL” inputs.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="dna-seq-variant-calling.html#cb178-1"></a>json1 &lt;-<span class="st"> </span><span class="kw">fromJSON</span>(tmpl1)</span>
+<span id="cb178-2"><a href="dna-seq-variant-calling.html#cb178-2"></a>json1<span class="op">$</span>HaplotypeCallerGvcf_GATK4.ref_dict &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.dict&quot;</span>)</span>
+<span id="cb178-3"><a href="dna-seq-variant-calling.html#cb178-3"></a>json1<span class="op">$</span>HaplotypeCallerGvcf_GATK4.ref_fasta &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.fa&quot;</span>)</span>
+<span id="cb178-4"><a href="dna-seq-variant-calling.html#cb178-4"></a>json1<span class="op">$</span>HaplotypeCallerGvcf_GATK4.ref_fasta_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.fa.fai&quot;</span>)</span>
+<span id="cb178-5"><a href="dna-seq-variant-calling.html#cb178-5"></a><span class="kw">dir.create</span>(<span class="st">&quot;apps/variants/vcf&quot;</span>)</span>
+<span id="cb178-6"><a href="dna-seq-variant-calling.html#cb178-6"></a><span class="kw">writeLines</span>(jsonlite<span class="op">::</span><span class="kw">toJSON</span>(json1, <span class="dt">pretty =</span> <span class="ot">TRUE</span>, <span class="dt">auto_unbox =</span> T), <span class="st">&quot;apps/variants/vcf/tmpl1.json&quot;</span>)</span></code></pre></div>
+<p>A interval list is required to define the exome capture region. We couldn’t find one for the TCGA data, so here we just simply use the exome regions.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="dna-seq-variant-calling.html#cb179-1"></a><span class="kw">library</span>(TxDb.Hsapiens.UCSC.hg19.knownGene)</span>
+<span id="cb179-2"><a href="dna-seq-variant-calling.html#cb179-2"></a><span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb179-3"><a href="dna-seq-variant-calling.html#cb179-3"></a>e1 &lt;-<span class="st"> </span><span class="kw">reduce</span>(<span class="kw">exons</span>(TxDb.Hsapiens.UCSC.hg19.knownGene), <span class="dt">ignore.strand =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb179-4"><a href="dna-seq-variant-calling.html#cb179-4"></a>e1 &lt;-<span class="st"> </span>e1[<span class="kw">seqnames</span>(e1) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;chr19&quot;</span>, <span class="st">&quot;chr20&quot;</span>)]</span>
+<span id="cb179-5"><a href="dna-seq-variant-calling.html#cb179-5"></a>e1df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(e1)</span>
+<span id="cb179-6"><a href="dna-seq-variant-calling.html#cb179-6"></a>bed &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">as.character</span>(<span class="kw">sub</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;&quot;</span>, e1df[,<span class="dv">1</span>])), e1df[,<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, e1df[,<span class="dv">3</span>])</span>
+<span id="cb179-7"><a href="dna-seq-variant-calling.html#cb179-7"></a><span class="kw">write.table</span>(bed, <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb179-8"><a href="dna-seq-variant-calling.html#cb179-8"></a>            <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">col.names =</span> <span class="ot">FALSE</span>, <span class="dt">quote =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb179-9"><a href="dna-seq-variant-calling.html#cb179-9"></a></span>
+<span id="cb179-10"><a href="dna-seq-variant-calling.html#cb179-10"></a>BedToIntervalList<span class="op">$</span>bed &lt;-<span class="st"> &quot;apps/variants/vcf/intval.bed&quot;</span></span>
+<span id="cb179-11"><a href="dna-seq-variant-calling.html#cb179-11"></a>BedToIntervalList<span class="op">$</span>SD &lt;-<span class="st"> &quot;apps/data/hs37d5.dict&quot;</span></span>
+<span id="cb179-12"><a href="dna-seq-variant-calling.html#cb179-12"></a>BedToIntervalList<span class="op">$</span>out &lt;-<span class="st"> &quot;region.interval_list&quot;</span></span>
+<span id="cb179-13"><a href="dna-seq-variant-calling.html#cb179-13"></a>r1 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(BedToIntervalList, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/vcf/&quot;</span>)</span>
+<span id="cb179-14"><a href="dna-seq-variant-calling.html#cb179-14"></a></span>
+<span id="cb179-15"><a href="dna-seq-variant-calling.html#cb179-15"></a><span class="kw">writeLines</span>(<span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/region.interval_list&quot;</span>), <span class="st">&quot;apps/variants/vcf/intval.txt&quot;</span>)</span>
+<span id="cb179-16"><a href="dna-seq-variant-calling.html#cb179-16"></a>fai &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;apps/data/hs37d5.fa.fai&quot;</span>)</span>
+<span id="cb179-17"><a href="dna-seq-variant-calling.html#cb179-17"></a>unpad &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="dv">19</span>, <span class="dv">20</span>), <span class="st">&quot;:&quot;</span>, <span class="dv">1</span>, <span class="st">&quot;-&quot;</span>, fai[<span class="dv">19</span><span class="op">:</span><span class="dv">20</span>, <span class="dv">2</span>])</span>
+<span id="cb179-18"><a href="dna-seq-variant-calling.html#cb179-18"></a><span class="kw">writeLines</span>(unpad, <span class="st">&quot;apps/variants/vcf/intval.unpad.txt&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="dna-seq-variant-calling.html#cb180-1"></a><span class="co">## fix bai paths</span></span>
+<span id="cb180-2"><a href="dna-seq-variant-calling.html#cb180-2"></a><span class="kw">file.copy</span>(<span class="st">&quot;apps/variants/BAM/normal19/normal19.bam.bai&quot;</span>,</span>
+<span id="cb180-3"><a href="dna-seq-variant-calling.html#cb180-3"></a>          <span class="st">&quot;apps/variants/BAM/normal19/normal19.bai&quot;</span>)</span>
+<span id="cb180-4"><a href="dna-seq-variant-calling.html#cb180-4"></a><span class="kw">file.copy</span>(<span class="st">&quot;apps/variants/BAM/normal20/normal20.bam.bai&quot;</span>,</span>
+<span id="cb180-5"><a href="dna-seq-variant-calling.html#cb180-5"></a>          <span class="st">&quot;apps/variants/BAM/normal20/normal20.bai&quot;</span>)</span>
+<span id="cb180-6"><a href="dna-seq-variant-calling.html#cb180-6"></a></span>
+<span id="cb180-7"><a href="dna-seq-variant-calling.html#cb180-7"></a>bams &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="kw">list.files</span>(<span class="st">&quot;apps/variants/BAM&quot;</span>, <span class="st">&quot;normal.*.bam$&quot;</span>,</span>
+<span id="cb180-8"><a href="dna-seq-variant-calling.html#cb180-8"></a>                                 <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb180-9"><a href="dna-seq-variant-calling.html#cb180-9"></a>bams &lt;-<span class="st"> </span><span class="kw">as.list</span>(bams)</span>
+<span id="cb180-10"><a href="dna-seq-variant-calling.html#cb180-10"></a><span class="kw">names</span>(bams) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;normal19&quot;</span>, <span class="st">&quot;normal20&quot;</span>)</span>
+<span id="cb180-11"><a href="dna-seq-variant-calling.html#cb180-11"></a></span>
+<span id="cb180-12"><a href="dna-seq-variant-calling.html#cb180-12"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">bam =</span> bams)</span>
+<span id="cb180-13"><a href="dna-seq-variant-calling.html#cb180-13"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">intervals =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/intval.txt&quot;</span>),</span>
+<span id="cb180-14"><a href="dna-seq-variant-calling.html#cb180-14"></a>                  <span class="dt">cromwell =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/cromwell-45.jar&quot;</span>),</span>
+<span id="cb180-15"><a href="dna-seq-variant-calling.html#cb180-15"></a>                  <span class="dt">wdl =</span> wdl1,</span>
+<span id="cb180-16"><a href="dna-seq-variant-calling.html#cb180-16"></a>                  <span class="dt">tmpl =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/tmpl1.json&quot;</span>))</span>
+<span id="cb180-17"><a href="dna-seq-variant-calling.html#cb180-17"></a></span>
+<span id="cb180-18"><a href="dna-seq-variant-calling.html#cb180-18"></a>res3 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(hapCall, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/vcf&quot;</span>, inputList, paramList,</span>
+<span id="cb180-19"><a href="dna-seq-variant-calling.html#cb180-19"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="kw">length</span>(bams),</span>
+<span id="cb180-20"><a href="dna-seq-variant-calling.html#cb180-20"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb180-21"><a href="dna-seq-variant-calling.html#cb180-21"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb180-22"><a href="dna-seq-variant-calling.html#cb180-22"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb180-23"><a href="dna-seq-variant-calling.html#cb180-23"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb180-24"><a href="dna-seq-variant-calling.html#cb180-24"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;hapCall&quot;</span>),</span>
+<span id="cb180-25"><a href="dna-seq-variant-calling.html#cb180-25"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb180-26"><a href="dna-seq-variant-calling.html#cb180-26"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>, <span class="dt">cwlTemp=</span>T)</span></code></pre></div>
+<p>Here are the results.</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="dna-seq-variant-calling.html#cb181-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/vcf/&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>, <span class="dt">glob =</span> <span class="st">&quot;*.g.vcf.gz&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                                       size
+##   &lt;fs::path&gt;                                          &lt;fs::bytes&gt;
+## 1 apps/variants/vcf/normal19/output/normal19.g.vcf.gz        192M
+## 2 apps/variants/vcf/normal20/output/normal20.g.vcf.gz        199M</code></pre>
+<p>Then we perform joint genotyping with <code>jdCall</code>. The reference genome bundles are also need to be changed to “b37”. You can skip this step if you already have a “b37” version of metadata file.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="dna-seq-variant-calling.html#cb183-1"></a>wdl2 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">package=</span><span class="st">&quot;RcwlPipelines&quot;</span>, <span class="st">&quot;GATK4/gatk4-germline-snps-indels/joint-discovery-gatk4-local.wdl&quot;</span>)</span>
+<span id="cb183-2"><a href="dna-seq-variant-calling.html#cb183-2"></a>tmpl2 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">package=</span><span class="st">&quot;RcwlPipelines&quot;</span>, <span class="st">&quot;GATK4/gatk4-germline-snps-indels/joint-discovery-gatk4-local.hg38.wgs.inputs.json&quot;</span>)</span>
+<span id="cb183-3"><a href="dna-seq-variant-calling.html#cb183-3"></a><span class="co">## change to b37</span></span>
+<span id="cb183-4"><a href="dna-seq-variant-calling.html#cb183-4"></a>json2 &lt;-<span class="st"> </span><span class="kw">fromJSON</span>(tmpl2)</span>
+<span id="cb183-5"><a href="dna-seq-variant-calling.html#cb183-5"></a>json2<span class="op">$</span>JointGenotyping.ref_dict &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.dict&quot;</span>)</span>
+<span id="cb183-6"><a href="dna-seq-variant-calling.html#cb183-6"></a>json2<span class="op">$</span>JointGenotyping.ref_fasta &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.fa&quot;</span>)</span>
+<span id="cb183-7"><a href="dna-seq-variant-calling.html#cb183-7"></a>json2<span class="op">$</span>JointGenotyping.ref_fasta_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/hs37d5.fa.fai&quot;</span>)</span>
+<span id="cb183-8"><a href="dna-seq-variant-calling.html#cb183-8"></a>json2<span class="op">$</span>JointGenotyping.dbsnp_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/dbsnp_138.b37.vcf&quot;</span>)</span>
+<span id="cb183-9"><a href="dna-seq-variant-calling.html#cb183-9"></a>json2<span class="op">$</span>JointGenotyping.dbsnp_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/dbsnp_138.b37.vcf.idx&quot;</span>)</span>
+<span id="cb183-10"><a href="dna-seq-variant-calling.html#cb183-10"></a>json2<span class="op">$</span>JointGenotyping.one_thousand_genomes_resource_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/1000G_phase1.snps.high_confidence.b37.vcf&quot;</span>)</span>
+<span id="cb183-11"><a href="dna-seq-variant-calling.html#cb183-11"></a>json2<span class="op">$</span>JointGenotyping.one_thousand_genomes_resource_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/1000G_phase1.snps.high_confidence.b37.vcf.idx&quot;</span>)</span>
+<span id="cb183-12"><a href="dna-seq-variant-calling.html#cb183-12"></a>json2<span class="op">$</span>JointGenotyping.omni_resource_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/1000G_omni2.5.b37.vcf&quot;</span>)</span>
+<span id="cb183-13"><a href="dna-seq-variant-calling.html#cb183-13"></a>json2<span class="op">$</span>JointGenotyping.omni_resource_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/1000G_omni2.5.b37.vcf.idx&quot;</span>)</span>
+<span id="cb183-14"><a href="dna-seq-variant-calling.html#cb183-14"></a>json2<span class="op">$</span>JointGenotyping.mills_resource_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/Mills_and_1000G_gold_standard.indels.b37.vcf&quot;</span>)</span>
+<span id="cb183-15"><a href="dna-seq-variant-calling.html#cb183-15"></a>json2<span class="op">$</span>JointGenotyping.mills_resource_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/Mills_and_1000G_gold_standard.indels.b37.vcf.idx&quot;</span>)</span>
+<span id="cb183-16"><a href="dna-seq-variant-calling.html#cb183-16"></a>json2<span class="op">$</span>JointGenotyping.axiomPoly_resource_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/Axiom_Exome_Plus.genotypes.all_populations.poly.vcf.gz&quot;</span>)</span>
+<span id="cb183-17"><a href="dna-seq-variant-calling.html#cb183-17"></a>json2<span class="op">$</span>JointGenotyping.axiomPoly_resource_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/Axiom_Exome_Plus.genotypes.all_populations.poly.vcf.gz.tbi&quot;</span>)</span>
+<span id="cb183-18"><a href="dna-seq-variant-calling.html#cb183-18"></a>json2<span class="op">$</span>JointGenotyping.hapmap_resource_vcf &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/hapmap_3.3.b37.vcf&quot;</span>)</span>
+<span id="cb183-19"><a href="dna-seq-variant-calling.html#cb183-19"></a>json2<span class="op">$</span>JointGenotyping.hapmap_resource_vcf_index &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="st">&quot;apps/data/bundle/hapmap_3.3.b37.vcf.idx&quot;</span>)</span>
+<span id="cb183-20"><a href="dna-seq-variant-calling.html#cb183-20"></a></span>
+<span id="cb183-21"><a href="dna-seq-variant-calling.html#cb183-21"></a><span class="kw">writeLines</span>(<span class="kw">toJSON</span>(json2, <span class="dt">pretty =</span> <span class="ot">TRUE</span>, <span class="dt">auto_unbox =</span> T), <span class="st">&quot;apps/variants/vcf/tmpl2.json&quot;</span>)</span></code></pre></div>
+<p>The joint calling step takes the inputs from the previous step and run together.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="dna-seq-variant-calling.html#cb184-1"></a><span class="co">## prepare inputs</span></span>
+<span id="cb184-2"><a href="dna-seq-variant-calling.html#cb184-2"></a>sampleName &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">names</span>(bams), <span class="dt">collapse =</span> <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb184-3"><a href="dna-seq-variant-calling.html#cb184-3"></a>gvcf &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">normalizePath</span>(<span class="kw">list.files</span>(<span class="st">&quot;apps/variants/vcf&quot;</span>, <span class="st">&quot;g.vcf.gz$&quot;</span>,</span>
+<span id="cb184-4"><a href="dna-seq-variant-calling.html#cb184-4"></a>                                       <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)),</span>
+<span id="cb184-5"><a href="dna-seq-variant-calling.html#cb184-5"></a>              <span class="dt">collapse =</span> <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb184-6"><a href="dna-seq-variant-calling.html#cb184-6"></a></span>
+<span id="cb184-7"><a href="dna-seq-variant-calling.html#cb184-7"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">sampleName =</span> <span class="kw">list</span>(<span class="dt">res =</span> sampleName),</span>
+<span id="cb184-8"><a href="dna-seq-variant-calling.html#cb184-8"></a>                  <span class="dt">gvcf =</span> <span class="kw">list</span>(<span class="dt">res =</span> gvcf))</span>
+<span id="cb184-9"><a href="dna-seq-variant-calling.html#cb184-9"></a></span>
+<span id="cb184-10"><a href="dna-seq-variant-calling.html#cb184-10"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">callsetName =</span> <span class="st">&quot;germline&quot;</span>,</span>
+<span id="cb184-11"><a href="dna-seq-variant-calling.html#cb184-11"></a>                  <span class="dt">intervals =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/region.interval_list&quot;</span>),</span>
+<span id="cb184-12"><a href="dna-seq-variant-calling.html#cb184-12"></a>                  <span class="dt">unpadded_intervals =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/intval.unpad.txt&quot;</span>),</span>
+<span id="cb184-13"><a href="dna-seq-variant-calling.html#cb184-13"></a>                  <span class="dt">tmpl =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/variants/vcf/tmpl2.json&quot;</span>),</span>
+<span id="cb184-14"><a href="dna-seq-variant-calling.html#cb184-14"></a>                  <span class="dt">wdl =</span> wdl2,</span>
+<span id="cb184-15"><a href="dna-seq-variant-calling.html#cb184-15"></a>                  <span class="dt">cromwell =</span> <span class="kw">normalizePath</span>(<span class="st">&quot;apps/cromwell-45.jar&quot;</span>))</span>
+<span id="cb184-16"><a href="dna-seq-variant-calling.html#cb184-16"></a>res4 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(jdCall, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/vcf1&quot;</span>, inputList, paramList,</span>
+<span id="cb184-17"><a href="dna-seq-variant-calling.html#cb184-17"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">1</span>,</span>
+<span id="cb184-18"><a href="dna-seq-variant-calling.html#cb184-18"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb184-19"><a href="dna-seq-variant-calling.html#cb184-19"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb184-20"><a href="dna-seq-variant-calling.html#cb184-20"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb184-21"><a href="dna-seq-variant-calling.html#cb184-21"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb184-22"><a href="dna-seq-variant-calling.html#cb184-22"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;jdCall&quot;</span>),</span>
+<span id="cb184-23"><a href="dna-seq-variant-calling.html#cb184-23"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb184-24"><a href="dna-seq-variant-calling.html#cb184-24"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>, <span class="dt">cwlTemp=</span>T)</span></code></pre></div>
+<p>Here are the final results:</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="dna-seq-variant-calling.html#cb185-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/vcf/res/output&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 2
+##   path                                                                 size
+##   &lt;fs::path&gt;                                                     &lt;fs::byte&gt;
+## 1 apps/variants/vcf/res/output/germline.variant_calling_detail_…      1.82K
+## 2 apps/variants/vcf/res/output/germline.variant_calling_summary…       1.6K
+## 3 apps/variants/vcf/res/output/germline.vcf.gz                       13.65M
+## 4 apps/variants/vcf/res/output/germline.vcf.gz.tbi                   83.89K
+## 5 apps/variants/vcf/res/output/out.intervals                             27</code></pre>
+</div>
+<div id="somatic-mutation-calling" class="section level2">
+<h2><span class="header-section-number">6.3</span> Somatic mutation calling</h2>
+<p>We have collected many somatic mutation callers, including MuTect2, strelka2, MuSe, VarDict, SomaticSniper, LoFreq, VarScan2, lancet and neusomatic. Recent research papers have reported that the combination of multiple callers could improve the sensitivity and specificity.</p>
+<div id="mutect2" class="section level3">
+<h3><span class="header-section-number">6.3.1</span> MuTect2</h3>
+<p>The MuTect2 was built based on the latest best practise from GATK 4.
+<a href="https://software.broadinstitute.org/gatk/best-practices/workflow?id=11146" class="uri">https://software.broadinstitute.org/gatk/best-practices/workflow?id=11146</a></p>
+<p>The required resources files can be downloaded from its google storage. &lt;gs://gatk-best-practices&gt;</p>
+<ol style="list-style-type: decimal">
+<li>Call variants on normal samples</li>
+</ol>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="dna-seq-variant-calling.html#cb187-1"></a>bams &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/BAM&quot;</span>, <span class="st">&quot;.bam$&quot;</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb187-2"><a href="dna-seq-variant-calling.html#cb187-2"></a>nbam &lt;-<span class="st"> </span><span class="kw">as.list</span>(bams[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])</span>
+<span id="cb187-3"><a href="dna-seq-variant-calling.html#cb187-3"></a><span class="kw">names</span>(nbam) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;normal19&quot;</span>, <span class="st">&quot;normal20&quot;</span>)</span>
+<span id="cb187-4"><a href="dna-seq-variant-calling.html#cb187-4"></a>ovcf &lt;-<span class="st"> </span><span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(nbam), <span class="st">&quot;.vcf&quot;</span>))</span>
+<span id="cb187-5"><a href="dna-seq-variant-calling.html#cb187-5"></a></span>
+<span id="cb187-6"><a href="dna-seq-variant-calling.html#cb187-6"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> nbam,</span>
+<span id="cb187-7"><a href="dna-seq-variant-calling.html#cb187-7"></a>                  <span class="dt">out =</span> ovcf)</span>
+<span id="cb187-8"><a href="dna-seq-variant-calling.html#cb187-8"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Ref =</span> ref,</span>
+<span id="cb187-9"><a href="dna-seq-variant-calling.html#cb187-9"></a>                  <span class="dt">interval =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>)</span>
+<span id="cb187-10"><a href="dna-seq-variant-calling.html#cb187-10"></a><span class="co">## avoid a bug in GenomicsDBImport</span></span>
+<span id="cb187-11"><a href="dna-seq-variant-calling.html#cb187-11"></a><span class="kw">arguments</span>(Mutect2) &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;-max-mnp-distance&quot;</span>, <span class="st">&quot;0&quot;</span>)</span>
+<span id="cb187-12"><a href="dna-seq-variant-calling.html#cb187-12"></a>res5 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(Mutect2, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/mutect2&quot;</span>, inputList, paramList,</span>
+<span id="cb187-13"><a href="dna-seq-variant-calling.html#cb187-13"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb187-14"><a href="dna-seq-variant-calling.html#cb187-14"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb187-15"><a href="dna-seq-variant-calling.html#cb187-15"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb187-16"><a href="dna-seq-variant-calling.html#cb187-16"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb187-17"><a href="dna-seq-variant-calling.html#cb187-17"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb187-18"><a href="dna-seq-variant-calling.html#cb187-18"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;mutect2&quot;</span>),</span>
+<span id="cb187-19"><a href="dna-seq-variant-calling.html#cb187-19"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb187-20"><a href="dna-seq-variant-calling.html#cb187-20"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="dna-seq-variant-calling.html#cb188-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/mutect2&quot;</span>, <span class="dt">regexp =</span> <span class="st">&quot;normal&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 14 x 2
+##    path                                                                size
+##    &lt;fs::path&gt;                                                    &lt;fs::byte&gt;
+##  1 apps/variants/mutect2/normal19                                        4K
+##  2 apps/variants/mutect2/normal19/normal19.vcf                       15.96M
+##  3 apps/variants/mutect2/normal19/normal19.vcf.idx                  117.92K
+##  4 apps/variants/mutect2/normal19/normal19.vcf.stats                     37
+##  5 apps/variants/mutect2/normal20                                        4K
+##  6 apps/variants/mutect2/normal20/normal20.vcf                       14.59M
+##  7 apps/variants/mutect2/normal20/normal20.vcf.idx                  248.43K
+##  8 apps/variants/mutect2/normal20/normal20.vcf.stats                     37
+##  9 apps/variants/mutect2/pt19/normal19.tumor19.ctfiltered.obfil…    123.43K
+## 10 apps/variants/mutect2/pt19/normal19.tumor19.ctfiltered.obfil…    542.26K
+## 11 apps/variants/mutect2/pt19/normal19.tumor19.ctfiltered.obfil…      1.04M
+## 12 apps/variants/mutect2/pt20/normal20.tumor20.ctfiltered.obfil…    211.87K
+## 13 apps/variants/mutect2/pt20/normal20.tumor20.ctfiltered.obfil…    517.15K
+## 14 apps/variants/mutect2/pt20/normal20.tumor20.ctfiltered.obfil…    990.28K</code></pre>
+<p>Note that, we need to add “-max-mnp-distance 0” to the arguments according to the Mutect2 documents to avoid a bug in “GenomicsDBImport” step.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Create a panel of normals (PoN)</li>
+</ol>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="dna-seq-variant-calling.html#cb190-1"></a>GPoN<span class="op">$</span>nvcf &lt;-<span class="st"> </span><span class="kw">as.list</span>(<span class="kw">list.files</span>(<span class="st">&quot;apps/variants/mutect2/&quot;</span>, <span class="st">&quot;.vcf$&quot;</span>,</span>
+<span id="cb190-2"><a href="dna-seq-variant-calling.html#cb190-2"></a>                                <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb190-3"><a href="dna-seq-variant-calling.html#cb190-3"></a>GPoN<span class="op">$</span>Ref &lt;-<span class="st"> </span>ref</span>
+<span id="cb190-4"><a href="dna-seq-variant-calling.html#cb190-4"></a>GPoN<span class="op">$</span>interval &lt;-<span class="st"> &quot;apps/variants/vcf/intval.bed&quot;</span></span>
+<span id="cb190-5"><a href="dna-seq-variant-calling.html#cb190-5"></a>GPoN<span class="op">$</span>pvcf &lt;-<span class="st"> &quot;pon.vcf&quot;</span></span>
+<span id="cb190-6"><a href="dna-seq-variant-calling.html#cb190-6"></a><span class="co">##GPoN$gresource &lt;- &quot;apps/data/Mutect2/af-only-gnomad.raw.sites.b37.vcf&quot;</span></span>
+<span id="cb190-7"><a href="dna-seq-variant-calling.html#cb190-7"></a><span class="kw">runCWL</span>(GPoN, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/mutect2/&quot;</span>, <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>, <span class="dt">Args =</span> <span class="st">&quot;--relax-path-checks&quot;</span>)</span></code></pre></div>
+<p>Here we add “–relax-path-checks” arugment to the “cwltool” because the temporary files have special characters in their file names.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Mutect2 pipeline
+We can visulize how the pipeline <code>Mutect2PL</code> was built based on the best practice guide.</li>
+</ol>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="dna-seq-variant-calling.html#cb191-1"></a><span class="kw">plotCWL</span>(Mutect2PL)</span></code></pre></div>
+<div id="htmlwidget-737d49593a477bffb90b" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-737d49593a477bffb90b">{"x":{"diagram":"graph TB\nA(tbam)-->P{Mutect2}\nB(nbam)-->P{Mutect2}\nC(Ref)-->P{Mutect2}\nD(normal)-->P{Mutect2}\nF(gresource)-->P{Mutect2}\nG(pon)-->P{Mutect2}\nH(interval)-->P{Mutect2}\nD(normal)-->P{Mutect2}\nE(tumor)-->P{Mutect2}\nA(tbam)-->Q{GetPileupSummariesT}\nI(comvcf)-->Q{GetPileupSummariesT}\nI(comvcf)-->Q{GetPileupSummariesT}\nB(nbam)-->R{GetPileupSummariesN}\nI(comvcf)-->R{GetPileupSummariesN}\nI(comvcf)-->R{GetPileupSummariesN}\nQ{GetPileupSummariesT}-->|pout|S{CalculateContamination}\nR{GetPileupSummariesN}-->|pout|S{CalculateContamination}\nE(tumor)-->S{CalculateContamination}\nS{CalculateContamination}-->N((conTable))\nP{Mutect2}-->|vout|T{FilterMutectCalls}\nN((conTable))-->T{FilterMutectCalls}\nC(Ref)-->T{FilterMutectCalls}\nD(normal)-->T{FilterMutectCalls}\nE(tumor)-->T{FilterMutectCalls}\nA(tbam)-->U{ColSeqArtifact}\nC(Ref)-->U{ColSeqArtifact}\nU{ColSeqArtifact}-->O((artTable))\nT{FilterMutectCalls}-->|fout|V{FilterOBias}\nO((artTable))-->V{FilterOBias}\nJ(artMode)-->V{FilterOBias}\nD(normal)-->V{FilterOBias}\nE(tumor)-->V{FilterOBias}\nV{FilterOBias}-->L((filterVCF))\nL((filterVCF))-->W{bcfview}\nK(filter)-->W{bcfview}\nW{bcfview}-->M((passVCF))"},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="dna-seq-variant-calling.html#cb192-1"></a>tbam &lt;-<span class="st"> </span><span class="kw">as.list</span>(bams[<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>])</span>
+<span id="cb192-2"><a href="dna-seq-variant-calling.html#cb192-2"></a>nbam &lt;-<span class="st"> </span><span class="kw">as.list</span>(bams[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])</span>
+<span id="cb192-3"><a href="dna-seq-variant-calling.html#cb192-3"></a>nid &lt;-<span class="st"> </span><span class="kw">as.list</span>(<span class="kw">sub</span>(<span class="st">&quot;.bam&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">basename</span>(bams))[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])</span>
+<span id="cb192-4"><a href="dna-seq-variant-calling.html#cb192-4"></a>tid &lt;-<span class="st"> </span><span class="kw">as.list</span>(<span class="kw">sub</span>(<span class="st">&quot;.bam&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">basename</span>(bams))[<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>])</span>
+<span id="cb192-5"><a href="dna-seq-variant-calling.html#cb192-5"></a></span>
+<span id="cb192-6"><a href="dna-seq-variant-calling.html#cb192-6"></a><span class="kw">names</span>(tbam) &lt;-<span class="st"> </span><span class="kw">names</span>(nbam) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;pt19&quot;</span>, <span class="st">&quot;pt20&quot;</span>)</span>
+<span id="cb192-7"><a href="dna-seq-variant-calling.html#cb192-7"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam, <span class="dt">nbam =</span> nbam,</span>
+<span id="cb192-8"><a href="dna-seq-variant-calling.html#cb192-8"></a>                  <span class="dt">normal =</span> nid, <span class="dt">tumor =</span> tid)</span>
+<span id="cb192-9"><a href="dna-seq-variant-calling.html#cb192-9"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Ref =</span> ref,</span>
+<span id="cb192-10"><a href="dna-seq-variant-calling.html#cb192-10"></a>                  <span class="dt">gresource =</span> <span class="st">&quot;apps/data/Mutect2/af-only-gnomad.raw.sites.b37.vcf&quot;</span>,</span>
+<span id="cb192-11"><a href="dna-seq-variant-calling.html#cb192-11"></a>                  <span class="dt">pon =</span> <span class="st">&quot;apps/variants/mutect2/pon.vcf&quot;</span>,</span>
+<span id="cb192-12"><a href="dna-seq-variant-calling.html#cb192-12"></a>                  <span class="dt">interval =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb192-13"><a href="dna-seq-variant-calling.html#cb192-13"></a>                  <span class="dt">comvcf =</span> <span class="st">&quot;apps/data/Mutect2/GetPileupSummaries/small_exac_common_3_b37.vcf&quot;</span>)</span>
+<span id="cb192-14"><a href="dna-seq-variant-calling.html#cb192-14"></a></span>
+<span id="cb192-15"><a href="dna-seq-variant-calling.html#cb192-15"></a>res6 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(Mutect2PL, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/mutect2&quot;</span>, inputList, paramList,</span>
+<span id="cb192-16"><a href="dna-seq-variant-calling.html#cb192-16"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb192-17"><a href="dna-seq-variant-calling.html#cb192-17"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb192-18"><a href="dna-seq-variant-calling.html#cb192-18"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb192-19"><a href="dna-seq-variant-calling.html#cb192-19"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb192-20"><a href="dna-seq-variant-calling.html#cb192-20"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb192-21"><a href="dna-seq-variant-calling.html#cb192-21"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;mutect2&quot;</span>),</span>
+<span id="cb192-22"><a href="dna-seq-variant-calling.html#cb192-22"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb192-23"><a href="dna-seq-variant-calling.html#cb192-23"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the final results for sample “pt19”:</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="dna-seq-variant-calling.html#cb193-1"></a><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/mutect2/pt19&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;normal19.tumor19.ctfiltered.obfiltered.PASS.u.vcf&quot;
+## [2] &quot;normal19.tumor19.ctfiltered.obfiltered.PASS.vcf&quot;  
+## [3] &quot;normal19.tumor19.ctfiltered.obfiltered.vcf&quot;       
+## [4] &quot;t.contamination.table&quot;                            
+## [5] &quot;tumor19.art.pre_adapter_detail_metrics.txt&quot;</code></pre>
+</div>
+<div id="muse" class="section level3">
+<h3><span class="header-section-number">6.3.2</span> MuSE</h3>
+<p>Only one step is required to run <code>MuSE</code>. We only need to prepare the BAM files, reference genome, caputre region and the dbSNP vcf file.</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="dna-seq-variant-calling.html#cb195-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb195-2"><a href="dna-seq-variant-calling.html#cb195-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb195-3"><a href="dna-seq-variant-calling.html#cb195-3"></a>                  <span class="dt">vcf =</span> <span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(tbam), <span class="st">&quot;_MuSE.vcf&quot;</span>)))</span>
+<span id="cb195-4"><a href="dna-seq-variant-calling.html#cb195-4"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb195-5"><a href="dna-seq-variant-calling.html#cb195-5"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb195-6"><a href="dna-seq-variant-calling.html#cb195-6"></a>                  <span class="dt">dbsnp =</span> dbsnp)</span>
+<span id="cb195-7"><a href="dna-seq-variant-calling.html#cb195-7"></a></span>
+<span id="cb195-8"><a href="dna-seq-variant-calling.html#cb195-8"></a>res7 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(MuSE, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/MuSE&quot;</span>, inputList, paramList,</span>
+<span id="cb195-9"><a href="dna-seq-variant-calling.html#cb195-9"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb195-10"><a href="dna-seq-variant-calling.html#cb195-10"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb195-11"><a href="dna-seq-variant-calling.html#cb195-11"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb195-12"><a href="dna-seq-variant-calling.html#cb195-12"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb195-13"><a href="dna-seq-variant-calling.html#cb195-13"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb195-14"><a href="dna-seq-variant-calling.html#cb195-14"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;MuSE&quot;</span>),</span>
+<span id="cb195-15"><a href="dna-seq-variant-calling.html#cb195-15"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb195-16"><a href="dna-seq-variant-calling.html#cb195-16"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="dna-seq-variant-calling.html#cb196-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/MuSE&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                         size
+##   &lt;fs::path&gt;                            &lt;fs::bytes&gt;
+## 1 apps/variants/MuSE/pt19/pt19_MuSE.vcf       89.8K
+## 2 apps/variants/MuSE/pt20/pt20_MuSE.vcf      162.2K</code></pre>
+<p>More details about the tool can be found:
+<a href="https://bioinformatics.mdanderson.org/public-software/muse/" class="uri">https://bioinformatics.mdanderson.org/public-software/muse/</a>.</p>
+</div>
+<div id="strelka2" class="section level3">
+<h3><span class="header-section-number">6.3.3</span> Strelka2</h3>
+<p>The tool recommended to use the indel candidates from <code>manta</code> as input for <code>strelka2</code>. We combined the two tools as <code>mantaStrelka</code> pipeline.</p>
+<p>The tool also recommended to use a indexed region file.</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="dna-seq-variant-calling.html#cb198-1"></a>bgzip<span class="op">$</span>ifile &lt;-<span class="st"> &quot;apps/variants/vcf/intval.bed&quot;</span></span>
+<span id="cb198-2"><a href="dna-seq-variant-calling.html#cb198-2"></a><span class="kw">runCWL</span>(bgzip, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/vcf/&quot;</span>, <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb198-3"><a href="dna-seq-variant-calling.html#cb198-3"></a>tabix_index<span class="op">$</span>tfile &lt;-<span class="st"> &quot;apps/variants/vcf/intval.bed.gz&quot;</span></span>
+<span id="cb198-4"><a href="dna-seq-variant-calling.html#cb198-4"></a>tabix_index<span class="op">$</span>type &lt;-<span class="st"> &quot;bed&quot;</span></span>
+<span id="cb198-5"><a href="dna-seq-variant-calling.html#cb198-5"></a><span class="kw">runCWL</span>(tabix_index, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/vcf/&quot;</span>, <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>To prepare the inputs and run it.</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="dna-seq-variant-calling.html#cb199-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb199-2"><a href="dna-seq-variant-calling.html#cb199-2"></a>                  <span class="dt">nbam =</span> nbam)</span>
+<span id="cb199-3"><a href="dna-seq-variant-calling.html#cb199-3"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb199-4"><a href="dna-seq-variant-calling.html#cb199-4"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed.gz&quot;</span>)</span>
+<span id="cb199-5"><a href="dna-seq-variant-calling.html#cb199-5"></a></span>
+<span id="cb199-6"><a href="dna-seq-variant-calling.html#cb199-6"></a>res8 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(mantaStrelka, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/strelka&quot;</span>, inputList, paramList,</span>
+<span id="cb199-7"><a href="dna-seq-variant-calling.html#cb199-7"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb199-8"><a href="dna-seq-variant-calling.html#cb199-8"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb199-9"><a href="dna-seq-variant-calling.html#cb199-9"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb199-10"><a href="dna-seq-variant-calling.html#cb199-10"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb199-11"><a href="dna-seq-variant-calling.html#cb199-11"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb199-12"><a href="dna-seq-variant-calling.html#cb199-12"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;strelka&quot;</span>),</span>
+<span id="cb199-13"><a href="dna-seq-variant-calling.html#cb199-13"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb199-14"><a href="dna-seq-variant-calling.html#cb199-14"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="dna-seq-variant-calling.html#cb200-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/strelka&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf.gz*&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 8 x 2
+##   path                                                        size
+##   &lt;fs::path&gt;                                           &lt;fs::bytes&gt;
+## 1 apps/variants/strelka/pt19/somatic.indels.vcf.gz          75.81K
+## 2 apps/variants/strelka/pt19/somatic.indels.vcf.gz.tbi       10.5K
+## 3 apps/variants/strelka/pt19/somatic.snvs.vcf.gz           338.11K
+## 4 apps/variants/strelka/pt19/somatic.snvs.vcf.gz.tbi        26.76K
+## 5 apps/variants/strelka/pt20/somatic.indels.vcf.gz          26.31K
+## 6 apps/variants/strelka/pt20/somatic.indels.vcf.gz.tbi       4.23K
+## 7 apps/variants/strelka/pt20/somatic.snvs.vcf.gz           402.21K
+## 8 apps/variants/strelka/pt20/somatic.snvs.vcf.gz.tbi        29.57K</code></pre>
+<p>More details about the tool can be found:
+<a href="https://github.com/Illumina/strelka" class="uri">https://github.com/Illumina/strelka</a></p>
+</div>
+<div id="somaticsniper" class="section level3">
+<h3><span class="header-section-number">6.3.4</span> SomaticSniper</h3>
+<p>The <code>SomaticSniper</code> only requires bams and reference genome to run.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="dna-seq-variant-calling.html#cb202-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb202-2"><a href="dna-seq-variant-calling.html#cb202-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb202-3"><a href="dna-seq-variant-calling.html#cb202-3"></a>                  <span class="dt">vcf =</span> <span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(tbam), <span class="st">&quot;_SomaticSniper.vcf&quot;</span>)))</span>
+<span id="cb202-4"><a href="dna-seq-variant-calling.html#cb202-4"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref)</span>
+<span id="cb202-5"><a href="dna-seq-variant-calling.html#cb202-5"></a></span>
+<span id="cb202-6"><a href="dna-seq-variant-calling.html#cb202-6"></a>res9 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(SomaticSniper, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/SomaticSniper&quot;</span>, inputList, paramList,</span>
+<span id="cb202-7"><a href="dna-seq-variant-calling.html#cb202-7"></a>                    <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb202-8"><a href="dna-seq-variant-calling.html#cb202-8"></a>                                              <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb202-9"><a href="dna-seq-variant-calling.html#cb202-9"></a>                                              <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb202-10"><a href="dna-seq-variant-calling.html#cb202-10"></a>                                              <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb202-11"><a href="dna-seq-variant-calling.html#cb202-11"></a>                                                               <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb202-12"><a href="dna-seq-variant-calling.html#cb202-12"></a>                                                               <span class="dt">jobname =</span> <span class="st">&quot;SomaticSniper&quot;</span>),</span>
+<span id="cb202-13"><a href="dna-seq-variant-calling.html#cb202-13"></a>                                              <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb202-14"><a href="dna-seq-variant-calling.html#cb202-14"></a>                    <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="dna-seq-variant-calling.html#cb203-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/SomaticSniper&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                                           size
+##   &lt;fs::path&gt;                                              &lt;fs::bytes&gt;
+## 1 apps/variants/SomaticSniper/pt19/pt19_SomaticSniper.vcf        671K
+## 2 apps/variants/SomaticSniper/pt20/pt20_SomaticSniper.vcf        867K</code></pre>
+<p>More details can be found:
+<a href="https://github.com/genome/somatic-sniper" class="uri">https://github.com/genome/somatic-sniper</a></p>
+</div>
+<div id="vardict" class="section level3">
+<h3><span class="header-section-number">6.3.5</span> VarDict</h3>
+<p>Similar to the other tools, we only need to prepare BAM files, reference genome and the capture region file.</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="dna-seq-variant-calling.html#cb205-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb205-2"><a href="dna-seq-variant-calling.html#cb205-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb205-3"><a href="dna-seq-variant-calling.html#cb205-3"></a>                  <span class="dt">vcf =</span> <span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(tbam), <span class="st">&quot;_VarDict.vcf&quot;</span>)))</span>
+<span id="cb205-4"><a href="dna-seq-variant-calling.html#cb205-4"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb205-5"><a href="dna-seq-variant-calling.html#cb205-5"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>)</span>
+<span id="cb205-6"><a href="dna-seq-variant-calling.html#cb205-6"></a></span>
+<span id="cb205-7"><a href="dna-seq-variant-calling.html#cb205-7"></a>res10 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(VarDict, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/VarDict&quot;</span>, inputList, paramList,</span>
+<span id="cb205-8"><a href="dna-seq-variant-calling.html#cb205-8"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb205-9"><a href="dna-seq-variant-calling.html#cb205-9"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb205-10"><a href="dna-seq-variant-calling.html#cb205-10"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb205-11"><a href="dna-seq-variant-calling.html#cb205-11"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb205-12"><a href="dna-seq-variant-calling.html#cb205-12"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb205-13"><a href="dna-seq-variant-calling.html#cb205-13"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;VarDict&quot;</span>),</span>
+<span id="cb205-14"><a href="dna-seq-variant-calling.html#cb205-14"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb205-15"><a href="dna-seq-variant-calling.html#cb205-15"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="dna-seq-variant-calling.html#cb206-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/VarDict&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                               size
+##   &lt;fs::path&gt;                                  &lt;fs::bytes&gt;
+## 1 apps/variants/VarDict/pt19/pt19_VarDict.vcf       2.46M
+## 2 apps/variants/VarDict/pt20/pt20_VarDict.vcf     985.92K</code></pre>
+<p>More details can be found:
+<a href="https://github.com/AstraZeneca-NGS/VarDict" class="uri">https://github.com/AstraZeneca-NGS/VarDict</a></p>
+</div>
+<div id="lofreq" class="section level3">
+<h3><span class="header-section-number">6.3.6</span> LoFreq</h3>
+<p>The tools requires BAM files, reference genome, dbSNP and capture regions.</p>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="dna-seq-variant-calling.html#cb208-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb208-2"><a href="dna-seq-variant-calling.html#cb208-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb208-3"><a href="dna-seq-variant-calling.html#cb208-3"></a>                  <span class="dt">out =</span> <span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(tbam), <span class="st">&quot;_LoFreq&quot;</span>)))</span>
+<span id="cb208-4"><a href="dna-seq-variant-calling.html#cb208-4"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb208-5"><a href="dna-seq-variant-calling.html#cb208-5"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb208-6"><a href="dna-seq-variant-calling.html#cb208-6"></a>                  <span class="dt">dbsnp =</span> dbsnp,</span>
+<span id="cb208-7"><a href="dna-seq-variant-calling.html#cb208-7"></a>                  <span class="dt">threads =</span> <span class="dv">16</span>)</span>
+<span id="cb208-8"><a href="dna-seq-variant-calling.html#cb208-8"></a></span>
+<span id="cb208-9"><a href="dna-seq-variant-calling.html#cb208-9"></a>res11 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(LoFreq, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/LoFreq&quot;</span>, inputList, paramList,</span>
+<span id="cb208-10"><a href="dna-seq-variant-calling.html#cb208-10"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb208-11"><a href="dna-seq-variant-calling.html#cb208-11"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb208-12"><a href="dna-seq-variant-calling.html#cb208-12"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb208-13"><a href="dna-seq-variant-calling.html#cb208-13"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb208-14"><a href="dna-seq-variant-calling.html#cb208-14"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb208-15"><a href="dna-seq-variant-calling.html#cb208-15"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;LoFreq&quot;</span>),</span>
+<span id="cb208-16"><a href="dna-seq-variant-calling.html#cb208-16"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb208-17"><a href="dna-seq-variant-calling.html#cb208-17"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="dna-seq-variant-calling.html#cb209-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/LoFreq&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf.gz&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 8 x 2
+##   path                                                                 size
+##   &lt;fs::path&gt;                                                     &lt;fs::byte&gt;
+## 1 apps/variants/LoFreq/pt19/pt19_LoFreqsomatic_final.indels.vcf…        858
+## 2 apps/variants/LoFreq/pt19/pt19_LoFreqsomatic_final.snvs.vcf.gz      2.88K
+## 3 apps/variants/LoFreq/pt19/pt19_LoFreqsomatic_final_minus-dbsn…        858
+## 4 apps/variants/LoFreq/pt19/pt19_LoFreqsomatic_final_minus-dbsn…      2.78K
+## 5 apps/variants/LoFreq/pt20/pt20_LoFreqsomatic_final.indels.vcf…        856
+## 6 apps/variants/LoFreq/pt20/pt20_LoFreqsomatic_final.snvs.vcf.gz      2.62K
+## 7 apps/variants/LoFreq/pt20/pt20_LoFreqsomatic_final_minus-dbsn…        856
+## 8 apps/variants/LoFreq/pt20/pt20_LoFreqsomatic_final_minus-dbsn…      2.55K</code></pre>
+<p>More details can be found:
+<a href="https://csb5.github.io/lofreq/" class="uri">https://csb5.github.io/lofreq/</a></p>
+</div>
+<div id="varscan2" class="section level3">
+<h3><span class="header-section-number">6.3.7</span> VarScan2</h3>
+<p>We simply prepare inputs and run as before.</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="dna-seq-variant-calling.html#cb211-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb211-2"><a href="dna-seq-variant-calling.html#cb211-2"></a>                  <span class="dt">nbam =</span> nbam)</span>
+<span id="cb211-3"><a href="dna-seq-variant-calling.html#cb211-3"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb211-4"><a href="dna-seq-variant-calling.html#cb211-4"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>)</span>
+<span id="cb211-5"><a href="dna-seq-variant-calling.html#cb211-5"></a></span>
+<span id="cb211-6"><a href="dna-seq-variant-calling.html#cb211-6"></a>res13 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(VarScan2Somatic, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/VarScan2&quot;</span>, inputList, paramList,</span>
+<span id="cb211-7"><a href="dna-seq-variant-calling.html#cb211-7"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb211-8"><a href="dna-seq-variant-calling.html#cb211-8"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb211-9"><a href="dna-seq-variant-calling.html#cb211-9"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb211-10"><a href="dna-seq-variant-calling.html#cb211-10"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb211-11"><a href="dna-seq-variant-calling.html#cb211-11"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb211-12"><a href="dna-seq-variant-calling.html#cb211-12"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;VarScan2&quot;</span>),</span>
+<span id="cb211-13"><a href="dna-seq-variant-calling.html#cb211-13"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb211-14"><a href="dna-seq-variant-calling.html#cb211-14"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="dna-seq-variant-calling.html#cb212-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/VarScan2&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   path                                                            size
+##   &lt;fs::path&gt;                                               &lt;fs::bytes&gt;
+## 1 apps/variants/VarScan2/pt19/tumor19.indel.vcf                  80.7K
+## 2 apps/variants/VarScan2/pt19/tumor19.normal19.somatic.vcf       14.2K
+## 3 apps/variants/VarScan2/pt19/tumor19.snp.vcf                   772.4K
+## 4 apps/variants/VarScan2/pt20/tumor20.indel.vcf                  28.4K
+## 5 apps/variants/VarScan2/pt20/tumor20.normal20.somatic.vcf       12.1K
+## 6 apps/variants/VarScan2/pt20/tumor20.snp.vcf                   297.1K</code></pre>
+<p>More details can be found:
+<a href="http://varscan.sourceforge.net/" class="uri">http://varscan.sourceforge.net/</a></p>
+</div>
+<div id="lancet" class="section level3">
+<h3><span class="header-section-number">6.3.8</span> Lancet</h3>
+<p>The tool requires BAM files, reference genome and capture region.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="dna-seq-variant-calling.html#cb214-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb214-2"><a href="dna-seq-variant-calling.html#cb214-2"></a>                  <span class="dt">nbam =</span> nbam)</span>
+<span id="cb214-3"><a href="dna-seq-variant-calling.html#cb214-3"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb214-4"><a href="dna-seq-variant-calling.html#cb214-4"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb214-5"><a href="dna-seq-variant-calling.html#cb214-5"></a>                  <span class="dt">threads =</span> <span class="dv">16</span>)</span>
+<span id="cb214-6"><a href="dna-seq-variant-calling.html#cb214-6"></a></span>
+<span id="cb214-7"><a href="dna-seq-variant-calling.html#cb214-7"></a>res14 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(lancet, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/lancet&quot;</span>, inputList, paramList,</span>
+<span id="cb214-8"><a href="dna-seq-variant-calling.html#cb214-8"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb214-9"><a href="dna-seq-variant-calling.html#cb214-9"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb214-10"><a href="dna-seq-variant-calling.html#cb214-10"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb214-11"><a href="dna-seq-variant-calling.html#cb214-11"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb214-12"><a href="dna-seq-variant-calling.html#cb214-12"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;all.q&quot;</span>,</span>
+<span id="cb214-13"><a href="dna-seq-variant-calling.html#cb214-13"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;lancet&quot;</span>),</span>
+<span id="cb214-14"><a href="dna-seq-variant-calling.html#cb214-14"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb214-15"><a href="dna-seq-variant-calling.html#cb214-15"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the results:</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="dna-seq-variant-calling.html#cb215-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/lancet&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                                  size
+##   &lt;fs::path&gt;                                     &lt;fs::bytes&gt;
+## 1 apps/variants/lancet/pt19/tumor19_normal19.vcf       5.26M
+## 2 apps/variants/lancet/pt20/tumor20_normal20.vcf       2.15M</code></pre>
+<p>More details can be found:
+<a href="https://github.com/nygenome/lancet" class="uri">https://github.com/nygenome/lancet</a></p>
+</div>
+<div id="neusomatic" class="section level3">
+<h3><span class="header-section-number">6.3.9</span> Neusomatic</h3>
+<p>It is recommended to combine the mutation results from multiple somatic mutation callers to increase both sensitivity and specificitiy by recent publications. The recent published tools <code>neusomatic</code> provides a emsembling mode to combine multiple existing methods to achieve the highest accuracy.</p>
+<p>First, we collect the outputs from previous somatic variant callers.</p>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="dna-seq-variant-calling.html#cb217-1"></a>mutect2Vcf &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/mutect2&quot;</span>, <span class="st">&quot;obfiltered.vcf$&quot;</span>,</span>
+<span id="cb217-2"><a href="dna-seq-variant-calling.html#cb217-2"></a>                         <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-3"><a href="dna-seq-variant-calling.html#cb217-3"></a>varscan2Snp &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/VarScan2&quot;</span>, <span class="st">&quot;.snp.vcf$&quot;</span>,</span>
+<span id="cb217-4"><a href="dna-seq-variant-calling.html#cb217-4"></a>                          <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-5"><a href="dna-seq-variant-calling.html#cb217-5"></a>varscan2Indel &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/VarScan2&quot;</span>, <span class="st">&quot;.indel.vcf$&quot;</span>,</span>
+<span id="cb217-6"><a href="dna-seq-variant-calling.html#cb217-6"></a>                          <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-7"><a href="dna-seq-variant-calling.html#cb217-7"></a>sniperVcf &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/SomaticSniper&quot;</span>, <span class="st">&quot;vcf$&quot;</span>,</span>
+<span id="cb217-8"><a href="dna-seq-variant-calling.html#cb217-8"></a>                        <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-9"><a href="dna-seq-variant-calling.html#cb217-9"></a>vardictVcf &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/VarDict&quot;</span>, <span class="st">&quot;.vcf$&quot;</span>,</span>
+<span id="cb217-10"><a href="dna-seq-variant-calling.html#cb217-10"></a>                         <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-11"><a href="dna-seq-variant-calling.html#cb217-11"></a>museVcf &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/MuSE&quot;</span>, <span class="st">&quot;.vcf$&quot;</span>,</span>
+<span id="cb217-12"><a href="dna-seq-variant-calling.html#cb217-12"></a>                      <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-13"><a href="dna-seq-variant-calling.html#cb217-13"></a>strelkaSNP &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/strelka&quot;</span>, <span class="st">&quot;snvs.vcf.gz$&quot;</span>,</span>
+<span id="cb217-14"><a href="dna-seq-variant-calling.html#cb217-14"></a>                         <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-15"><a href="dna-seq-variant-calling.html#cb217-15"></a>strelkaIndel &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/strelka&quot;</span>, <span class="st">&quot;indels.vcf.gz$&quot;</span>,</span>
+<span id="cb217-16"><a href="dna-seq-variant-calling.html#cb217-16"></a>                           <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-17"><a href="dna-seq-variant-calling.html#cb217-17"></a>lofreqSNP &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/LoFreq&quot;</span>, <span class="st">&quot;final.snvs.vcf.gz$&quot;</span>,</span>
+<span id="cb217-18"><a href="dna-seq-variant-calling.html#cb217-18"></a>                        <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb217-19"><a href="dna-seq-variant-calling.html#cb217-19"></a>lofreqIndel &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/LoFreq&quot;</span>, <span class="st">&quot;final.indels.vcf.gz$&quot;</span>,</span>
+<span id="cb217-20"><a href="dna-seq-variant-calling.html#cb217-20"></a>                          <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>Here we use the wrapper script from somaticseq to essemble the results.</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="dna-seq-variant-calling.html#cb218-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb218-2"><a href="dna-seq-variant-calling.html#cb218-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb218-3"><a href="dna-seq-variant-calling.html#cb218-3"></a>                  <span class="dt">mutect2 =</span> <span class="kw">as.list</span>(mutect2Vcf),</span>
+<span id="cb218-4"><a href="dna-seq-variant-calling.html#cb218-4"></a>                  <span class="dt">varscanSnv =</span> <span class="kw">as.list</span>(varscan2Snp),</span>
+<span id="cb218-5"><a href="dna-seq-variant-calling.html#cb218-5"></a>                  <span class="dt">varscanIndel =</span> <span class="kw">as.list</span>(varscan2Indel),</span>
+<span id="cb218-6"><a href="dna-seq-variant-calling.html#cb218-6"></a>                  <span class="dt">sniper =</span> <span class="kw">as.list</span>(sniperVcf),</span>
+<span id="cb218-7"><a href="dna-seq-variant-calling.html#cb218-7"></a>                  <span class="dt">vardict =</span> <span class="kw">as.list</span>(vardictVcf),</span>
+<span id="cb218-8"><a href="dna-seq-variant-calling.html#cb218-8"></a>                  <span class="dt">muse =</span> <span class="kw">as.list</span>(museVcf),</span>
+<span id="cb218-9"><a href="dna-seq-variant-calling.html#cb218-9"></a>                  <span class="dt">strelkaSnv =</span> <span class="kw">as.list</span>(strelkaSNP),</span>
+<span id="cb218-10"><a href="dna-seq-variant-calling.html#cb218-10"></a>                  <span class="dt">strelkaIndel =</span> <span class="kw">as.list</span>(strelkaIndel),</span>
+<span id="cb218-11"><a href="dna-seq-variant-calling.html#cb218-11"></a>                  <span class="dt">lofreqSnv =</span> <span class="kw">as.list</span>(lofreqSNP),</span>
+<span id="cb218-12"><a href="dna-seq-variant-calling.html#cb218-12"></a>                  <span class="dt">lofreqIndel =</span> <span class="kw">as.list</span>(lofreqIndel))</span>
+<span id="cb218-13"><a href="dna-seq-variant-calling.html#cb218-13"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb218-14"><a href="dna-seq-variant-calling.html#cb218-14"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb218-15"><a href="dna-seq-variant-calling.html#cb218-15"></a>                  <span class="dt">dbsnp =</span> dbsnp)</span>
+<span id="cb218-16"><a href="dna-seq-variant-calling.html#cb218-16"></a></span>
+<span id="cb218-17"><a href="dna-seq-variant-calling.html#cb218-17"></a>res15 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(SomaticSeq_Wrapper, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/Wrapper&quot;</span>, inputList, paramList,</span>
+<span id="cb218-18"><a href="dna-seq-variant-calling.html#cb218-18"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb218-19"><a href="dna-seq-variant-calling.html#cb218-19"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb218-20"><a href="dna-seq-variant-calling.html#cb218-20"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb218-21"><a href="dna-seq-variant-calling.html#cb218-21"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb218-22"><a href="dna-seq-variant-calling.html#cb218-22"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;mem.q&quot;</span>,</span>
+<span id="cb218-23"><a href="dna-seq-variant-calling.html#cb218-23"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;Wrapper&quot;</span>),</span>
+<span id="cb218-24"><a href="dna-seq-variant-calling.html#cb218-24"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb218-25"><a href="dna-seq-variant-calling.html#cb218-25"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>The <code>neusomatic</code> pipeline provided a ensemble mode to use outputs from different somatic callers as candidates and applied a pre-trained deep learning model to filter the variant candiates.</p>
+<p>First, we need to combine the SNV and INDEL candidates for the ensemble mode input.</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="dna-seq-variant-calling.html#cb219-1"></a><span class="cf">for</span>(id <span class="cf">in</span> <span class="kw">names</span>(tbam)) {</span>
+<span id="cb219-2"><a href="dna-seq-variant-calling.html#cb219-2"></a>    snv1 &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">paste0</span>(<span class="st">&quot;apps/variants/Wrapper/&quot;</span>, id, <span class="st">&quot;/Ensemble.sSNV.tsv&quot;</span>), <span class="dt">header =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb219-3"><a href="dna-seq-variant-calling.html#cb219-3"></a>    indel1 &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">paste0</span>(<span class="st">&quot;apps/variants/Wrapper/&quot;</span>, id, <span class="st">&quot;/Ensemble.sINDEL.tsv&quot;</span>), <span class="dt">header =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb219-4"><a href="dna-seq-variant-calling.html#cb219-4"></a>    var1 &lt;-<span class="st"> </span><span class="kw">rbind</span>(snv1, indel1)</span>
+<span id="cb219-5"><a href="dna-seq-variant-calling.html#cb219-5"></a>    var1[<span class="kw">is.na</span>(var1)] &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb219-6"><a href="dna-seq-variant-calling.html#cb219-6"></a>    <span class="kw">write.table</span>(var1, <span class="dt">file =</span> <span class="kw">paste0</span>(<span class="st">&quot;apps/variants/Wrapper/&quot;</span>, id, <span class="st">&quot;/Ensemble.sVar.tsv&quot;</span>),</span>
+<span id="cb219-7"><a href="dna-seq-variant-calling.html#cb219-7"></a>                <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">quote =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb219-8"><a href="dna-seq-variant-calling.html#cb219-8"></a>}</span>
+<span id="cb219-9"><a href="dna-seq-variant-calling.html#cb219-9"></a>ensemble &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/Wrapper&quot;</span>, <span class="st">&quot;Ensemble.sVar.tsv&quot;</span>,</span>
+<span id="cb219-10"><a href="dna-seq-variant-calling.html#cb219-10"></a>                       <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>Then we can prepare the inputs and run the <code>neusomatic</code> pipeline.</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="dna-seq-variant-calling.html#cb220-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb220-2"><a href="dna-seq-variant-calling.html#cb220-2"></a>                  <span class="dt">nbam =</span> nbam,</span>
+<span id="cb220-3"><a href="dna-seq-variant-calling.html#cb220-3"></a>                  <span class="dt">ensemble =</span> <span class="kw">as.list</span>(ensemble),</span>
+<span id="cb220-4"><a href="dna-seq-variant-calling.html#cb220-4"></a>                  <span class="dt">ovcf =</span> <span class="kw">as.list</span>(<span class="kw">paste0</span>(<span class="kw">names</span>(tbam), <span class="st">&quot;_neusomtic.vcf&quot;</span>)))</span>
+<span id="cb220-5"><a href="dna-seq-variant-calling.html#cb220-5"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">ref =</span> ref,</span>
+<span id="cb220-6"><a href="dna-seq-variant-calling.html#cb220-6"></a>                  <span class="dt">region =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb220-7"><a href="dna-seq-variant-calling.html#cb220-7"></a>                  <span class="dt">threads =</span> <span class="dv">16</span>)</span>
+<span id="cb220-8"><a href="dna-seq-variant-calling.html#cb220-8"></a></span>
+<span id="cb220-9"><a href="dna-seq-variant-calling.html#cb220-9"></a>res16 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(neusomatic, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/neusomatic&quot;</span>, inputList, paramList,</span>
+<span id="cb220-10"><a href="dna-seq-variant-calling.html#cb220-10"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb220-11"><a href="dna-seq-variant-calling.html#cb220-11"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb220-12"><a href="dna-seq-variant-calling.html#cb220-12"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb220-13"><a href="dna-seq-variant-calling.html#cb220-13"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb220-14"><a href="dna-seq-variant-calling.html#cb220-14"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;mem.q&quot;</span>,</span>
+<span id="cb220-15"><a href="dna-seq-variant-calling.html#cb220-15"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;neusomatic&quot;</span>),</span>
+<span id="cb220-16"><a href="dna-seq-variant-calling.html#cb220-16"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb220-17"><a href="dna-seq-variant-calling.html#cb220-17"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>That’s it! Here are the finnal results:</p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="dna-seq-variant-calling.html#cb221-1"></a><span class="kw">dir_info</span>(<span class="st">&quot;apps/variants/neusomatic&quot;</span>, <span class="dt">glob =</span> <span class="st">&quot;*.vcf&quot;</span>, <span class="dt">recurse =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(path, size)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   path                                                    size
+##   &lt;fs::path&gt;                                       &lt;fs::bytes&gt;
+## 1 apps/variants/neusomatic/pt19/pt19_neusomtic.vcf      19.18K
+## 2 apps/variants/neusomatic/pt20/pt20_neusomtic.vcf       8.84K</code></pre>
+</div>
+<div id="combined-somatic-caller-pipeline" class="section level3">
+<h3><span class="header-section-number">6.3.10</span> Combined somatic caller pipeline</h3>
+<p>We combined the previous multiple callers into a ensemble pipeline <code>SomaticCallers</code>. The detailed inputs, outputs and steps can be visualized by <code>plotCWL</code>.</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="dna-seq-variant-calling.html#cb223-1"></a><span class="kw">plotCWL</span>(SomaticCallers)</span></code></pre></div>
+<div id="htmlwidget-668f7e1868375b2188cc" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-668f7e1868375b2188cc">{"x":{"diagram":"graph TB\nA(tbam)-->H8{Mutect2PL}\nB(nbam)-->H8{Mutect2PL}\nC(Ref)-->H8{Mutect2PL}\nE(gresource)-->H8{Mutect2PL}\nF(pon)-->H8{Mutect2PL}\nG(interval)-->H8{Mutect2PL}\nH(comvcf)-->H8{Mutect2PL}\nH8{Mutect2PL}-->L((mutect2filterVCF))\nH8{Mutect2PL}-->M((mutect2passVCF))\nH8{Mutect2PL}-->N((mutect2conTable))\nH8{Mutect2PL}-->O((mutect2artTable))\nA(tbam)-->I9{MuSE}\nB(nbam)-->I9{MuSE}\nC(Ref)-->I9{MuSE}\nG(interval)-->I9{MuSE}\nD(dbsnp)-->I9{MuSE}\nI9{MuSE}-->P((MuSEout))\nG(interval)-->J10{bgzip}\nJ10{bgzip}-->|zfile|K11{tabixIndex}\nA(tbam)-->L12{mantaStrelka}\nB(nbam)-->L12{mantaStrelka}\nC(Ref)-->L12{mantaStrelka}\nK11{tabixIndex}-->|idx|L12{mantaStrelka}\nL12{mantaStrelka}-->Q((strelka2snv))\nL12{mantaStrelka}-->R((strelka2indel))\nA(tbam)-->M13{SomaticSniper}\nB(nbam)-->M13{SomaticSniper}\nC(Ref)-->M13{SomaticSniper}\nM13{SomaticSniper}-->S((SomaticSniperout))\nA(tbam)-->N14{VarDict}\nB(nbam)-->N14{VarDict}\nC(Ref)-->N14{VarDict}\nG(interval)-->N14{VarDict}\nN14{VarDict}-->T((VarDictout))\nA(tbam)-->O15{LoFreq}\nB(nbam)-->O15{LoFreq}\nC(Ref)-->O15{LoFreq}\nG(interval)-->O15{LoFreq}\nD(dbsnp)-->O15{LoFreq}\nK(threads)-->O15{LoFreq}\nO15{LoFreq}-->U((LoFreqsnp))\nO15{LoFreq}-->W((LoFreqsnpdb))\nO15{LoFreq}-->V((LoFreqindel))\nO15{LoFreq}-->X((LoFreqindeldb))\nA(tbam)-->P16{VarScanPL}\nB(nbam)-->P16{VarScanPL}\nC(Ref)-->P16{VarScanPL}\nG(interval)-->P16{VarScanPL}\nP16{VarScanPL}-->Y((VarScanSnp))\nP16{VarScanPL}-->Z((VarScanIndel))\nP16{VarScanPL}-->A1((VarScansVcf))\nA(tbam)-->Q17{Wrapper}\nB(nbam)-->Q17{Wrapper}\nC(Ref)-->Q17{Wrapper}\nG(interval)-->Q17{Wrapper}\nD(dbsnp)-->Q17{Wrapper}\nL((mutect2filterVCF))-->Q17{Wrapper}\nY((VarScanSnp))-->Q17{Wrapper}\nZ((VarScanIndel))-->Q17{Wrapper}\nS((SomaticSniperout))-->Q17{Wrapper}\nT((VarDictout))-->Q17{Wrapper}\nP((MuSEout))-->Q17{Wrapper}\nQ((strelka2snv))-->Q17{Wrapper}\nR((strelka2indel))-->Q17{Wrapper}\nU((LoFreqsnp))-->Q17{Wrapper}\nV((LoFreqindel))-->Q17{Wrapper}\nQ17{Wrapper}-->C3((WrapperSNV))\nQ17{Wrapper}-->D4((WrapperINDEL))\nQ17{Wrapper}-->E5((WrapperESNV))\nQ17{Wrapper}-->F6((WrapperEINDEL))\nE5((WrapperESNV))-->R18{mergeTSV}\nF6((WrapperEINDEL))-->R18{mergeTSV}\nR18{mergeTSV}-->B2((mergeTSVout))\nA(tbam)-->S19{neusomaticPL}\nB(nbam)-->S19{neusomaticPL}\nC(Ref)-->S19{neusomaticPL}\nG(interval)-->S19{neusomaticPL}\nB2((mergeTSVout))-->S19{neusomaticPL}\nK(threads)-->S19{neusomaticPL}\nS19{neusomaticPL}-->G7((neusomaticVCF))"},"evals":[],"jsHooks":[]}</script>
+<p>The ensemble callers can be performed in parallel by samples. We can use the same inputs to run all the tools in one batch.</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="dna-seq-variant-calling.html#cb224-1"></a>inputList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tbam =</span> tbam,</span>
+<span id="cb224-2"><a href="dna-seq-variant-calling.html#cb224-2"></a>                  <span class="dt">nbam =</span> nbam)</span>
+<span id="cb224-3"><a href="dna-seq-variant-calling.html#cb224-3"></a>paramList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Ref =</span> ref,</span>
+<span id="cb224-4"><a href="dna-seq-variant-calling.html#cb224-4"></a>                  <span class="dt">interval =</span> <span class="st">&quot;apps/variants/vcf/intval.bed&quot;</span>,</span>
+<span id="cb224-5"><a href="dna-seq-variant-calling.html#cb224-5"></a>                  <span class="dt">dbsnp =</span> dbsnp,</span>
+<span id="cb224-6"><a href="dna-seq-variant-calling.html#cb224-6"></a>                  <span class="dt">gresource =</span> <span class="st">&quot;apps/data/Mutect2/af-only-gnomad.raw.sites.b37.vcf&quot;</span>,</span>
+<span id="cb224-7"><a href="dna-seq-variant-calling.html#cb224-7"></a>                  <span class="dt">comvcf =</span> <span class="st">&quot;apps/data/Mutect2/GetPileupSummaries/small_exac_common_3_b37.vcf&quot;</span>,</span>
+<span id="cb224-8"><a href="dna-seq-variant-calling.html#cb224-8"></a>                  <span class="dt">pon =</span> <span class="st">&quot;apps/variants/mutect2/pon.vcf&quot;</span>,</span>
+<span id="cb224-9"><a href="dna-seq-variant-calling.html#cb224-9"></a>                  <span class="dt">threads =</span> <span class="dv">16</span>)</span>
+<span id="cb224-10"><a href="dna-seq-variant-calling.html#cb224-10"></a></span>
+<span id="cb224-11"><a href="dna-seq-variant-calling.html#cb224-11"></a>res17 &lt;-<span class="st"> </span><span class="kw">runCWLBatch</span>(SomaticCallers, <span class="dt">outdir =</span> <span class="st">&quot;apps/variants/combined&quot;</span>, inputList, paramList,</span>
+<span id="cb224-12"><a href="dna-seq-variant-calling.html#cb224-12"></a>                     <span class="dt">BPPARAM =</span> <span class="kw">BatchtoolsParam</span>(<span class="dt">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb224-13"><a href="dna-seq-variant-calling.html#cb224-13"></a>                                               <span class="dt">cluster =</span> <span class="st">&quot;sge&quot;</span>,</span>
+<span id="cb224-14"><a href="dna-seq-variant-calling.html#cb224-14"></a>                                               <span class="dt">template =</span> <span class="st">&quot;apps/data/sge.tmpl&quot;</span>,</span>
+<span id="cb224-15"><a href="dna-seq-variant-calling.html#cb224-15"></a>                                               <span class="dt">resources =</span> <span class="kw">list</span>(<span class="dt">threads =</span> <span class="dv">16</span>,</span>
+<span id="cb224-16"><a href="dna-seq-variant-calling.html#cb224-16"></a>                                                                <span class="dt">queue =</span> <span class="st">&quot;mem.q&quot;</span>,</span>
+<span id="cb224-17"><a href="dna-seq-variant-calling.html#cb224-17"></a>                                                                <span class="dt">jobname =</span> <span class="st">&quot;combined&quot;</span>),</span>
+<span id="cb224-18"><a href="dna-seq-variant-calling.html#cb224-18"></a>                                               <span class="dt">log =</span> <span class="ot">TRUE</span>, <span class="dt">logdir =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">progressbar =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb224-19"><a href="dna-seq-variant-calling.html#cb224-19"></a>                     <span class="dt">stderr =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p>Here are the final results:</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="dna-seq-variant-calling.html#cb225-1"></a><span class="kw">list.files</span>(<span class="st">&quot;apps/variants/combined/pt19&quot;</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;Consensus.sINDEL.vcf&quot;                                     
+##  [2] &quot;Consensus.sSNV.vcf&quot;                                       
+##  [3] &quot;Ensemble.sINDEL.tsv&quot;                                      
+##  [4] &quot;Ensemble.sSNV.tsv&quot;                                        
+##  [5] &quot;Ensemble.sVar.tsv&quot;                                        
+##  [6] &quot;normal19.tumor19.ctfiltered.obfiltered.PASS.vcf&quot;          
+##  [7] &quot;normal19.tumor19.ctfiltered.obfiltered.vcf&quot;               
+##  [8] &quot;somatic.indels.vcf.gz&quot;                                    
+##  [9] &quot;somatic.indels.vcf.gz.tbi&quot;                                
+## [10] &quot;somatic.snvs.vcf.gz&quot;                                      
+## [11] &quot;somatic.snvs.vcf.gz.tbi&quot;                                  
+## [12] &quot;t.contamination.table&quot;                                    
+## [13] &quot;tumor19_LoFreq.vcfsomatic_final_minus-dbsnp.indels.vcf.gz&quot;
+## [14] &quot;tumor19_LoFreq.vcfsomatic_final_minus-dbsnp.snvs.vcf.gz&quot;  
+## [15] &quot;tumor19_LoFreq.vcfsomatic_final.indels.vcf.gz&quot;            
+## [16] &quot;tumor19_LoFreq.vcfsomatic_final.snvs.vcf.gz&quot;              
+## [17] &quot;tumor19_MuSE.vcf&quot;                                         
+## [18] &quot;tumor19_neusomatic.vcf&quot;                                   
+## [19] &quot;tumor19_SomaticSniper.vcf&quot;                                
+## [20] &quot;tumor19_VarDict.vcf&quot;                                      
+## [21] &quot;tumor19.art.pre_adapter_detail_metrics.txt&quot;               
+## [22] &quot;tumor19.indel.vcf&quot;                                        
+## [23] &quot;tumor19.normal19.somatic.vcf&quot;                             
+## [24] &quot;tumor19.snp.vcf&quot;</code></pre>
+</div>
+</div>
+<div id="structural-variation" class="section level2">
+<h2><span class="header-section-number">6.4</span> Structural variation</h2>
+<div id="structural-variation-engine" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Structural variation Engine</h3>
+</div>
+</div>
+<div id="copy-number-variation" class="section level2">
+<h2><span class="header-section-number">6.5</span> Copy number variation</h2>
+<div id="cnvkit" class="section level3">
+<h3><span class="header-section-number">6.5.1</span> cnvkit</h3>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="application.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rna-seq-alignment-and-quantification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-VariantCalling.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["Rcwl-Pipelines.pdf", "Rcwl-Pipelines.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Components | Bioinformatics tools and pipelines using R and CWL</title>
+  <meta name="description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Components | Bioinformatics tools and pipelines using R and CWL" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Components | Bioinformatics tools and pipelines using R and CWL" />
+  
+  <meta name="twitter:description" content="A manual to wrap Bioinformatics tools and workflows with Common Workflow Language using the Rcwl package." />
+  
+
+<meta name="author" content="Qiang Hu" />
+<meta name="author" content="Qian Liu" />
+
+
+<meta name="date" content="2019-10-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="writing-pipeline.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/d3-3.3.8/d3.min.js"></script>
+<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
+<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
+<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/chromatography-0.1/chromatography.js"></script>
+<script src="libs/DiagrammeR-binding-1.0.1/DiagrammeR.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Rcwl and Case Study</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#r-package-installation"><i class="fa fa-check"></i><b>0.1</b> R package installation</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#system-requirements"><i class="fa fa-check"></i><b>0.2</b> System requirements</a></li>
+<li class="chapter" data-level="0.3" data-path="index.html"><a href="index.html#docker"><i class="fa fa-check"></i><b>0.3</b> Docker</a></li>
+<li class="chapter" data-level="0.4" data-path="index.html"><a href="index.html#structure-of-the-book"><i class="fa fa-check"></i><b>0.4</b> Structure of the book</a></li>
+<li class="chapter" data-level="0.5" data-path="index.html"><a href="index.html#r-session-information"><i class="fa fa-check"></i><b>0.5</b> R session information</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#common-workflow-language"><i class="fa fa-check"></i><b>1.1</b> Common Workflow Language</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#first-example"><i class="fa fa-check"></i><b>1.2</b> First example</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#test-run"><i class="fa fa-check"></i><b>1.3</b> Test run</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="components.html"><a href="components.html"><i class="fa fa-check"></i><b>2</b> Components</a><ul>
+<li class="chapter" data-level="2.1" data-path="components.html"><a href="components.html#input-parameters"><i class="fa fa-check"></i><b>2.1</b> Input Parameters</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="components.html"><a href="components.html#essential-input-parameters"><i class="fa fa-check"></i><b>2.1.1</b> Essential Input parameters</a></li>
+<li class="chapter" data-level="2.1.2" data-path="components.html"><a href="components.html#array-inputs"><i class="fa fa-check"></i><b>2.1.2</b> Array Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="components.html"><a href="components.html#output-parameters"><i class="fa fa-check"></i><b>2.2</b> Output Parameters</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="components.html"><a href="components.html#capturing-output"><i class="fa fa-check"></i><b>2.2.1</b> Capturing Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="components.html"><a href="components.html#array-outputs"><i class="fa fa-check"></i><b>2.2.2</b> Array Outputs</a></li>
+<li class="chapter" data-level="2.2.3" data-path="components.html"><a href="components.html#standard-output"><i class="fa fa-check"></i><b>2.2.3</b> Standard output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="writing-pipeline.html"><a href="writing-pipeline.html"><i class="fa fa-check"></i><b>3</b> Writing Pipeline</a><ul>
+<li class="chapter" data-level="3.1" data-path="writing-pipeline.html"><a href="writing-pipeline.html#scattering-pipeline"><i class="fa fa-check"></i><b>3.1</b> Scattering pipeline</a></li>
+<li class="chapter" data-level="3.2" data-path="writing-pipeline.html"><a href="writing-pipeline.html#pipeline-plot"><i class="fa fa-check"></i><b>3.2</b> Pipeline plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="run-approaches.html"><a href="run-approaches.html"><i class="fa fa-check"></i><b>4</b> Run approaches</a><ul>
+<li class="chapter" data-level="4.1" data-path="run-approaches.html"><a href="run-approaches.html#running-tools-in-docker"><i class="fa fa-check"></i><b>4.1</b> Running Tools in Docker</a></li>
+<li class="chapter" data-level="4.2" data-path="run-approaches.html"><a href="run-approaches.html#running-tools-in-cluster-server"><i class="fa fa-check"></i><b>4.2</b> Running Tools in Cluster server</a></li>
+<li class="chapter" data-level="4.3" data-path="run-approaches.html"><a href="run-approaches.html#web-application"><i class="fa fa-check"></i><b>4.3</b> Web Application</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="run-approaches.html"><a href="run-approaches.html#cwlparam-example"><i class="fa fa-check"></i><b>4.3.1</b> cwlParam example</a></li>
+<li class="chapter" data-level="4.3.2" data-path="run-approaches.html"><a href="run-approaches.html#cwlparam-to-shiny-app"><i class="fa fa-check"></i><b>4.3.2</b> cwlParam to Shiny App</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i><b>5</b> Application</a><ul>
+<li class="chapter" data-level="5.1" data-path="application.html"><a href="application.html#rcwlpipelines-tools"><i class="fa fa-check"></i><b>5.1</b> RcwlPipelines tools</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="application.html"><a href="application.html#rcwl-scripts"><i class="fa fa-check"></i><b>5.1.1</b> Rcwl scripts</a></li>
+<li class="chapter" data-level="5.1.2" data-path="application.html"><a href="application.html#build-a-pipeline"><i class="fa fa-check"></i><b>5.1.2</b> Build a pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="application.html"><a href="application.html#rcwlpipelines-summary"><i class="fa fa-check"></i><b>5.2</b> RcwlPipelines summary</a></li>
+<li class="chapter" data-level="5.3" data-path="application.html"><a href="application.html#dnaseq-alignment-pipeline"><i class="fa fa-check"></i><b>5.3</b> DNASeq alignment pipeline</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="application.html"><a href="application.html#prepare-data"><i class="fa fa-check"></i><b>5.3.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.3.2" data-path="application.html"><a href="application.html#run-in-cluster"><i class="fa fa-check"></i><b>5.3.2</b> Run in cluster</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="application.html"><a href="application.html#rnaseq-pipeline"><i class="fa fa-check"></i><b>5.4</b> RNASeq pipeline</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="application.html"><a href="application.html#prepare-data-1"><i class="fa fa-check"></i><b>5.4.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.4.2" data-path="application.html"><a href="application.html#submit-pipeline-with-sge"><i class="fa fa-check"></i><b>5.4.2</b> Submit pipeline with SGE</a></li>
+<li class="chapter" data-level="5.4.3" data-path="application.html"><a href="application.html#summarize-qc"><i class="fa fa-check"></i><b>5.4.3</b> Summarize QC</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="application.html"><a href="application.html#mc3-somatic-variant-calling-pipeline"><i class="fa fa-check"></i><b>5.5</b> MC3 somatic variant calling pipeline</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="application.html"><a href="application.html#prepare-data-2"><i class="fa fa-check"></i><b>5.5.1</b> Prepare data</a></li>
+<li class="chapter" data-level="5.5.2" data-path="application.html"><a href="application.html#run-mc3-pipeline"><i class="fa fa-check"></i><b>5.5.2</b> Run MC3 pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="application.html"><a href="application.html#gatk4-germline-variant-calling-pipeline"><i class="fa fa-check"></i><b>5.6</b> GATK4 germline variant calling pipeline</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="application.html"><a href="application.html#gatk-alignment"><i class="fa fa-check"></i><b>5.6.1</b> GATK Alignment</a></li>
+<li class="chapter" data-level="5.6.2" data-path="application.html"><a href="application.html#haplotypecaller"><i class="fa fa-check"></i><b>5.6.2</b> HaplotypeCaller</a></li>
+<li class="chapter" data-level="5.6.3" data-path="application.html"><a href="application.html#joint-discovery"><i class="fa fa-check"></i><b>5.6.3</b> Joint Discovery</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html"><i class="fa fa-check"></i><b>6</b> DNA-Seq Variant calling</a><ul>
+<li class="chapter" data-level="6.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#dna-alignment"><i class="fa fa-check"></i><b>6.1</b> DNA alignment</a></li>
+<li class="chapter" data-level="6.2" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#germline-variant-calling"><i class="fa fa-check"></i><b>6.2</b> Germline variant calling</a></li>
+<li class="chapter" data-level="6.3" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#somatic-mutation-calling"><i class="fa fa-check"></i><b>6.3</b> Somatic mutation calling</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#mutect2"><i class="fa fa-check"></i><b>6.3.1</b> MuTect2</a></li>
+<li class="chapter" data-level="6.3.2" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#muse"><i class="fa fa-check"></i><b>6.3.2</b> MuSE</a></li>
+<li class="chapter" data-level="6.3.3" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#strelka2"><i class="fa fa-check"></i><b>6.3.3</b> Strelka2</a></li>
+<li class="chapter" data-level="6.3.4" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#somaticsniper"><i class="fa fa-check"></i><b>6.3.4</b> SomaticSniper</a></li>
+<li class="chapter" data-level="6.3.5" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#vardict"><i class="fa fa-check"></i><b>6.3.5</b> VarDict</a></li>
+<li class="chapter" data-level="6.3.6" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#lofreq"><i class="fa fa-check"></i><b>6.3.6</b> LoFreq</a></li>
+<li class="chapter" data-level="6.3.7" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#varscan2"><i class="fa fa-check"></i><b>6.3.7</b> VarScan2</a></li>
+<li class="chapter" data-level="6.3.8" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#lancet"><i class="fa fa-check"></i><b>6.3.8</b> Lancet</a></li>
+<li class="chapter" data-level="6.3.9" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#neusomatic"><i class="fa fa-check"></i><b>6.3.9</b> Neusomatic</a></li>
+<li class="chapter" data-level="6.3.10" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#combined-somatic-caller-pipeline"><i class="fa fa-check"></i><b>6.3.10</b> Combined somatic caller pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#structural-variation"><i class="fa fa-check"></i><b>6.4</b> Structural variation</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#structural-variation-engine"><i class="fa fa-check"></i><b>6.4.1</b> Structural variation Engine</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#copy-number-variation"><i class="fa fa-check"></i><b>6.5</b> Copy number variation</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="dna-seq-variant-calling.html"><a href="dna-seq-variant-calling.html#cnvkit"><i class="fa fa-check"></i><b>6.5.1</b> cnvkit</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html"><i class="fa fa-check"></i><b>7</b> RNA-Seq alignment and quantification</a><ul>
+<li class="chapter" data-level="7.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#bulk-mrna"><i class="fa fa-check"></i><b>7.1</b> bulk mRNA</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#prepare-data-3"><i class="fa fa-check"></i><b>7.1.1</b> Prepare data</a></li>
+<li class="chapter" data-level="7.1.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#submit-pipeline-with-sge-1"><i class="fa fa-check"></i><b>7.1.2</b> Submit pipeline with SGE</a></li>
+<li class="chapter" data-level="7.1.3" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#qc-summary"><i class="fa fa-check"></i><b>7.1.3</b> QC Summary</a></li>
+<li class="chapter" data-level="7.1.4" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#abundances-summary"><i class="fa fa-check"></i><b>7.1.4</b> Abundances summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#transcriptome-quantification"><i class="fa fa-check"></i><b>7.2</b> transcriptome quantification</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#kallisto"><i class="fa fa-check"></i><b>7.2.1</b> Kallisto</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#single-cell-rnaseq"><i class="fa fa-check"></i><b>7.3</b> single cell RNAseq</a></li>
+<li class="chapter" data-level="7.4" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#mirna"><i class="fa fa-check"></i><b>7.4</b> miRNA</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#prepare-reference"><i class="fa fa-check"></i><b>7.4.1</b> Prepare reference</a></li>
+<li class="chapter" data-level="7.4.2" data-path="rna-seq-alignment-and-quantification.html"><a href="rna-seq-alignment-and-quantification.html#run-mirdeep2-pipeline"><i class="fa fa-check"></i><b>7.4.2</b> Run miRDeep2 pipeline</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html"><i class="fa fa-check"></i><b>8</b> Neoantigen prediction</a><ul>
+<li class="chapter" data-level="8.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#input-file-preparation"><i class="fa fa-check"></i><b>8.1</b> Input file preparation</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#annotating-vcf"><i class="fa fa-check"></i><b>8.1.1</b> Annotating VCF</a></li>
+<li class="chapter" data-level="8.1.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#adding-coverage"><i class="fa fa-check"></i><b>8.1.2</b> Adding coverage</a></li>
+<li class="chapter" data-level="8.1.3" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#adding-expression"><i class="fa fa-check"></i><b>8.1.3</b> Adding expression</a></li>
+<li class="chapter" data-level="8.1.4" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#creating-a-phased-vcf"><i class="fa fa-check"></i><b>8.1.4</b> Creating a phased VCF</a></li>
+<li class="chapter" data-level="8.1.5" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#combined-vcf-preparing-pipeline"><i class="fa fa-check"></i><b>8.1.5</b> Combined VCF preparing pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#hla-typing"><i class="fa fa-check"></i><b>8.2</b> HLA typing</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#polysolver"><i class="fa fa-check"></i><b>8.2.1</b> polysolver</a></li>
+<li class="chapter" data-level="8.2.2" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#optitype"><i class="fa fa-check"></i><b>8.2.2</b> Optitype</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="neoantigen-prediction.html"><a href="neoantigen-prediction.html#neoantigen-prediction-by-pvacseq"><i class="fa fa-check"></i><b>8.3</b> Neoantigen prediction by pVACseq</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html"><i class="fa fa-check"></i><b>9</b> Other Sequencing pipelines</a><ul>
+<li class="chapter" data-level="9.1" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#chip-seq"><i class="fa fa-check"></i><b>9.1</b> ChiP-Seq</a></li>
+<li class="chapter" data-level="9.2" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#atac-seq"><i class="fa fa-check"></i><b>9.2</b> ATAC-Seq</a></li>
+<li class="chapter" data-level="9.3" data-path="other-sequencing-pipelines.html"><a href="other-sequencing-pipelines.html#microbiome-sequencing"><i class="fa fa-check"></i><b>9.3</b> Microbiome Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bioinformatics tools and pipelines using R and CWL</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="components" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Components</h1>
+<div id="input-parameters" class="section level2">
+<h2><span class="header-section-number">2.1</span> Input Parameters</h2>
+<div id="essential-input-parameters" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Essential Input parameters</h3>
+<p>For the input parameters, we usually need to define three options, <em>id</em>, <em>type</em>, and <em>prefix</em>. The type can be <em>string</em>, <em>int</em>, <em>long</em>, <em>float</em>, <em>double</em>, and so on. More detail can be found at: <a href="https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType" class="uri">https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType</a>.</p>
+<p>A <code>InputParam</code> constructor is used to define a list of input objects for the command tool, such as “prefix” for the parameter flags and “position” for the paramter orders. More descriptions are available in the CWL specification <a href="https://www.commonwl.org/v1.0/CommandLineTool.html#CommandLineBinding" class="uri">https://www.commonwl.org/v1.0/CommandLineTool.html#CommandLineBinding</a>.</p>
+<p>Here is an example from the CWL user guide(<a href="http://www.commonwl.org/user_guide/03-input/" class="uri">http://www.commonwl.org/user_guide/03-input/</a>). We defined the <code>echo</code> with different type of input parameters by <code>InputParam</code>, and the <code>stdout</code> option can be used to caputre the standard output stream into a file:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="components.html#cb21-1"></a>e1 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;flag&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;boolean&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-f&quot;</span>)</span>
+<span id="cb21-2"><a href="components.html#cb21-2"></a>e2 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;string&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;string&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-s&quot;</span>)</span>
+<span id="cb21-3"><a href="components.html#cb21-3"></a>e3 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-i&quot;</span>)</span>
+<span id="cb21-4"><a href="components.html#cb21-4"></a>e4 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;file&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;--file=&quot;</span>, <span class="dt">separate =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb21-5"><a href="components.html#cb21-5"></a>echoA &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;echo&quot;</span>,</span>
+<span id="cb21-6"><a href="components.html#cb21-6"></a>                  <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(e1, e2, e3, e4),</span>
+<span id="cb21-7"><a href="components.html#cb21-7"></a>                  <span class="dt">stdout =</span> <span class="st">&quot;output.txt&quot;</span>)</span></code></pre></div>
+<p>Then we give it a try by setting values for the inputs:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="components.html#cb22-1"></a>echoA<span class="op">$</span>flag &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb22-2"><a href="components.html#cb22-2"></a>echoA<span class="op">$</span>string &lt;-<span class="st"> &quot;Hello&quot;</span></span>
+<span id="cb22-3"><a href="components.html#cb22-3"></a>echoA<span class="op">$</span>int &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb22-4"><a href="components.html#cb22-4"></a></span>
+<span id="cb22-5"><a href="components.html#cb22-5"></a>tmpfile &lt;-<span class="st"> </span><span class="kw">tempfile</span>()</span>
+<span id="cb22-6"><a href="components.html#cb22-6"></a><span class="kw">write</span>(<span class="st">&quot;World&quot;</span>, tmpfile)</span>
+<span id="cb22-7"><a href="components.html#cb22-7"></a>echoA<span class="op">$</span>file &lt;-<span class="st"> </span>tmpfile</span>
+<span id="cb22-8"><a href="components.html#cb22-8"></a></span>
+<span id="cb22-9"><a href="components.html#cb22-9"></a>r2 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(echoA, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="components.html#cb24-1"></a>r2<span class="op">$</span>command</span></code></pre></div>
+<pre><code>## [1] &quot;\033[1;30mINFO\033[0m [job file33e119137d.cwl] /tmp/jy5_17oh$ echo \\&quot;                 
+## [2] &quot;    --file=/tmp/tmpfps825wz/stgda42f59e-bf3b-42da-a72b-3acfaad10160/file33e71c79690 \\&quot;
+## [3] &quot;    -f \\&quot;                                                                             
+## [4] &quot;    -i \\&quot;                                                                             
+## [5] &quot;    1 \\&quot;                                                                              
+## [6] &quot;    -s \\&quot;                                                                             
+## [7] &quot;    Hello &gt; /tmp/jy5_17oh/output.txt&quot;</code></pre>
+</div>
+<div id="array-inputs" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Array Inputs</h3>
+<p>Taking a similar example to the CWL user guide described above, we can define three different type of array as inputs:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="components.html#cb26-1"></a>a1 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;A&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;string[]&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-A&quot;</span>)</span>
+<span id="cb26-2"><a href="components.html#cb26-2"></a>a2 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;B&quot;</span>,</span>
+<span id="cb26-3"><a href="components.html#cb26-3"></a>                 <span class="dt">type =</span> <span class="kw">InputArrayParam</span>(<span class="dt">items =</span> <span class="st">&quot;string&quot;</span>,</span>
+<span id="cb26-4"><a href="components.html#cb26-4"></a>                                        <span class="dt">prefix=</span><span class="st">&quot;-B=&quot;</span>, <span class="dt">separate =</span> <span class="ot">FALSE</span>))</span>
+<span id="cb26-5"><a href="components.html#cb26-5"></a>a3 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;C&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;string[]&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-C=&quot;</span>,</span>
+<span id="cb26-6"><a href="components.html#cb26-6"></a>                 <span class="dt">itemSeparator =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">separate =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb26-7"><a href="components.html#cb26-7"></a>echoB &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;echo&quot;</span>,</span>
+<span id="cb26-8"><a href="components.html#cb26-8"></a>                 <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(a1, a2, a3))</span></code></pre></div>
+<p>We then set values for the three inputs:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="components.html#cb27-1"></a>echoB<span class="op">$</span>A &lt;-<span class="st"> </span>letters[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
+<span id="cb27-2"><a href="components.html#cb27-2"></a>echoB<span class="op">$</span>B &lt;-<span class="st"> </span>letters[<span class="dv">4</span><span class="op">:</span><span class="dv">6</span>]</span>
+<span id="cb27-3"><a href="components.html#cb27-3"></a>echoB<span class="op">$</span>C &lt;-<span class="st"> </span>letters[<span class="dv">7</span><span class="op">:</span><span class="dv">9</span>]</span>
+<span id="cb27-4"><a href="components.html#cb27-4"></a>echoB</span></code></pre></div>
+<pre><code>## class: cwlParam 
+##  cwlClass: CommandLineTool 
+##  cwlVersion: v1.0 
+##  baseCommand: echo 
+## inputs:
+##   A (string[]): -A a b c
+##   B:
+##     type: array
+##     prefix: -B= d e f
+##   C (string[]): -C= g h i
+## outputs:
+## output:
+##   type: stdout</code></pre>
+<p>Now we can check whether the command behaves as we expected:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="components.html#cb29-1"></a>r3 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(echoB, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="components.html#cb31-1"></a>r3<span class="op">$</span>command</span></code></pre></div>
+<pre><code>## [1] &quot;\033[1;30mINFO\033[0m [job file33e70b7881b.cwl] /tmp/y5c0n6ey$ echo \\&quot;
+## [2] &quot;    -A \\&quot;                                                             
+## [3] &quot;    a \\&quot;                                                              
+## [4] &quot;    b \\&quot;                                                              
+## [5] &quot;    c \\&quot;                                                              
+## [6] &quot;    -B=d \\&quot;                                                           
+## [7] &quot;    -B=e \\&quot;                                                           
+## [8] &quot;    -B=f \\&quot;                                                           
+## [9] &quot;    -C=g,h,i &gt; /tmp/y5c0n6ey/a42ab676393b853fed6cc21e1e301b73e8d537b9&quot;</code></pre>
+</div>
+</div>
+<div id="output-parameters" class="section level2">
+<h2><span class="header-section-number">2.2</span> Output Parameters</h2>
+<div id="capturing-output" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Capturing Output</h3>
+<p>The outputs, similar to the inputs, is a list of output parameters. Three options, <em>id</em>, <em>type</em> and <em>glob</em>, can be defined. The <em>glob</em> option is used to define a pattern to find files relative to the output directory.</p>
+<p>Here is an example to unzip a compressed <code>gz</code> file. First, we generate a compressed R script file:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="components.html#cb33-1"></a>zzfil &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;sample.R.gz&quot;</span>)</span>
+<span id="cb33-2"><a href="components.html#cb33-2"></a>zz &lt;-<span class="st"> </span><span class="kw">gzfile</span>(zzfil, <span class="st">&quot;w&quot;</span>)</span>
+<span id="cb33-3"><a href="components.html#cb33-3"></a><span class="kw">cat</span>(<span class="st">&quot;sample(1:10, 5)&quot;</span>, <span class="dt">file =</span> zz, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-4"><a href="components.html#cb33-4"></a><span class="kw">close</span>(zz)</span></code></pre></div>
+<p>We then define a <code>cwlParam</code> object to use “gzip” to uncompress an input file:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="components.html#cb34-1"></a>ofile &lt;-<span class="st"> &quot;sample.R&quot;</span></span>
+<span id="cb34-2"><a href="components.html#cb34-2"></a>z1 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;uncomp&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;boolean&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-d&quot;</span>)</span>
+<span id="cb34-3"><a href="components.html#cb34-3"></a>z2 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;out&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;boolean&quot;</span>, <span class="dt">prefix =</span> <span class="st">&quot;-c&quot;</span>)</span>
+<span id="cb34-4"><a href="components.html#cb34-4"></a>z3 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;zfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>)</span>
+<span id="cb34-5"><a href="components.html#cb34-5"></a>o1 &lt;-<span class="st"> </span><span class="kw">OutputParam</span>(<span class="dt">id =</span> <span class="st">&quot;rfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>, <span class="dt">glob =</span> ofile)</span>
+<span id="cb34-6"><a href="components.html#cb34-6"></a>gz &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;gzip&quot;</span>,</span>
+<span id="cb34-7"><a href="components.html#cb34-7"></a>               <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(z1, z2, z3),</span>
+<span id="cb34-8"><a href="components.html#cb34-8"></a>               <span class="dt">outputs =</span> <span class="kw">OutputParamList</span>(o1),</span>
+<span id="cb34-9"><a href="components.html#cb34-9"></a>               <span class="dt">stdout =</span> ofile)</span></code></pre></div>
+<p>Now the <code>gz</code> object can be used to uncompress the previously generated compressed file:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="components.html#cb35-1"></a>gz<span class="op">$</span>uncomp &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb35-2"><a href="components.html#cb35-2"></a>gz<span class="op">$</span>out &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb35-3"><a href="components.html#cb35-3"></a>gz<span class="op">$</span>zfile &lt;-<span class="st"> </span>zzfil</span>
+<span id="cb35-4"><a href="components.html#cb35-4"></a>r4 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(gz, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="components.html#cb37-1"></a>r4<span class="op">$</span>output</span></code></pre></div>
+<pre><code>## [1] &quot;/tmp/RtmpgQiSSu/sample.R&quot;</code></pre>
+<p>Or we can use <code>arguments</code> to set some default parameters:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="components.html#cb39-1"></a>z1 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;zfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>)</span>
+<span id="cb39-2"><a href="components.html#cb39-2"></a>o1 &lt;-<span class="st"> </span><span class="kw">OutputParam</span>(<span class="dt">id =</span> <span class="st">&quot;rfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>, <span class="dt">glob =</span> ofile)</span>
+<span id="cb39-3"><a href="components.html#cb39-3"></a>Gz &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;gzip&quot;</span>,</span>
+<span id="cb39-4"><a href="components.html#cb39-4"></a>               <span class="dt">arguments =</span> <span class="kw">list</span>(<span class="st">&quot;-d&quot;</span>, <span class="st">&quot;-c&quot;</span>),</span>
+<span id="cb39-5"><a href="components.html#cb39-5"></a>               <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(z1),</span>
+<span id="cb39-6"><a href="components.html#cb39-6"></a>               <span class="dt">outputs =</span> <span class="kw">OutputParamList</span>(o1),</span>
+<span id="cb39-7"><a href="components.html#cb39-7"></a>               <span class="dt">stdout =</span> ofile)</span>
+<span id="cb39-8"><a href="components.html#cb39-8"></a>Gz</span></code></pre></div>
+<pre><code>## class: cwlParam 
+##  cwlClass: CommandLineTool 
+##  cwlVersion: v1.0 
+##  baseCommand: gzip 
+## arguments: -d -c 
+## inputs:
+##   zfile (File):  
+## outputs:
+## rfile:
+##   type: File
+##   outputBinding:
+##     glob: sample.R
+## stdout: sample.R</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="components.html#cb41-1"></a>Gz<span class="op">$</span>zfile &lt;-<span class="st"> </span>zzfil</span>
+<span id="cb41-2"><a href="components.html#cb41-2"></a>r4a &lt;-<span class="st"> </span><span class="kw">runCWL</span>(Gz, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<p>To make it for general usage, we can define a pattern with javascript to <em>glob</em> the output, which requires <code>node</code> to be installed in your system PATH:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="components.html#cb43-1"></a>pfile &lt;-<span class="st"> &quot;$(inputs.zfile.path.split(&#39;/&#39;).slice(-1)[0].split(&#39;.&#39;).slice(0,-1).join(&#39;.&#39;))&quot;</span></span></code></pre></div>
+<p>Or we can directly use the CWL built in file property, <code>nameroot</code>:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="components.html#cb44-1"></a>pfile &lt;-<span class="st"> &quot;$(inputs.zfile.nameroot)&quot;</span></span>
+<span id="cb44-2"><a href="components.html#cb44-2"></a>o2 &lt;-<span class="st"> </span><span class="kw">OutputParam</span>(<span class="dt">id =</span> <span class="st">&quot;rfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File&quot;</span>, <span class="dt">glob =</span> pfile)</span>
+<span id="cb44-3"><a href="components.html#cb44-3"></a>req1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">class =</span> <span class="st">&quot;InlineJavascriptRequirement&quot;</span>)</span>
+<span id="cb44-4"><a href="components.html#cb44-4"></a>GZ &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="kw">c</span>(<span class="st">&quot;gzip&quot;</span>, <span class="st">&quot;-d&quot;</span>, <span class="st">&quot;-c&quot;</span>),</span>
+<span id="cb44-5"><a href="components.html#cb44-5"></a>               <span class="dt">requirements =</span> <span class="kw">list</span>(), <span class="co">## assign list(req1) if node installed.</span></span>
+<span id="cb44-6"><a href="components.html#cb44-6"></a>               <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(z1),</span>
+<span id="cb44-7"><a href="components.html#cb44-7"></a>               <span class="dt">outputs =</span> <span class="kw">OutputParamList</span>(o2),</span>
+<span id="cb44-8"><a href="components.html#cb44-8"></a>               <span class="dt">stdout =</span> pfile)</span>
+<span id="cb44-9"><a href="components.html#cb44-9"></a>GZ<span class="op">$</span>zfile &lt;-<span class="st"> </span>zzfil</span>
+<span id="cb44-10"><a href="components.html#cb44-10"></a>r4b &lt;-<span class="st"> </span><span class="kw">runCWL</span>(GZ, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+</div>
+<div id="array-outputs" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Array Outputs</h3>
+<p>We can also capture multiple output files with the <code>glob</code> pattern:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="components.html#cb46-1"></a>a &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;a&quot;</span>, <span class="dt">type =</span> <span class="kw">InputArrayParam</span>(<span class="dt">items =</span> <span class="st">&quot;string&quot;</span>))</span>
+<span id="cb46-2"><a href="components.html#cb46-2"></a>b &lt;-<span class="st"> </span><span class="kw">OutputParam</span>(<span class="dt">id =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">type =</span> <span class="kw">OutputArrayParam</span>(<span class="dt">items =</span> <span class="st">&quot;File&quot;</span>), <span class="dt">glob =</span> <span class="st">&quot;*.txt&quot;</span>)</span>
+<span id="cb46-3"><a href="components.html#cb46-3"></a>touch &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;touch&quot;</span>, <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(a), <span class="dt">outputs =</span> <span class="kw">OutputParamList</span>(b))</span>
+<span id="cb46-4"><a href="components.html#cb46-4"></a>touch<span class="op">$</span>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a.txt&quot;</span>, <span class="st">&quot;b.gz&quot;</span>, <span class="st">&quot;c.txt&quot;</span>)</span>
+<span id="cb46-5"><a href="components.html#cb46-5"></a>r5 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(touch, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="components.html#cb48-1"></a>r5<span class="op">$</span>output</span></code></pre></div>
+<pre><code>## [1] &quot;/tmp/RtmpgQiSSu/a.txt&quot; &quot;/tmp/RtmpgQiSSu/c.txt&quot;</code></pre>
+</div>
+<div id="standard-output" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Standard output</h3>
+<p>Usually, the <code>stdout</code> option is a string or an expression of output
+file name from the command tool. The command’s standard output stream
+will be captured into a file written to the designated output
+directory. When the <code>stdout</code> field is defined, an output parameter
+with the type of “stdout” should be also assigned with no
+“outputBinding” set.</p>
+<p>An example for command tool “cat” is defined with <code>stdout</code> field in
+the output, with the name passed from the input parameter “p2”:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="components.html#cb50-1"></a><span class="co">## define Cat</span></span>
+<span id="cb50-2"><a href="components.html#cb50-2"></a>p1 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;infiles&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;File[]&quot;</span>)</span>
+<span id="cb50-3"><a href="components.html#cb50-3"></a>p2 &lt;-<span class="st"> </span><span class="kw">InputParam</span>(<span class="dt">id =</span> <span class="st">&quot;outfile&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;string&quot;</span>,</span>
+<span id="cb50-4"><a href="components.html#cb50-4"></a>                 <span class="dt">default =</span> <span class="st">&quot;catout.txt&quot;</span>, <span class="dt">position =</span> <span class="dv">-1</span>)</span>
+<span id="cb50-5"><a href="components.html#cb50-5"></a>Cat &lt;-<span class="st"> </span><span class="kw">cwlParam</span>(<span class="dt">baseCommand =</span> <span class="st">&quot;cat&quot;</span>,</span>
+<span id="cb50-6"><a href="components.html#cb50-6"></a>                <span class="dt">inputs =</span> <span class="kw">InputParamList</span>(p1, p2),</span>
+<span id="cb50-7"><a href="components.html#cb50-7"></a>                <span class="dt">stdout =</span> <span class="st">&quot;$(inputs.outfile)&quot;</span>)</span>
+<span id="cb50-8"><a href="components.html#cb50-8"></a><span class="co">## assign inputs</span></span>
+<span id="cb50-9"><a href="components.html#cb50-9"></a>afile &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;a.txt&quot;</span>)</span>
+<span id="cb50-10"><a href="components.html#cb50-10"></a>bfile &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;b.txt&quot;</span>)</span>
+<span id="cb50-11"><a href="components.html#cb50-11"></a><span class="kw">write</span>(<span class="st">&quot;a&quot;</span>, afile)</span>
+<span id="cb50-12"><a href="components.html#cb50-12"></a><span class="kw">write</span>(<span class="st">&quot;b&quot;</span>, bfile)</span>
+<span id="cb50-13"><a href="components.html#cb50-13"></a>Cat<span class="op">$</span>infiles &lt;-<span class="st"> </span><span class="kw">list</span>(afile, bfile)</span>
+<span id="cb50-14"><a href="components.html#cb50-14"></a><span class="co">## run</span></span>
+<span id="cb50-15"><a href="components.html#cb50-15"></a>r6 &lt;-<span class="st"> </span><span class="kw">runCWL</span>(Cat, <span class="dt">outdir =</span> <span class="kw">tempdir</span>())</span></code></pre></div>
+<pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="components.html#cb52-1"></a>r6<span class="op">$</span>command</span></code></pre></div>
+<pre><code>## [1] &quot;\033[1;30mINFO\033[0m [job file33e6dd5ea8c.cwl] /tmp/cw55z3so$ cat \\&quot;                        
+## [2] &quot;    /tmp/tmpzpsel0g3/stgb15a5507-711c-4333-b2eb-631c6dc3f57c/a.txt \\&quot;                        
+## [3] &quot;    /tmp/tmpzpsel0g3/stg63b35434-34ca-43fe-96a7-98738e8efc65/b.txt &gt; /tmp/cw55z3so/catout.txt&quot;</code></pre>
+
+<div class="tips">
+<p>In this example, we used the parameter “p2” to pass the name to the
+standard output.</p>
+<p>In the <code>InputParam</code> of “p2”, the position is assigned to a negative
+value (-1), which means the parameters will not be used in the command
+and only uses for passing variable. To write the “Cat” tool to a CWL
+file, the “inputBinding” field will be skipped for this parameter.</p>
+</div>
+
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="writing-pipeline.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/02-Components.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["Rcwl-Pipelines.pdf", "Rcwl-Pipelines.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
