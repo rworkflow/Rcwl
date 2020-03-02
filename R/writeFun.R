@@ -1,7 +1,11 @@
 #' @importFrom R.utils commandArgs
 #' @importFrom codetools findGlobals
 writeFun <- function(cwl){
-    file <- tempfile("Fun", fileext = ".R")
+    if(length(mvOut@id) > 0){
+        file <- file.path(tempdir(), paste0(cwl@id, ".R"))
+    }else{
+        file <- tempfile("Fun", fileext = ".R")
+    }
     funName <- sub(".R", "", basename(file))
     assign(funName, baseCommand(cwl))
     types <- lapply(inputs(cwl), function(x)x@type)

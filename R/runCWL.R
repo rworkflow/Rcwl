@@ -5,9 +5,8 @@
 #' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param cwlRunner The path to the `cwltool` or `cwl-runner`. If not
 #'     exists, the cwltool package will be installed by `reticulate`.
-#' @param cwlTemp Whether to keep temporary files. If true, all
-#'     temporary files will be kept in a "temp" folder of current
-#'     output directory.
+#' @param cwlTemp Path to keep temporary files. If a directory path is
+#'     given, the temporary files will be kept in the directory.
 #' @param outdir Output directory, default current directory.
 #' @param Args The arguments for `cwltool` or `cwl-runner`. For
 #'     example, "--debug" can work with `cwltool` to show debug
@@ -26,7 +25,7 @@
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-                   cwlTemp = FALSE, outdir = ".", Args = character(),
+                   cwlTemp = NULL, outdir = ".", Args = character(),
                    stdout = TRUE, stderr = TRUE, docker = TRUE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     writeCWL(cwl, prefix = prefix, docker = docker, ...)
@@ -40,8 +39,8 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
              "https://github.com/common-workflow-language/cwltool#install")
     }
     
-    if(cwlTemp){
-        Args <- paste("--tmp-outdir-prefix temp/", Args)
+    if(!is.null(cwlTemp)){
+        Args <- paste("--tmp-outdir-prefix", cwlTemp, Args)
     }
     res <- system2(cwlRunner,
                    args = paste0("--outdir ", outdir, " ", Args, " ",
