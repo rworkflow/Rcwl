@@ -4,8 +4,14 @@
 \alias{runCWLBatch}
 \title{run CWL with batchtools}
 \usage{
-runCWLBatch(cwl, outdir = getwd(), inputList, paramList = list(),
-  BPPARAM = BatchtoolsParam(workers = lengths(inputList)[1]), ...)
+runCWLBatch(
+  cwl,
+  outdir = getwd(),
+  inputList,
+  paramList = list(),
+  BPPARAM = BatchtoolsParam(workers = lengths(inputList)[1]),
+  ...
+)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}

@@ -3,7 +3,6 @@
 \docType{package}
 \name{Rcwl}
 \alias{Rcwl}
-\alias{Rcwl-package}
 \title{Rcwl}
 \description{
 An R package to wrap command line tools and build pipelines with

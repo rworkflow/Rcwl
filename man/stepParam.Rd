@@ -6,8 +6,14 @@
 \alias{stepParam}
 \title{stepParam}
 \usage{
-stepParam(id, run = cwlParam(), In = stepInParamList(), Out = list(),
-  scatter = character(), scatterMethod = character())
+stepParam(
+  id,
+  run = cwlParam(),
+  In = stepInParamList(),
+  Out = list(),
+  scatter = character(),
+  scatterMethod = character()
+)
 }
 \arguments{
 \item{id}{The unique identifier for this workflow step.}

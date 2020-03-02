@@ -6,11 +6,19 @@
 \alias{OutputParam}
 \title{Output parameters}
 \usage{
-OutputParam(id = "output", label = character(), doc = character(),
-  type = "stdout", format = character(),
-  secondaryFiles = character(), streamable = logical(),
-  glob = character(), loadContents = logical(),
-  outputEval = character(), outputSource = character())
+OutputParam(
+  id = "output",
+  label = character(),
+  doc = character(),
+  type = "stdout",
+  format = character(),
+  secondaryFiles = character(),
+  streamable = logical(),
+  glob = character(),
+  loadContents = logical(),
+  outputEval = character(),
+  outputSource = character()
+)
 }
 \arguments{
 \item{id}{The unique identifier for this parameter object.}

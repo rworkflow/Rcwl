@@ -9,13 +9,25 @@
 \title{Input parameters
 InputParam}
 \usage{
-InputParam(id, label = "", type = "string", doc = character(),
-  secondaryFiles = character(), streamable = logical(),
-  format = character(), loadListing = character(),
-  loadContents = logical(), position = 0L, prefix = "",
-  separate = TRUE, itemSeparator = character(),
-  valueFrom = character(), shellQuote = logical(),
-  default = character(), value = character())
+InputParam(
+  id,
+  label = "",
+  type = "string",
+  doc = character(),
+  secondaryFiles = character(),
+  streamable = logical(),
+  format = character(),
+  loadListing = character(),
+  loadContents = logical(),
+  position = 0L,
+  prefix = "",
+  separate = TRUE,
+  itemSeparator = character(),
+  valueFrom = character(),
+  shellQuote = logical(),
+  default = character(),
+  value = character()
+)
 
 \S4method{$}{cwlParam}(x, name)
 

@@ -6,8 +6,13 @@
 \alias{stepInParam}
 \title{stepInParam}
 \usage{
-stepInParam(id, source = character(), linkMerge = character(),
-  default = character(), valueFrom = character())
+stepInParam(
+  id,
+  source = character(),
+  linkMerge = character(),
+  default = character(),
+  valueFrom = character()
+)
 }
 \arguments{
 \item{id}{A unique identifier for this workflow input parameter.}

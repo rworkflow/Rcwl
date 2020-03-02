@@ -4,8 +4,13 @@
 \alias{Step}
 \title{Step function}
 \usage{
-Step(id, run = cwlParam(), In = list(), scatter = character(),
-  scatterMethod = character())
+Step(
+  id,
+  run = cwlParam(),
+  In = list(),
+  scatter = character(),
+  scatterMethod = character()
+)
 }
 \arguments{
 \item{id}{The id of `stepParam` object.}

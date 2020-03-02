@@ -6,11 +6,19 @@
 \alias{cwlStepParam}
 \title{cwlStepParam}
 \usage{
-cwlStepParam(cwlVersion = "v1.0", cwlClass = "Workflow",
-  requirements = list(), id = character(), hints = list(),
-  arguments = list(), extensions = list(), inputs = InputParamList(),
-  outputs = OutputParamList(), stdout = character(),
-  steps = stepParamList())
+cwlStepParam(
+  cwlVersion = "v1.0",
+  cwlClass = "Workflow",
+  requirements = list(),
+  id = character(),
+  hints = list(),
+  arguments = list(),
+  extensions = list(),
+  inputs = InputParamList(),
+  outputs = OutputParamList(),
+  stdout = character(),
+  steps = stepParamList()
+)
 }
 \arguments{
 \item{cwlVersion}{CWL version}

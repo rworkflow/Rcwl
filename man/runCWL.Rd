@@ -4,9 +4,18 @@
 \alias{runCWL}
 \title{run cwlParam}
 \usage{
-runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-  cwlTemp = FALSE, outdir = ".", Args = character(), stdout = TRUE,
-  stderr = TRUE, docker = TRUE, ...)
+runCWL(
+  cwl,
+  prefix = tempfile(),
+  cwlRunner = "cwltool",
+  cwlTemp = NULL,
+  outdir = ".",
+  Args = character(),
+  stdout = TRUE,
+  stderr = TRUE,
+  docker = TRUE,
+  ...
+)
 }
 \arguments{
 \item{cwl}{A `cwlParam` or `cwlStepParam` object.}
@@ -16,9 +25,8 @@ runCWL(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 \item{cwlRunner}{The path to the `cwltool` or `cwl-runner`. If not
 exists, the cwltool package will be installed by `reticulate`.}
 
-\item{cwlTemp}{Whether to keep temporary files. If true, all
-temporary files will be kept in a "temp" folder of current
-output directory.}
+\item{cwlTemp}{Path to keep temporary files. If a directory path is
+given, the temporary files will be kept in the directory.}
 
 \item{outdir}{Output directory, default current directory.}
 

@@ -6,9 +6,14 @@
 \alias{OutputArrayParam}
 \title{Output array parameters}
 \usage{
-OutputArrayParam(label = character(), type = "array",
-  items = character(), glob = character(), loadContents = logical(),
-  outputEval = character())
+OutputArrayParam(
+  label = character(),
+  type = "array",
+  items = character(),
+  glob = character(),
+  loadContents = logical(),
+  outputEval = character()
+)
 }
 \arguments{
 \item{label}{A short, human-readable label of this object.}

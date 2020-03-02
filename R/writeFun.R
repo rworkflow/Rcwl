@@ -1,7 +1,7 @@
 #' @importFrom R.utils commandArgs
 #' @importFrom codetools findGlobals
 writeFun <- function(cwl){
-    if(length(mvOut@id) > 0){
+    if(length(cwl@id) > 0){
         file <- file.path(tempdir(), paste0(cwl@id, ".R"))
     }else{
         file <- tempfile("Fun", fileext = ".R")

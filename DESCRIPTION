@@ -14,6 +14,6 @@ Suggests: testthat,
     rmarkdown,
     BiocStyle
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 biocViews: Software, WorkflowStep, ImmunoOncology
 SystemRequirements: python (>= 2.7), cwltool (>= 1.0.2018)

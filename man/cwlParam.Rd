@@ -6,12 +6,21 @@
 \alias{cwlParam}
 \title{Parameters for CWL}
 \usage{
-cwlParam(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
-  baseCommand = character(), requirements = list(), hints = list(),
-  arguments = list(), id = character(), label = character(),
-  inputs = InputParamList(), outputs = OutputParamList(),
-  stdout = character(), expression = character(),
-  extensions = list())
+cwlParam(
+  cwlVersion = "v1.0",
+  cwlClass = "CommandLineTool",
+  baseCommand = character(),
+  requirements = list(),
+  hints = list(),
+  arguments = list(),
+  id = character(),
+  label = character(),
+  inputs = InputParamList(),
+  outputs = OutputParamList(),
+  stdout = character(),
+  expression = character(),
+  extensions = list()
+)
 }
 \arguments{
 \item{cwlVersion}{CWL version}

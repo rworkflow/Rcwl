@@ -6,9 +6,15 @@
 \alias{InputArrayParam}
 \title{InputArrayParam}
 \usage{
-InputArrayParam(label = "", type = "array", items = character(),
-  prefix = "", separate = TRUE, itemSeparator = character(),
-  valueFrom = character())
+InputArrayParam(
+  label = "",
+  type = "array",
+  items = character(),
+  prefix = "",
+  separate = TRUE,
+  itemSeparator = character(),
+  valueFrom = character()
+)
 }
 \arguments{
 \item{label}{A short description for this object}
