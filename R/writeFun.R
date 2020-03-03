@@ -1,10 +1,12 @@
 #' @importFrom R.utils commandArgs
 #' @importFrom codetools findGlobals
-writeFun <- function(cwl){
+writeFun <- function(cwl, prefix = NULL){
+    Dir <- ifelse(is.null(prefix), tempdir(), dirname(prefix))
+    Fname <- ifelse(is.null(prefix), basename(tempfile()), basename(prefix))
     if(length(cwl@id) > 0){
-        file <- file.path(tempdir(), paste0(cwl@id, ".R"))
-    }else{
-        file <- tempfile("Fun", fileext = ".R")
+        file <- file.path(Dir, paste0(cwl@id, ".R"))
+    }else{        
+        file <- file.path(Dir, paste0(Fname, ".R"))
     }
     funName <- sub(".R", "", basename(file))
     assign(funName, baseCommand(cwl))

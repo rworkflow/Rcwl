@@ -17,11 +17,11 @@
     return(cwl)
 }
 
-cwlToList <- function(cwl, docker){
+cwlToList <- function(cwl, docker, prefix = NULL){
     stopifnot(is(cwl, "cwlParam"))
     if(!docker) cwl <- .rmDocker(cwl)
     if(is(baseCommand(cwl), "function")){
-        rfile <- writeFun(cwl)
+        rfile <- writeFun(cwl, prefix)
         bc <- c("Rscript", rfile)
     }else{
         bc <- baseCommand(cwl)
@@ -111,20 +111,22 @@ writeCWL <- function(cwl, prefix, docker = TRUE, ...){
     if(cwlClass(cwl) == "Workflow") {
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
-            write_yaml(cwlToList(Runs[[i]], docker),
-                       file = paste0(file.path(dirname(prefix),
-                                               names(Runs)[[i]]), ".cwl"),
+            cfile <- paste0(file.path(dirname(prefix),
+                                    names(Runs)[[i]]), ".cwl")
+            write_yaml(cwlToList(Runs[[i]], docker,
+                                 prefix = sub(".cwl", "", cfile)),
+                       file = cfile,
                        handlers = handlers, ...)
         })
         
-        cList <- cwlToList(cwl, docker)
+        cList <- cwlToList(cwl, docker, prefix)
         for(i in seq(cList$steps)){
             if(!grepl("^/", cList$steps[[i]]$run)){
                 cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
             }
         }
     }else{
-        cList <- cwlToList(cwl, docker)
+        cList <- cwlToList(cwl, docker, prefix)
     }
     write_yaml(cList, file = paste0(prefix, ".cwl"), handlers = handlers, ...)
     write_yaml(yml, file = paste0(prefix, ".yml"), handlers = handlers, ...)
