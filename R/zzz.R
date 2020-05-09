@@ -2,8 +2,9 @@
     cwltool <- system("which cwltool", intern = TRUE)
     if(length(cwltool) > 0){
         cwlversion <- system("cwltool --version", intern = TRUE)
-        cwlversion <- as.numeric(sub('.* 1.', "", cwlversion))
-        if(cwlversion < 0.2018){
+        ## cwlversion <- as.numeric(sub('.* 1.', "", cwlversion))
+        cwlversion <- as.numeric(sub(".*.(20\\d{2})\\d*", "\\1", cwlversion))
+        if(cwlversion < 2018){
             stop("Your cwltool is out of date, please update it!")
         }
     }else{
