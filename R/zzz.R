@@ -5,7 +5,7 @@
         ## cwlversion <- as.numeric(sub('.* 1.', "", cwlversion))
         cwlversion <- as.numeric(sub(".*.(20\\d{2})\\d*", "\\1", cwlversion))
         if(cwlversion < 2018){
-            stop("Your cwltool is out of date, please update it!")
+            warning("Your cwltool is out of date, please update it!")
         }
     }else{
         stop("cwltool is not found, ",
