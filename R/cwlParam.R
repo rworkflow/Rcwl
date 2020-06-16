@@ -118,6 +118,66 @@ requirements <- function(cwl) cwl@requirements
     cwl
 }
 
+#' requireDocker
+#' @rdname requirements
+#' @param docker The docker pull address.
+#' @param Load dockerLoad
+#' @param File dockerFile
+#' @param Import dockerImport
+#' @param ImageId dockerImageId
+#' @param OutputDir dockerOutputDirectory
+#' @export
+#' @return A DockerRequirement list
+requireDocker <- function(docker = NULL, Load = NULL, File = NULL,
+                          Import = NULL, ImageId = NULL,
+                          OutputDir = NULL){
+    req <- list(class = "DockerRequirement",
+                dockerPull = docker,
+                dockerLoad = Load,
+                dockerFile = File,
+                dockerImport = Import,
+                dockerImageId = ImageId,
+                dockerOutputDirectory = OutputDir)
+    req <- req[lengths(req) > 0]
+    return(req)
+}
+
+#' requireJS
+#' @rdname requirements
+#' @param expressionLib optional code
+#' @export
+#' @return A InlineJavascriptRequirement list
+requireJS <- function(expressionLib = list()){
+    req <- list(class = "InlineJavascriptRequirement",
+                expressionLib = expressionLib)
+    req <- req[lengths(req) > 0]
+    return(req)
+}
+
+#' requireSoftware
+#' @rdname requirements
+#' @param packages The list of software to be configured.
+#' @export
+#' @return A SoftwareRequirement list
+requireSoftware <- function(packages = list()){
+    req <- list(class = "SoftwareRequirement",
+                packages = packages)
+    req <- req[lengths(req) > 0]
+    return(req)
+}
+
+#' InitialWorkDirRequirement
+#' @rdname requirements
+#' @param listing The list of files or directories.
+#' @export
+#' @return A InitialWorkDirRequirement list
+requireInitialWorkDir <- function(listing = list()){
+    req <- list(class = "InitialWorkDirRequirement",
+                listing = listing)
+    req <- req[lengths(req) > 0]
+    return(req)
+}
+
 #' inputs
 #' @rdname InputParamList
 #' @param cwl A cwlParam object
