@@ -2,11 +2,19 @@
 #'
 #' Function to plot cwlStepParam object.
 #' @param cwl A cwlStepParam object to plot
-#' @param ... other parameters from `mermaid` function
+#' @param output A string specifying the output type. An option
+#'     inherits from `render_graph` and can also be "mermaid".
+#' @param layout Layout from `render_graph`.
+#' @param ... other parameters from `mermaid` or `render_graph`
+#'     function
 #' @importFrom DiagrammeR mermaid
+#' @importFrom DiagrammeR create_graph
+#' @importFrom DiagrammeR add_nodes_from_table
+#' @importFrom DiagrammeR add_edges_from_table
+#' @importFrom DiagrammeR render_graph
 #' @importFrom stats na.omit
 #' @export
-#' @return A mermaid workflow plot.
+#' @return A workflow plot.
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo1 <- cwlParam(baseCommand = "echo",
@@ -23,7 +31,15 @@
 #' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
 #' wf <- wf + s1 + s2
 #' plotCWL(wf)
-plotCWL <- function(cwl, ...){
+plotCWL <- function(cwl, output = "graph", layout = "tree", ...){
+    if(output == "mermaid"){
+        plotMermaid(cwl, ...)
+    }else{
+        plotGraph(cwl, output = output, layout = layout, ...)
+    }
+}
+
+plotMermaid <- function(cwl, ...){
     Inputs <- names(inputs(cwl))
     Outputs <- names(outputs(cwl))
     OutSource <- unlist(lapply(outputs(cwl), function(x)x@outputSource))
@@ -83,4 +99,68 @@ plotCWL <- function(cwl, ...){
     ## remove orphan output nodes
     mm <- na.omit(mm)
     mermaid(paste(mm, collapse = "\n"), ...)
+}
+
+plotGraph <- function(cwl, layout = "tree", ...){
+    Inputs <- names(inputs(cwl))
+    Outputs <- names(outputs(cwl))
+    OutSource <- unlist(lapply(outputs(cwl), function(x)x@outputSource))
+    
+    Steps <- steps(cwl)
+    Snames <- names(Steps)
+    ## all nodes
+    nodes <- c(Inputs, Outputs, Snames)
+    if(length(nodes) > 26){
+        nn <- length(nodes) - 26
+        NodeID <- c(LETTERS, paste0(LETTERS[seq(nn)], seq(nn)))
+    }else{
+        NodeID <- LETTERS[seq(length(nodes))]
+    }
+    shape <- rep(c("rectangle", "circle", "diamond"),
+                 c(length(Inputs), length(Outputs), length(Snames)))
+    ntable <- data.frame(id = NodeID, label = nodes, shape = shape)
+    ntable <- data.frame(ntable, id_ext = ntable$id)
+    names(nodes) <- NodeID
+
+    etable <- c()
+    for(i in seq_along(Steps)){
+        s1 <- Steps[[i]]
+        sid1 <- names(nodes)[match(Snames[i], nodes)]
+        input1 <- unlist(lapply(s1@In, function(x)x@source))
+        mIn <- c()
+        for(j in seq_along(input1)){
+            if(input1[j] %in% Inputs){
+                iid1 <- names(nodes)[match(input1[j], nodes)]
+                e1 <- data.frame(from  = iid1, to = sid1)
+            }else if(input1[j] %in% OutSource){                
+                in2os <- names(OutSource)[match(input1[j], OutSource)]
+                iid1 <- names(nodes)[match(in2os, nodes)]
+                e1 <- data.frame(from = iid1, to = sid1)
+            }else{
+                sIn <- unlist(strsplit(input1[j], split = "/"))[1]
+                iid1 <- names(nodes)[match(sIn[1], nodes)]
+                e1 <- data.frame(from = iid1, to = sid1)
+            }
+            mIn <- rbind(mIn, e1)
+        }
+
+        output1 <- unlist(s1@Out)
+        sout1 <- paste(Snames[i], output1, sep = "/")
+        mOut <- c()
+        for(j in seq_along(output1)){
+            if(sout1[j] %in% OutSource){
+                o1 <- names(OutSource)[match(sout1[j], OutSource)]
+                oid1 <- names(nodes)[match(o1, nodes)]
+                mOut <- rbind(mOut, data.frame(from = sid1, to = oid1))
+             }
+        }
+        etable <- rbind(etable, rbind(mIn, mOut))
+    }
+
+    graph <- create_graph()
+    graph <- add_nodes_from_table(graph, ntable, label_col = "label")
+    graph <- add_edges_from_table(graph, etable,
+                                  from_col = "from", to_col = "to",
+                                  from_to_map = "id_ext")
+    render_graph(graph, layout = layout, ...)
 }

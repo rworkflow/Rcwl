@@ -303,7 +303,7 @@ extensions <- function(cwl) cwl@extensions
 }
 
 setMethod(show, "InputParam", function(object){
-    cat(as.yaml(as.listInputs(list(input1))))
+    cat(as.yaml(as.listInputs(list(object))))
 })
 
 setMethod(show, "InputParamList", function(object) {

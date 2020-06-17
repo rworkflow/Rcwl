@@ -4,15 +4,21 @@
 \alias{plotCWL}
 \title{plotCWL}
 \usage{
-plotCWL(cwl, ...)
+plotCWL(cwl, output = "graph", layout = "tree", ...)
 }
 \arguments{
 \item{cwl}{A cwlStepParam object to plot}
 
-\item{...}{other parameters from `mermaid` function}
+\item{output}{A string specifying the output type. An option
+inherits from `render_graph` and can also be "mermaid".}
+
+\item{layout}{Layout from `render_graph`.}
+
+\item{...}{other parameters from `mermaid` or `render_graph`
+function}
 }
 \value{
-A mermaid workflow plot.
+A workflow plot.
 }
 \description{
 Function to plot cwlStepParam object.
