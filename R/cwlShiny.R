@@ -1,40 +1,45 @@
 .inputUI <- function(cwl, inputList, upload){
     ilist <- inputs(cwl)
     dList <- lapply(ilist, function(x){
+        if(x@inputBinding$prefix != ""){
+            label <- paste0(x@id, " (", x@inputBinding$prefix, " ", x@type, ")")
+        }else{
+            label <- paste0(x@id, " (", x@type, ")")
+        }
         if(x@id %in% names(inputList)){
             d <- selectInput(inputId = x@id,
-                             label = paste0(x@id, " (", x@type, ")"),
+                             label = label,
                              choices = inputList[[x@id]])
         }else{
             if(is(x@type, "InputArrayParam")){
                 d <- textAreaInput(inputId = x@id,
-                                   label = paste0(x@id, " (array)"),
+                                   label = label,
                                    value = x@default)
             }else if(x@type == "boolean"){
                 d <- selectInput(inputId = x@id,
-                                 label = paste0(x@id, " (", x@type, ")"),
+                                 label = label,
                                  choices = list("TRUE" = TRUE, "FALSE" = FALSE))
             }else if(x@type == "int"){
                 v <- ifelse(length(x@default) == 0, NA, x@default)
                 d <- numericInput(inputId = x@id,
-                                  label = paste0(x@id, " (int)"),
+                                  label = label,
                                   value = v)
             }else if(x@type %in% c("string", "File", "Directory")){
                 if(x@type == "File" & upload){
                     d <- fileInput(inputId = x@id,
-                                   label = paste0(x@id, " (", x@type, ")"))
+                                   label = label)
                 }else{
                     d <- textInput(inputId = x@id,
-                                   label = paste0(x@id, " (", x@type, ")"),
+                                   label = label,
                                    value = x@default)
                 }
             }else if(grepl("\\[", x@type)){
                 d <- textAreaInput(inputId = x@id,
-                                   label = paste0(x@id, " (", x@type, ")"),
+                                   label = label,
                                    value = x@default)
             }else{
                 d <- textInput(inputId = x@id,
-                               label = paste0(x@id, " (", x@type, ")"),
+                               label = label,
                                value = x @default)
             }
         }
