@@ -306,6 +306,10 @@ setMethod(show, "InputParam", function(object){
     cat(as.yaml(as.listInputs(list(object))))
 })
 
+setMethod(show, "OutputParam", function(object){
+    cat(as.yaml(as.listOutputs(list(object))))
+})
+
 setMethod(show, "InputParamList", function(object) {
     cat("inputs:\n")
     lapply(seq(object), function(i){

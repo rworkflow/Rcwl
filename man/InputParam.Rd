@@ -41,7 +41,8 @@ InputParam(
 \item{type}{valid types of data that may be assigned to this
 parameter.}
 
-\item{doc}{A documentation string for this type.}
+\item{doc}{Optional. This argument takes an arbitrary documentation
+as a note for this object.}
 
 \item{secondaryFiles}{Only valid when type: File or is an array of
 items: File. Provides a pattern or expression specifying files

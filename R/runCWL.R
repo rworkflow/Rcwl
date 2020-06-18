@@ -8,7 +8,7 @@
 #' @param cwlTemp Path to keep temporary files. If a directory path is
 #'     given, the temporary files will be kept in the directory.
 #' @param outdir Output directory, default current directory.
-#' @param Args The arguments for `cwltool` or `cwl-runner`. For
+#' @param cwlArgs The arguments for `cwltool` or `cwl-runner`. For
 #'     example, "--debug" can work with `cwltool` to show debug
 #'     information.
 #' @param stdout standard output from `system2`.
@@ -25,7 +25,7 @@
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-                   cwlTemp = NULL, outdir = ".", Args = character(),
+                   cwlTemp = NULL, outdir = ".", cwlArgs = character(),
                    stdout = TRUE, stderr = TRUE, docker = TRUE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     writeCWL(cwl, prefix = prefix, docker = docker, ...)
@@ -40,10 +40,10 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     }
     
     if(!is.null(cwlTemp)){
-        Args <- paste("--tmp-outdir-prefix", cwlTemp, Args)
+        cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
     }
     res <- system2(cwlRunner,
-                   args = paste0("--outdir ", outdir, " ", Args, " ",
+                   args = paste0("--outdir ", outdir, " ", cwlArgs, " ",
                                  prefix, ".cwl ", prefix, ".yml"),
                    stdout = stdout, stderr = stderr, ...)
     ##return(res)

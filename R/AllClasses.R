@@ -106,7 +106,8 @@ setClass("InputParam",
 #' @param label A short, human-readable label of this object.
 #' @param type valid types of data that may be assigned to this
 #'     parameter.
-#' @param doc A documentation string for this type.
+#' @param doc Optional. This argument takes an arbitrary documentation
+#'     as a note for this object.
 #' @param secondaryFiles Only valid when type: File or is an array of
 #'     items: File. Provides a pattern or expression specifying files
 #'     or directories that must be included alongside the primary

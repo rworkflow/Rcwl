@@ -10,7 +10,7 @@ runCWL(
   cwlRunner = "cwltool",
   cwlTemp = NULL,
   outdir = ".",
-  Args = character(),
+  cwlArgs = character(),
   stdout = TRUE,
   stderr = TRUE,
   docker = TRUE,
@@ -30,7 +30,7 @@ given, the temporary files will be kept in the directory.}
 
 \item{outdir}{Output directory, default current directory.}
 
-\item{Args}{The arguments for `cwltool` or `cwl-runner`. For
+\item{cwlArgs}{The arguments for `cwltool` or `cwl-runner`. For
 example, "--debug" can work with `cwltool` to show debug
 information.}
 
