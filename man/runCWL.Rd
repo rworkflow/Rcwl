@@ -39,7 +39,8 @@ information.}
 \item{stderr}{standard error from `system2`. By setting it to "",
 the detailed running logs will return directly.}
 
-\item{docker}{Whether to use docker.}
+\item{docker}{Whether to use docker, or "sigularity" if use
+Singularity runtime to run container.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }

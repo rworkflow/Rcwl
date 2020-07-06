@@ -14,7 +14,8 @@
 #' @param stdout standard output from `system2`.
 #' @param stderr standard error from `system2`. By setting it to "",
 #'     the detailed running logs will return directly.
-#' @param docker Whether to use docker.
+#' @param docker Whether to use docker, or "sigularity" if use
+#'     Singularity runtime to run container.
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @export
 #' @return A list of outputs from tools and logs from cwltool.
@@ -38,7 +39,9 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
             "Please install cwltool first!\n",
              "https://github.com/common-workflow-language/cwltool#install")
     }
-    
+    if(docker == "singularity"){
+        cwlArgs <- paste("--singularity", cwlArgs)
+    }
     if(!is.null(cwlTemp)){
         cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
     }
