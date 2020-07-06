@@ -11,11 +11,11 @@
 #' @param cwlArgs The arguments for `cwltool` or `cwl-runner`. For
 #'     example, "--debug" can work with `cwltool` to show debug
 #'     information.
-#' @param log Whether to show log details to standard out. i.e. stderr
-#'     = "".
 #' @param stdout standard output from `system2`.
 #' @param stderr standard error from `system2`. By setting it to "",
 #'     the detailed running logs will return directly.
+#' @param showLog Whether to show log details to standard out. i.e. stderr
+#'     = "".
 #' @param docker Whether to use docker, or "sigularity" if use
 #'     Singularity runtime to run container.
 #' @param ... The other options from `writeCWL` and `system2`.
@@ -29,7 +29,8 @@
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    cwlTemp = NULL, outdir = ".", cwlArgs = character(),
-                   stdout = TRUE, stderr = TRUE, docker = TRUE, log, ...){
+                   stdout = TRUE, stderr = TRUE, showLog = FALSE,
+                   docker = TRUE, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     if(docker == "singularity"){
         cwlArgs <- paste("--singularity", cwlArgs)
@@ -48,7 +49,7 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     if(!is.null(cwlTemp)){
         cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
     }
-    if(log){
+    if(showLog){
         stderr <- ""
     }
     res <- system2(cwlRunner,

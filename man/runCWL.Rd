@@ -13,8 +13,8 @@ runCWL(
   cwlArgs = character(),
   stdout = TRUE,
   stderr = TRUE,
+  showLog = FALSE,
   docker = TRUE,
-  log,
   ...
 )
 }
@@ -40,11 +40,11 @@ information.}
 \item{stderr}{standard error from `system2`. By setting it to "",
 the detailed running logs will return directly.}
 
+\item{showLog}{Whether to show log details to standard out. i.e. stderr
+= "".}
+
 \item{docker}{Whether to use docker, or "sigularity" if use
 Singularity runtime to run container.}
-
-\item{log}{Whether to show log details to standard out. i.e. stderr
-= "".}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }
