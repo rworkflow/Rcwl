@@ -43,6 +43,9 @@ the detailed running logs will return directly.}
 Singularity runtime to run container.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
+
+\item{log}{Whether to show log details to standard out. i.e. stderr
+= "".}
 }
 \value{
 A list of outputs from tools and logs from cwltool.
