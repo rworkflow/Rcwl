@@ -29,7 +29,7 @@
 #' ## res <- runCWL(echo)
 runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    cwlTemp = NULL, outdir = ".", cwlArgs = character(),
-                   stdout = TRUE, stderr = TRUE, docker = TRUE, ...){
+                   stdout = TRUE, stderr = TRUE, docker = TRUE, log, ...){
     if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
     if(docker == "singularity"){
         cwlArgs <- paste("--singularity", cwlArgs)

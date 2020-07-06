@@ -14,6 +14,7 @@ runCWL(
   stdout = TRUE,
   stderr = TRUE,
   docker = TRUE,
+  log,
   ...
 )
 }
@@ -42,10 +43,10 @@ the detailed running logs will return directly.}
 \item{docker}{Whether to use docker, or "sigularity" if use
 Singularity runtime to run container.}
 
-\item{...}{The other options from `writeCWL` and `system2`.}
-
 \item{log}{Whether to show log details to standard out. i.e. stderr
 = "".}
+
+\item{...}{The other options from `writeCWL` and `system2`.}
 }
 \value{
 A list of outputs from tools and logs from cwltool.
