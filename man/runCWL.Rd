@@ -10,9 +10,10 @@ runCWL(
   cwlRunner = "cwltool",
   cwlTemp = NULL,
   outdir = ".",
-  Args = character(),
+  cwlArgs = character(),
   stdout = TRUE,
   stderr = TRUE,
+  showLog = FALSE,
   docker = TRUE,
   ...
 )
@@ -30,7 +31,7 @@ given, the temporary files will be kept in the directory.}
 
 \item{outdir}{Output directory, default current directory.}
 
-\item{Args}{The arguments for `cwltool` or `cwl-runner`. For
+\item{cwlArgs}{The arguments for `cwltool` or `cwl-runner`. For
 example, "--debug" can work with `cwltool` to show debug
 information.}
 
@@ -39,7 +40,11 @@ information.}
 \item{stderr}{standard error from `system2`. By setting it to "",
 the detailed running logs will return directly.}
 
-\item{docker}{Whether to use docker.}
+\item{showLog}{Whether to show log details to standard out. i.e. stderr
+= "".}
+
+\item{docker}{Whether to use docker, or "sigularity" if use
+Singularity runtime to run container.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }

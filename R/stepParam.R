@@ -82,3 +82,36 @@ steps <- function(cwl) cwl@steps
     cwl@steps  <- value
     cwl
 }
+
+
+#' SubworkflowFeatureRequirement
+#' @rdname requirements
+#' @export
+#' @return A SubworkflowFeatureRequirement list
+requireSubworkflow <- function(){
+    list(class = "SubworkflowFeatureRequirement")
+}
+
+#' ScatterFeatureRequirement
+#' @rdname requirements
+#' @export
+#' @return A ScatterFeatureRequirement list
+requireScatter <- function(){
+    list(class = "ScatterFeatureRequirement")
+}
+
+#' MultipleInputFeatureRequirement
+#' @rdname requirements
+#' @export
+#' @return A MultipleInputFeatureRequirement list
+requireMultipleInput <- function(){
+    list(class = "MultipleInputFeatureRequirement")
+}
+
+#' StepInputExpressionRequirement
+#' @rdname requirements
+#' @export
+#' @return A StepInputExpressionRequirement list
+requireStepInputExpression <- function(){
+    list(class = "StepInputExpressionRequirement")
+}

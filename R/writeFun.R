@@ -11,7 +11,10 @@ writeFun <- function(cwl, prefix = NULL){
     funName <- sub(".R", "", basename(file))
     assign(funName, baseCommand(cwl))
     types <- lapply(inputs(cwl), function(x)x@type)
-    comArg <- c("suppressPackageStartupMessages(library(R.utils))",
+    ## add user libPaths
+    libs <- .libPaths()[1]
+    comArg <- c(paste0(".libPaths('", libs, "')"),
+                "suppressPackageStartupMessages(library(R.utils))",
                 "suppressPackageStartupMessages(library(codetools))",
                 "args <- commandArgs(trailingOnly = TRUE, asValues = TRUE)")
     write(comArg, file = file)

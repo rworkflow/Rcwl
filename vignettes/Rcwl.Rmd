@@ -224,7 +224,7 @@ r6 <- runCWL(doc)
 The tools defined with docker requirements can also be run locally by disabling the docker option. In case your `Rscript` depends some local libraries to run, an option from `cwltools`, "--preserve-entire-environment", can be used to pass all environment variables.
 ```{r}
 r6a <- runCWL(doc, docker = FALSE, outdir = tempdir(),
-              Args = "--preserve-entire-environment")
+              cwlArgs = "--preserve-entire-environment")
 ```
 
 # Running Tools in Cluster server
@@ -372,7 +372,7 @@ TestFun <- cwlParam(baseCommand = testFun,
                     stdout = "rout.txt")
 TestFun$a <- 1
 TestFun$b <- 2
-r1 <- runCWL(TestFun, Args = "--preserve-entire-environment")
+r1 <- runCWL(TestFun, cwlArgs = "--preserve-entire-environment")
 readLines(r1$output)
 ```
 
