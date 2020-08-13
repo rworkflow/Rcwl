@@ -109,12 +109,52 @@ hints <- function(cwl) cwl@hints
 #' @rdname cwlParam-methods
 #' @export
 #' @return requirements: CWL requirments
-requirements <- function(cwl) cwl@requirements
+## requirements <- function(cwl) cwl@requirements
+requirements <- function(cwl, step = NULL){
+    if(is.null(step)){
+        return(cwl@requirements)
+    }else{
+        Steps <- unlist(strsplit(step, split = "/"))
+        irun <- "cwl@steps[[ Steps[1] ]]@run"
+        if(length(Steps) > 1){
+            for(i in 2:length(Steps)){
+                irun <- paste0(irun, "@steps[[ Steps[", i, "] ]]@run")
+            }
+        }
+        irun <- paste0(irun, "@requirements")
+        eval(parse(text = irun))
+    }
+}
+
 #' requirements
 #' @rdname cwlParam-methods
+#' @param step To specifiy a step ID when `cwl` is a workflow.
+#' @param value To assign a list of `requirements` value.
 #' @export
-"requirements<-" <- function(cwl, value){
-    cwl@requirements <- value
+## "requirements<-" <- function(cwl, value){
+##     cwl@requirements <- value
+##     cwl
+## }
+"requirements<-" <- function(cwl, step = NULL, value){
+    if(is.null(step)){
+        cwl@requirements <- value
+    }else{
+        Steps <- unlist(strsplit(step, split = "/"))
+        irun <- "cwl@steps[[ Steps[1] ]]@run"
+        if(length(Steps) > 1){
+            for(i in 2:length(Steps)){
+                irun <- paste0(irun, "@steps[[ Steps[", i, "] ]]@run")
+            }
+        }
+        valuec <- as.character(value)
+        idxl <- !grepl("^list", valuec)
+        if(sum(idxl) > 0){
+            valuec[idxl] <- paste0("\"", valuec[idxl], "\"")
+        }
+        value <- paste(valuec, collapse = ",")
+        irun <- paste0(irun, "@requirements <- list(", value, ")")
+        eval(parse(text = irun))
+    }
     cwl
 }
 

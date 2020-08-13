@@ -39,9 +39,9 @@ hints(cwl)
 
 hints(cwl) <- value
 
-requirements(cwl)
+requirements(cwl, step = NULL)
 
-requirements(cwl) <- value
+requirements(cwl, step = NULL) <- value
 
 stdOut(cwl)
 
@@ -54,11 +54,9 @@ extensions(cwl) <- value
 \arguments{
 \item{cwl}{A `cwlParam` object.}
 
-\item{value}{Assign value to the `cwlParam` object.}
+\item{value}{To assign a list of `requirements` value.}
 
-\item{step}{To specifiy a step ID when `cwl` is a workflow. It can
-be multiple levels of steps separated by "/" for nested
-workflow.}
+\item{step}{To specifiy a step ID when `cwl` is a workflow.}
 }
 \value{
 cwlVersion: cwl version
