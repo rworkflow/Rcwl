@@ -218,6 +218,45 @@ requireInitialWorkDir <- function(listing = list()){
     return(req)
 }
 
+#' Dirent class
+#'
+#' @rdname requirements
+#' @param entryname The name of the file or subdirectory to create in
+#'     the output directory.
+#' @param entry charactor or expression.
+#' @param writable boolean.
+#' @details https://www.commonwl.org/v1.0/CommandLineTool.html#Dirent
+#' @export
+Dirent <- function(entryname = character(), entry,
+                   writable = FALSE){
+    list(entryname = entryname,
+         entry = entry,
+         writable = writable)
+}
+
+#' Create manifest for configure files
+#'
+#' @rdname requirements
+#' @param inputID The input ID from corresponding `InputParam`.
+#' @param sep The separator of the input files in the manifest config.
+#' @export
+#' @examples
+#' p1 <- InputParam(id = "ifiles", type = "File[]?", position = -1)
+#' CAT = cwlParam(baseCommand = "cat",
+#' requirements = list(requireDocker("alpine"), requireManifest("ifiles"), requireJS()),
+#' arguments = list("ifiles"),
+#' inputs = InputParamList(p1))
+requireManifest <- function(inputID, sep = "\\n"){
+    js <- paste0("${var x='';for(var i=0;i<inputs.", inputID,
+                 ".length;i++){x+=inputs.", inputID, "[i].path+'",
+                 sep, "'}return(x)}")
+    
+    req1 <- requireInitialWorkDir(
+        list(Dirent(entryname = inputID,
+                    entry = js)))
+    return(req1)
+}
+
 #' inputs
 #' @rdname InputParamList
 #' @param cwl A cwlParam object

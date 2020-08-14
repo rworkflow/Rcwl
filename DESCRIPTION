@@ -1,9 +1,9 @@
 Package: Rcwl
-Title: Wrap Command Tools and Pipelines Using CWL
-Version: 1.5.9
+Title: An R interface to the Common Workflow Language
+Version: 1.5.10
 Authors@R: c(person("Qiang", "Hu", email = "qiang.hu@roswellpark.org", role = c("aut", "cre")),
 	     person("Qian", "Liu", email = "qian.liu@roswellpark.org", role = c("aut")))
-Description: The package can be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL).
+Description: The Common Workflow Language (CWL) is an open standard for development of data analysis workflows that is portable and scalable across different tools and working environments. Rcwl provides a simple way to wrap command line tools and build CWL data analysis pipelines programmatically within R. It increases the ease of usage, development, and maintenance of CWL pipelines.
 Depends: R (>= 3.6), yaml, methods, S4Vectors
 Imports: utils, stats, BiocParallel, batchtools, DiagrammeR, shiny, R.utils, codetools
 License: GPL-2 | file LICENSE

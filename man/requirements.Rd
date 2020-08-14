@@ -5,6 +5,8 @@
 \alias{requireJS}
 \alias{requireSoftware}
 \alias{requireInitialWorkDir}
+\alias{Dirent}
+\alias{requireManifest}
 \alias{requireSubworkflow}
 \alias{requireScatter}
 \alias{requireMultipleInput}
@@ -25,6 +27,10 @@ requireJS(expressionLib = list())
 requireSoftware(packages = list())
 
 requireInitialWorkDir(listing = list())
+
+Dirent(entryname = character(), entry, writable = FALSE)
+
+requireManifest(inputID, sep = "\\\\n")
 
 requireSubworkflow()
 
@@ -52,6 +58,17 @@ requireStepInputExpression()
 \item{packages}{The list of software to be configured.}
 
 \item{listing}{The list of files or directories.}
+
+\item{entryname}{The name of the file or subdirectory to create in
+the output directory.}
+
+\item{entry}{charactor or expression.}
+
+\item{writable}{boolean.}
+
+\item{inputID}{The input ID from corresponding `InputParam`.}
+
+\item{sep}{The separator of the input files in the manifest config.}
 }
 \value{
 A DockerRequirement list
@@ -79,6 +96,10 @@ requireSoftware
 
 InitialWorkDirRequirement
 
+Dirent class
+
+Create manifest for configure files
+
 SubworkflowFeatureRequirement
 
 ScatterFeatureRequirement
@@ -86,4 +107,14 @@ ScatterFeatureRequirement
 MultipleInputFeatureRequirement
 
 StepInputExpressionRequirement
+}
+\details{
+https://www.commonwl.org/v1.0/CommandLineTool.html#Dirent
+}
+\examples{
+p1 <- InputParam(id = "ifiles", type = "File[]?", position = -1)
+CAT = cwlParam(baseCommand = "cat",
+requirements = list(requireDocker("alpine"), requireManifest("ifiles"), requireJS()),
+arguments = list("ifiles"),
+inputs = InputParamList(p1))
 }
