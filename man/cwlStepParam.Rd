@@ -11,12 +11,14 @@ cwlStepParam(
   cwlClass = "Workflow",
   requirements = list(),
   id = character(),
+  label = character(),
+  doc = list(),
+  intent = list(),
   hints = list(),
   arguments = list(),
   extensions = list(),
   inputs = InputParamList(),
   outputs = OutputParamList(),
-  stdout = character(),
   steps = stepParamList()
 )
 }
@@ -30,6 +32,13 @@ environment or the workflow engine.}
 
 \item{id}{The unique identifier for this process object.}
 
+\item{label}{A short, human-readable label of this object.}
+
+\item{doc}{A documentation string for this object.}
+
+\item{intent}{An identifier for the type of computational
+operation, of this Process.}
+
 \item{hints}{Any or a list for the workflow engine.}
 
 \item{arguments}{Command line bindings which are not directly
@@ -40,9 +49,6 @@ associated with input parameters.}
 \item{inputs}{A object of `InputParamList`.}
 
 \item{outputs}{A object of `OutputParamList`.}
-
-\item{stdout}{Capture the command's standard output stream to a
-file written to the designated output directory.}
 
 \item{steps}{A list of `stepParamList`.}
 }

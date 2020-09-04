@@ -239,7 +239,7 @@ OutputArrayParam <- function(label= character(), type = "array",
                             outputEval = outputEval))
 }
 
-setClassUnion("characterOROutputArrayParam", c("character", "OutputArrayParam"))
+setClassUnion("characterOROutputArrayParamORlist", c("character", "OutputArrayParam", "list"))
 
 #' Output parameters
 #' @rdname OutputParam
@@ -250,7 +250,7 @@ setClass("OutputParam",
              label = "character",
              doc = "character",
              format = "character",
-             type = "characterOROutputArrayParam",
+             type = "characterOROutputArrayParamORlist",
              secondaryFiles = "characterORlist",
              streamable = "logical",
              outputBinding = "list",
@@ -344,7 +344,7 @@ OutputParamList <- function(out = OutputParam(), ...){
 }
 
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))
-setClassUnion("characterORfunction", c("character", "function"))
+setClassUnion("characterORlistORfunction", c("character", "list", "function"))
 
 #' @rdname cwlParam
 #' @export
@@ -352,7 +352,7 @@ setClass("cwlParam",
          slots = c(
              cwlVersion = "character",
              cwlClass = "character",
-             baseCommand = "characterORfunction",
+             baseCommand = "characterORlistORfunction",
              requirements = "list",
              hints = "list",
              arguments = "list",
@@ -363,7 +363,8 @@ setClass("cwlParam",
              outputs = "OutputParamListORlist",
              stdout = "character",
              expression = "character",
-             extensions = "list"
+             extensions = "list",
+             intent = "list"
          ),
          prototype = list(cwlVersion = character(),
                           cwlClass = character(),
@@ -378,7 +379,8 @@ setClass("cwlParam",
                           outputs = OutputParamList(),
                           stdout = character(),
                           expression = character(),
-                          extensions = list()
+                          extensions = list(),
+                          intent = list()
          ))
 
 #' Parameters for CWL
@@ -406,19 +408,23 @@ setClass("cwlParam",
 #'     file written to the designated output directory.
 #' @param expression Javascripts for ExpressionTool class.
 #' @param extensions A list of extensions and metadata
+#' @param intent An identifier for the type of computational
+#'     operation, of this Process.
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
 #' @return A `cwlParam` class object.
 #' @examples
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
-cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
+cwlParam <- function(cwlVersion = "v1.0",
+                     cwlClass = "CommandLineTool",
                      baseCommand = character(), requirements = list(),
-                     hints = list(), arguments = list(), id = character(),
-                     label = character(),
-                     inputs = InputParamList(), outputs = OutputParamList(),
+                     hints = list(), arguments = list(),
+                     id = character(), label = character(),
+                     inputs = InputParamList(),
+                     outputs = OutputParamList(),
                      stdout = character(), expression = character(),
-                     extensions = list()){
+                     extensions = list(), intent = list()){
     new("cwlParam", cwlVersion = cwlVersion,
         cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand,
@@ -426,7 +432,8 @@ cwlParam <- function(cwlVersion = "v1.0", cwlClass = "CommandLineTool",
         arguments = arguments, inputs = inputs,
         outputs = outputs, stdout = stdout,
         expression = expression,
-        extensions = extensions)
+        extensions = extensions,
+        intent = intent)
 }
 
 #' stepInParam
@@ -572,11 +579,13 @@ setClass("cwlStepParam",
 #' @param arguments Command line bindings which are not directly
 #'     associated with input parameters.
 #' @param id The unique identifier for this process object.
+#' @param label A short, human-readable label of this object.
+#' @param doc A documentation string for this object.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
-#' @param stdout Capture the command's standard output stream to a
-#'     file written to the designated output directory.
 #' @param steps A list of `stepParamList`.
+#' @param intent An identifier for the type of computational
+#'     operation, of this Process.
 #' @rdname cwlStepParam
 #' @export
 #' @return An object of class `cwlStepParam`.
@@ -596,13 +605,15 @@ setClass("cwlStepParam",
 #' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
 #' wf <- wf + s1 + s2
 cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
-                     requirements = list(), id = character(),
-                     hints = list(), arguments = list(), extensions = list(),
-                     inputs = InputParamList(), outputs = OutputParamList(),
-                     stdout = character(), steps = stepParamList()){
+                         requirements = list(), id = character(),
+                         label = character(), doc = list(), intent = list(),
+                         hints = list(), arguments = list(), extensions = list(),
+                         inputs = InputParamList(), outputs = OutputParamList(),
+                         steps = stepParamList()){
     new("cwlStepParam", cwlVersion = cwlVersion, cwlClass = cwlClass,
-        baseCommand = character(), requirements = requirements, hints = hints,
-        arguments = arguments, inputs = inputs, outputs = outputs, stdout = stdout,
+        requirements = requirements, id = id, label = label,
+        doc = doc, intent = intent, hints = hints,
+        arguments = arguments, inputs = inputs, outputs = outputs,
         steps = steps, extensions = extensions)
 }
 

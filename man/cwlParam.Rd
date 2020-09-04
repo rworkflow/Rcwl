@@ -19,7 +19,8 @@ cwlParam(
   outputs = OutputParamList(),
   stdout = character(),
   expression = character(),
-  extensions = list()
+  extensions = list(),
+  intent = list()
 )
 }
 \arguments{
@@ -51,6 +52,9 @@ file written to the designated output directory.}
 \item{expression}{Javascripts for ExpressionTool class.}
 
 \item{extensions}{A list of extensions and metadata}
+
+\item{intent}{An identifier for the type of computational
+operation, of this Process.}
 }
 \value{
 A `cwlParam` class object.

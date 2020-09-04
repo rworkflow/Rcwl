@@ -23,7 +23,9 @@
             idx <- names(ilist$type) %in% formalArgs(InputArrayParam)
             ilist$type <- do.call(InputArrayParam, ilist$type[idx])
         }
-        ilist$id <- names(inputList)[i]
+        if(is.null(ilist$id)){
+            ilist$id <- names(inputList)[i]
+        }
         iList[[i]] <- do.call(InputParam, ilist)
     }
     names(iList) <- names(inputList)
@@ -52,7 +54,9 @@
             warning(names(olist)[!idx], " not imported")
             olist <- olist[idx]
         }
-        olist$id <- names(outputList)[i]
+        if(is.null(olist$id)){
+            olist$id <- names(outputList)[i]
+        }
         oList[[i]] <- do.call(OutputParam, olist)
     }
     names(oList) <- names(outputList)
@@ -62,8 +66,12 @@
 .readSteps <- function(cwl.origin, pwd, cwl){
     Steps <- cwl.origin$steps
     for(i in seq_along(Steps)){
-        id <- names(Steps)[i]
-        sList <- c(id = id, Steps[[i]])
+        if(is.null(Steps[[i]]$id)){
+            id <- names(Steps)[i]
+            sList <- c(id = id, Steps[[i]])
+        }else{
+            sList <- Steps[[i]]
+        }
         run <- Steps[[i]]$run
         if(!grepl("^/", run)){
             sList$run <- file.path(pwd, run)
@@ -72,13 +80,18 @@
         In <- sList$"in"
         slist <- list()
         for(i in seq(In)) {
+            if(is.null(names(In)[i])){
+                id <- In[[i]]$id
+            }else{
+                id <- names(In)[i]
+            }
             if(is.list(In[[i]])) {
-                si <- stepInParam(id = names(In)[i])
+                si <- stepInParam(id = id)
                 for(j in seq(In[[i]])){
                     slot(si, names(In[[i]])[j]) <- In[[i]][[j]]
                 }
             }else{
-                si <- stepInParam(id = names(In)[i],
+                si <- stepInParam(id = id,
                                   source = In[[i]])
             }
             slist[[i]] <- si

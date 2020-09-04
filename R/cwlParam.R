@@ -445,7 +445,7 @@ setMethod(show, "cwlParam", function(object){
     if(is(baseCommand(object), "function")){
         bc <- c("baseCommand: R function", "\n")
     }else{
-        bc <- c("baseCommand:", baseCommand(object), "\n")
+        bc <- c("baseCommand:", unlist(baseCommand(object)), "\n")
     }
     cat("class:", class(object), "\n",
         "cwlClass:", cwlClass(object), "\n",
