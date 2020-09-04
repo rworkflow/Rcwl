@@ -4,7 +4,11 @@
     iList <- list()
     for(i in seq_along(inputList)){
         if(cwlClass(cwl) == "Workflow"){
-            ilist <- c(id = names(inputList)[i], inputList[[i]])
+            if(is.character(inputList[[i]])){
+                ilist <- list(id = names(inputList)[i], type = inputList[[i]])
+            }else{
+                ilist <- c(id = names(inputList)[i], inputList[[i]])
+            }
         }else{
             ilist <- inputList[[i]]
         }
