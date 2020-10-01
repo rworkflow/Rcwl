@@ -18,12 +18,14 @@
         }else{
             ilist$position = -1
         }
-        if(any(!names(ilist) %in% formalArgs(InputParam))){
-            idx <- names(ilist) %in% formalArgs(InputParam)
-            warning(names(ilist)[!idx], " not imported")
-            ilist <- ilist[idx]
-        }
-        if(is(ilist$type, "list")){
+        if(is(ilist$type, "list") &&
+           unlist(ilist$type)[["type"]] == "array"){
+
+            if(any(!names(ilist) %in% formalArgs(InputParam))){
+                idx <- names(ilist) %in% formalArgs(InputParam)
+                warning(names(ilist)[!idx], " not imported")
+                ilist <- ilist[idx]
+            }
             idx <- names(ilist$type) %in% formalArgs(InputArrayParam)
             ilist$type <- do.call(InputArrayParam, ilist$type[idx])
         }
