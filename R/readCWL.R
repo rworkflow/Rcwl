@@ -123,7 +123,15 @@
 #' writeCWL(echo, tf)
 #' readCWL(paste0(tf, ".cwl"))
 readCWL <- function(cwlfile){
-    cwl.origin <- read_yaml(cwlfile)
+    float.handler <- function(x){
+        if(x == "."){
+            return(".")
+        }else{
+            return(as.numeric(x))
+        }
+    }
+    handlers <- list("float#fix" = float.handler)
+    cwl.origin <- read_yaml(cwlfile, handlers = handlers)
     names(cwl.origin)[names(cwl.origin)=="class"] <- "cwlClass"
     cwl.list1 <- cwl.origin[setdiff(names(cwl.origin),
                                     c("inputs", "outputs", "steps"))]
