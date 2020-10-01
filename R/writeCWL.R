@@ -39,7 +39,7 @@ cwlToList <- function(cwl, docker, prefix = NULL){
                stdout = cwl@stdout,
                expression = cwl@expression)
     CL <- c(CL, cwl@extensions)
-    CL$requirements <- .removeEmpty(CL$requirements)
+    ## CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps)))
@@ -151,6 +151,9 @@ writeCWL <- function(cwl, prefix, docker = TRUE, ...){
             v <- as.integer(v)
         }else if(is(v, "character") && Type == "boolean"){
             v <- as.logical(v)
+        }
+        if(length(x@format)!=0){
+            v <- c(format = x@format, v)
         }
         v
     })
