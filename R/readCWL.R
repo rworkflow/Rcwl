@@ -134,6 +134,13 @@ readCWL <- function(cwlfile){
     }
     handlers <- list("float#fix" = float.handler)
     cwl.origin <- read_yaml(cwlfile, handlers = handlers)
+    ## fix listing
+    if(("InitialWorkDirRequirement" %in% names(cwl.origin$requirements)) &&
+       is(cwl.origin$requirements$InitialWorkDirRequirement$listing, "character")){
+        cwl.origin$requirements$InitialWorkDirRequirement$listing <-
+            list(cwl.origin$requirements$InitialWorkDirRequirement$listing)
+    }
+
     names(cwl.origin)[names(cwl.origin)=="class"] <- "cwlClass"
     cwl.list1 <- cwl.origin[setdiff(names(cwl.origin),
                                     c("inputs", "outputs", "steps"))]
