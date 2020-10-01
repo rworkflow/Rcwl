@@ -35,6 +35,9 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     if(docker == "singularity"){
         cwlArgs <- paste("--singularity", cwlArgs)
         docker <- TRUE
+    }else if(docker == "udocker"){
+        cwlArgs <- paste("--user-space-docker-cmd=udocker", cwlArgs)
+        docker <- TRUE
     }
     writeCWL(cwl, prefix = prefix, docker = docker, ...)
 
