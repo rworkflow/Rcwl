@@ -5,7 +5,7 @@ Authors@R: c(person("Qiang", "Hu", email = "qiang.hu@roswellpark.org", role = c(
 	     person("Qian", "Liu", email = "qian.liu@roswellpark.org", role = c("aut")))
 Description: The Common Workflow Language (CWL) is an open standard for development of data analysis workflows that is portable and scalable across different tools and working environments. Rcwl provides a simple way to wrap command line tools and build CWL data analysis pipelines programmatically within R. It increases the ease of usage, development, and maintenance of CWL pipelines.
 Depends: R (>= 3.6), yaml, methods, S4Vectors
-Imports: utils, stats, BiocParallel, batchtools, DiagrammeR, shiny, R.utils, codetools
+Imports: utils, stats, BiocParallel, batchtools, DiagrammeR, shiny, R.utils, codetools, basilisk
 License: GPL-2 | file LICENSE
 Encoding: UTF-8
 LazyData: true
