@@ -50,9 +50,10 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     ##         "Please install cwltool first!\n",
     ##          "https://github.com/common-workflow-language/cwltool#install")
     ## }
-    cl <- basiliskStart(env_Rcwl)
-    basiliskStop(cl)
-
+    if(!file.exists(Sys.which(cwlRunner))){
+        cl <- basiliskStart(env_Rcwl)
+        basiliskStop(cl)
+    }
     if(!is.null(cwlTemp)){
         cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
     }
