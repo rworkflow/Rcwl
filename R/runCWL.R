@@ -19,6 +19,7 @@
 #' @param docker Whether to use docker, or "sigularity" if use
 #'     Singularity runtime to run container.
 #' @param ... The other options from `writeCWL` and `system2`.
+#' @importFrom basilisk basiliskStart basiliskStop
 #' @export
 #' @return A list of outputs from tools and logs from cwltool.
 #' @examples
