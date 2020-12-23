@@ -41,14 +41,17 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     }
     writeCWL(cwl, prefix = prefix, docker = docker, ...)
 
-    ## check cwltool
-    ext <- suppressWarnings(system(paste("which", cwlRunner),
-                                   intern = TRUE))
-    if(length(ext)==0){
-        stop(cwlRunner, " is not found, ",
-            "Please install cwltool first!\n",
-             "https://github.com/common-workflow-language/cwltool#install")
-    }
+    ## ## check cwltool
+    ## ext <- suppressWarnings(system(paste("which", cwlRunner),
+    ##                                intern = TRUE))
+    ## if(length(ext)==0){
+    ##     stop(cwlRunner, " is not found, ",
+    ##         "Please install cwltool first!\n",
+    ##          "https://github.com/common-workflow-language/cwltool#install")
+    ## }
+    cl <- basiliskStart(env_Rcwl)
+    basiliskStop(cl)
+
     if(!is.null(cwlTemp)){
         cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
     }
