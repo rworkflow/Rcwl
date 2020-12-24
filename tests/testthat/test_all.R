@@ -88,8 +88,9 @@ test_that("extensions", {
                 ))
     extensions(echo) <- ext
     r1 <- runCWL(echo)
-    cwlfile <- unlist(strsplit(r1$logs[2], split="'"))[2]
-
+    writeCWL(echo, file.path(tempdir(), "echo"))
+    cwlfile <- file.path(tempdir(), "echo.cwl")
+    
     expect_match(tail(r1$logs, 1), "success")
     expect_true(all(ext %in% read_yaml(cwlfile)))
 })
