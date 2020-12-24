@@ -233,7 +233,12 @@ as.listSteps <- function(Steps){
                  "in" = sIns,
                  out = st@Out,
                  scatter = st@scatter,
-                 scatterMethod = st@scatterMethod)
+                 scatterMethod = st@scatterMethod,
+                 label = st@label,
+                 doc = st@doc,
+                 requirements = st@requirements,
+                 hints = st@hints,
+                 when = st@when)
         )
     })
     return(slist)

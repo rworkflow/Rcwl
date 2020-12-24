@@ -12,7 +12,12 @@ stepParam(
   In = stepInParamList(),
   Out = list(),
   scatter = character(),
-  scatterMethod = character()
+  scatterMethod = character(),
+  label = character(),
+  doc = character(),
+  requirements = list(),
+  hints = list(),
+  when = character()
 )
 }
 \arguments{
@@ -30,6 +35,20 @@ stepParam(
 one element. It can be one of "dotproduct",
 "nested_crossproduct" and "flat_crossproduct". Details:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep}
+
+\item{label}{A short, human-readable label of this object.}
+
+\item{doc}{A documentation string for this object, or an array of
+strings which should be concatenated.}
+
+\item{requirements}{requirements that apply to either the runtime
+environment or the workflow engine.}
+
+\item{hints}{hints applying to either the runtime environment or
+the workflow engine}
+
+\item{when}{If defined, only run the step when the expression
+evaluates to true. If false the step is skipped.}
 }
 \value{
 An object of class `stepParam`.

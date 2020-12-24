@@ -1,4 +1,4 @@
-
+setClassUnion("characterORlist", c("character", "list"))
 #' InputArrayParam
 #' @rdname InputArrayParam
 #' @export
@@ -6,7 +6,7 @@ setClass("InputArrayParam",
          slots = c(
              label = "character",
              type = "character",
-             items = "character",
+             items = "characterORlist",
              inputBinding = "list"
          ),
          prototype = list(
@@ -57,7 +57,6 @@ InputArrayParam <- function(label = "", type = "array",
 }
 
 setClassUnion("characterORInputArrayParamORlist", c("character", "InputArrayParam", "list"))
-setClassUnion("characterORlist", c("character", "list"))
 #' Input parameters
 #' InputParam
 #' @rdname InputParam
@@ -504,7 +503,12 @@ setClass("stepParam",
                    In = "stepInParamList",
                    Out = "list",
                    scatter = "characterORlist",
-                   scatterMethod = "character"))
+                   scatterMethod = "character",
+                   label = "character",
+                   doc = "character",
+                   requirements = "list",
+                   hints = "list",
+                   when = "character"))
 #' stepParam
 #' 
 #' A workflow step parameters. More details:
@@ -519,20 +523,39 @@ setClass("stepParam",
 #'     one element. It can be one of "dotproduct",
 #'     "nested_crossproduct" and "flat_crossproduct". Details:
 #'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+#' @param label A short, human-readable label of this object.
+#' @param doc A documentation string for this object, or an array of
+#'     strings which should be concatenated.
+#' @param requirements requirements that apply to either the runtime
+#'     environment or the workflow engine.
+#' @param hints hints applying to either the runtime environment or
+#'     the workflow engine
+#' @param when If defined, only run the step when the expression
+#'     evaluates to true. If false the step is skipped.
 #' @export
 #' @return An object of class `stepParam`.
 #' @examples
 #' s1 <- stepParam(id = "s1")
 stepParam <- function(id, run = cwlParam(),
                       In = stepInParamList(), Out = list(),
-                      scatter = character(), scatterMethod = character()) {
+                      scatter = character(), scatterMethod = character(),
+                      label = character(),
+                      doc = character(),
+                      requirements = list(),
+                      hints = list(),
+                      when = character()) {
     new("stepParam",
         id = id,
         run = run,
         In = In,
         Out = Out,
         scatter = scatter,
-        scatterMethod = scatterMethod)
+        scatterMethod = scatterMethod,
+        label = label,
+        doc = doc,
+        requirements = requirements,
+        hints = hints,
+        when = when)
 }
 
 #' stepParamList
@@ -619,23 +642,25 @@ cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
 
 # show methods for stepParam
 setMethod(show, "stepParam", function(object) {
-    cat("  ", object@id, ":\n", sep = "")
-    cat("    run: ", paste0(object@id, ".cwl"), "\n", sep = "")
-    lapply(object@In, function(y) {
-        cat("    ", paste0(y@id, ": ", y@source), "\n", sep = "")
-    })
-    cat("    out: ", paste(unlist(object@Out), collapse=" "), "\n", sep = "")
-    if(length(object@scatter) > 0){
-        cat("    scatter:", unlist(object@scatter), "\n", sep = " ")
-        if(length(object@scatterMethod) > 0){
-            cat("    scatterMethod: ", object@scatterMethod, "\n", sep = "")
-        }
-    }
+    cat(as.yaml(as.listSteps(list(object))))
+    ## cat("  ", object@id, ":\n", sep = "")
+    ## cat("    run: ", paste0(object@id, ".cwl"), "\n", sep = "")
+    ## lapply(object@In, function(y) {
+    ##     cat("    ", paste0(y@id, ": ", y@source), "\n", sep = "")
+    ## })
+    ## cat("    out: ", paste(unlist(object@Out), collapse=" "), "\n", sep = "")
+    ## if(length(object@scatter) > 0){
+    ##     cat("    scatter:", unlist(object@scatter), "\n", sep = " ")
+    ##     if(length(object@scatterMethod) > 0){
+    ##         cat("    scatterMethod: ", object@scatterMethod, "\n", sep = "")
+    ##     }
+    ## }
 })
 
 setMethod(show, "stepParamList", function(object) {
     cat("steps:\n")
-    lapply(object, function(x) {
-        show(x)
-    })
+    cat(as.yaml(as.listSteps(object)))
+    ## lapply(object, function(x) {
+    ##     show(x)
+    ## })
 })

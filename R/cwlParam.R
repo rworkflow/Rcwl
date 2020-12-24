@@ -415,7 +415,7 @@ setMethod(show, "InputParamList", function(object) {
                 object[[i]]@inputBinding$prefix, " ",
                 paste(unlist(v), collapse = " "), "\n", sep = "")
         }else if(is(object[[i]]@type, "InputArrayParam")){
-            if(object[[i]]@type@items %in% c("File", "Directory")){
+            if(any(object[[i]]@type@items %in% c("File", "Directory"))){
                 if(length(object[[i]]@value) > 0){
                     v <- object[[i]]@value$path
                 }else{

@@ -69,7 +69,7 @@
     return(oList)
 }
 
-.readSteps <- function(cwl.origin, pwd, cwl){
+.readSteps <- function(cwl.origin, cwl){
     Steps <- cwl.origin$steps
     for(i in seq_along(Steps)){
         if(is.null(Steps[[i]]$id)){
@@ -80,7 +80,7 @@
         }
         run <- Steps[[i]]$run
         if(!grepl("^/", run)){
-            sList$run <- file.path(pwd, run)
+            sList$run <- run #file.path(pwd, run)
         }
 
         In <- sList$"in"
@@ -159,8 +159,8 @@ readCWL <- function(cwlfile){
     cwl@outputs@listData <- .readOutputs(cwl.origin, cwl)
 
     if(cwl.origin$cwlClass == "Workflow"){
-        pwd <- dirname(normalizePath(cwlfile))
-        cwl <- .readSteps(cwl.origin, pwd, cwl)
+        ## pwd <- dirname(normalizePath(cwlfile))
+        cwl <- .readSteps(cwl.origin, cwl)
     }
     
     if(any(!idx)){
