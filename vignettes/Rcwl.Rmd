@@ -240,7 +240,7 @@ library(BiocParallel)
 sth.list <- as.list(LETTERS)
 names(sth.list) <- LETTERS
 
-## submit with mutlicore
+## submit with multicore
 result1 <- runCWLBatch(cwl = echo, outdir = tempdir(), inputList = list(sth = sth.list),
                        BPPARAM = MulticoreParam(26))
 
@@ -268,23 +268,38 @@ tres <- runCWL(Rs, outdir = tempdir())
 readLines(tres$output)
 ```
 
-The pipeline includes two steps, decompressed by `GZ` and compiled by `Rs`. The input file is a compressed file and the output would be the output `Rout` from `Rs`.
+The pipeline includes two steps, decompressed by the predefined tool
+`GZ` and compiled by `Rs`. The input file is a compressed file for the
+first "Uncomp" step. 
 
-First we need to define the direct inputs and outputs from `GZ` and `Rs`.
 ```{r}
 i1 <- InputParam(id = "cwl_zfile", type = "File")
-o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
-```
-For the input "cwl_zifle", it refers to the `GZ` input `zfile`.  The output "cwl_cout" will be the outcome of `Rs` output `Rout`.
-
-The `cwlStepParam` is used to define `inputs` and `outputs` from previous step. Then it connects with the two steps with `Step` function. The `run` option refer to the corresponding `cwlParam` object and the `In` option in steps should be linked to the input parameters defined by `cwlStepParam`. In the end, we use `+` to connect all steps.
-```{r}
-cwl <- cwlStepParam(inputs = InputParamList(i1),
-                    outputs = OutputParamList(o1))
 s1 <- Step(id = "Uncomp", run = GZ,
            In = list(zfile = "cwl_zfile"))
 s2 <- Step(id = "Compile", run = Rs,
            In = list(rfile = "Uncomp/rfile"))
+```
+
+The input "cwl_zfile", it is assigned to the `GZ` input `zfile` ih the
+frist step. Then the input of 'Rs' in the "Compile" step is assigned
+by the output "rfile" of the "GZ" tool in the previous step
+("Uncomp/rfile"). The `run` option refer to the corresponding
+`cwlParam` object and the `In` option in steps should be linked to the
+input parameters defined by `cwlStepParam`.
+
+The pipeline output would be output of the 'Compile' step from the
+tool `Rs`.
+
+```{r}
+o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
+```
+
+The `cwlStepParam` is used to collect `inputs` and `outputs` from
+previous step. Then we can simply use `+` to connect all steps.
+
+```{r}
+cwl <- cwlStepParam(inputs = InputParamList(i1),
+                    outputs = OutputParamList(o1))
 cwl <- cwl + s1 + s2
 cwl
 ```
@@ -297,7 +312,13 @@ readLines(r7$output)
 ```
 
 ## Scattering pipeline
-The scattering feature can specifies the associated workflow step or subworkflow to execute separately over a list of input elements. To use this feature, `ScatterFeatureRequirement` must be specified in the workflow requirements. Different `scatter` methods can be used in the associated step to decompose the input into a discrete set of jobs. More details can be found at: https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep.
+The scattering feature can specifies the associated workflow step or
+subworkflow to execute separately over a list of input elements. To
+use this feature, `ScatterFeatureRequirement` must be specified in the
+workflow requirements. Different `scatter` methods can be used in the
+associated step to decompose the input into a discrete set of
+jobs. More details can be found at:
+https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep.
 
 Here is an example to execute multiple R scripts. First, we need to set the input and output types to be array of "File", and add the requirments. In the "Compile" step, the scattering input is required to be set with the `scatter` option.
 ```{r}
@@ -381,7 +402,7 @@ r1 <- runCWL(TestFun, cwlArgs = "--preserve-entire-environment")
 readLines(r1$output)
 ```
 
-The `runCWL` function wrote the `testFun` function and its dependencies into an R script file automatically and call `Rscript` to run the script with parameters. Each parameter requires a prefix from corresponding argument in the R function with "=" and without a separator. Here we assigned the R function and its dependencies into the global environment because it will start a new environment when the vignette compiled.
+The `runCWL` function wrote the `testFun` function and its dependencies into an R script file automatically and call `Rscript` to run the script with parameters. Each parameter requires a prefix from corresponding argument in the R function with "=" and without a separator. Here we assigned the R function and its dependencies into the global environment because it will start a new environment when the vignette is compiled.
 
 # Resources
 ## RcwlPipelines
