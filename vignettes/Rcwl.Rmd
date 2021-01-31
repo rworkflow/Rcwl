@@ -205,6 +205,11 @@ r5 <- runCWL(touch, outdir = tempdir())
 r5$output
 ```
 
+The "touch" comand generated three files, but the output shows that
+only two files with ".txt" suffix return in the output directory
+except the "gz" file, which behaves right as we defined in the
+"glob" pattern.
+
 # Running Tools in Docker
 The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` or `requirements` option.
 ```{r}
