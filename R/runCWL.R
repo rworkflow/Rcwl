@@ -1,7 +1,7 @@
-#' run cwlParam
+#' run cwlProcess
 #' 
-#' Execute a cwlParam object with assigned inputs.
-#' @param cwl A `cwlParam` or `cwlStepParam` object.
+#' Execute a cwlProcess object with assigned inputs.
+#' @param cwl A `cwlProcess` or `cwlWorkflow` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param cwlRunner The path to the `cwltool` or `cwl-runner`. If not
 #'     exists, the cwltool package will be installed by `reticulate`.
@@ -24,7 +24,7 @@
 #' @return A list of outputs from tools and logs from cwltool.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo <- cwlParam(baseCommand = "echo",
+#' echo <- cwlProcess(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
@@ -114,7 +114,7 @@ runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
 
 #' run CWL with batchtools
 #' 
-#' @param cwl A `cwlParam` or `cwlStepParam` object.
+#' @param cwl A `cwlProcess` or `cwlWorkflow` object.
 #' @param outdir Directory to output results
 #' @param inputList An input list to run in parallel. The list names
 #'     must be in the inputs of cwl. Jobs will be submitted in

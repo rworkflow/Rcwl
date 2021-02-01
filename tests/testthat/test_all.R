@@ -1,7 +1,7 @@
 
 ## test echo
 input1 <- InputParam(id = "sth")
-echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 echo$sth <- "Hello World!"
 r1 <- runCWL(echo)
 test_that("simple echo", {
@@ -15,7 +15,7 @@ test_that("simple echo", {
 p1 <- InputParam(id = "infiles", type = "File[]")
 p2 <- InputParam(id = "outfile", type = "string",
                  default = "catout.txt", position = -1)
-Cat <- cwlParam(baseCommand = "cat",
+Cat <- cwlProcess(baseCommand = "cat",
                 inputs = InputParamList(p1, p2),
                 stdout = "$(inputs.outfile)")
 writeCWL(Cat, file.path(tempdir(), "cat"))
@@ -62,7 +62,7 @@ test_that("OutputParamList class and element type", {
 ##     }};
 ## }'
 ## req <- list(class = "InlineJavascriptRequirement")
-## groupFiles <- cwlParam(cwlClass = "ExpressionTool",
+## groupFiles <- cwlProcess(cwlClass = "ExpressionTool",
 ##                        requirements = list(req),
 ##                        inputs = InputParamList(p1, p2),
 ##                        outputs = OutputParamList(o1),

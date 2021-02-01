@@ -14,7 +14,7 @@ runCWLBatch(
 )
 }
 \arguments{
-\item{cwl}{A `cwlParam` or `cwlStepParam` object.}
+\item{cwl}{A `cwlProcess` or `cwlWorkflow` object.}
 
 \item{outdir}{Directory to output results}
 

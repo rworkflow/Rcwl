@@ -116,10 +116,10 @@
 #' Function to read CWL command or workflow files.
 #' @param cwlfile The cwl file to read.
 #' @export
-#' @return A object of class `cwlParam` or `cwlStepParam`.
+#' @return A object of class `cwlProcess` or `cwlWorkflow`.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo <- cwlParam(baseCommand = "echo",
+#' echo <- cwlProcess(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
 #' tf <- tempfile()
 #' writeCWL(echo, tf)
@@ -144,14 +144,14 @@ readCWL <- function(cwlfile){
     names(cwl.origin)[names(cwl.origin)=="class"] <- "cwlClass"
     cwl.list1 <- cwl.origin[setdiff(names(cwl.origin),
                                     c("inputs", "outputs", "steps"))]
-    idx <- names(cwl.list1) %in% formalArgs(cwlParam)
+    idx <- names(cwl.list1) %in% formalArgs(cwlProcess)
     if(cwl.origin$cwlClass %in% c("CommandLineTool", "ExpressionTool")){
         if(!is.null(cwl.list1$arguments)){
             cwl.list1$arguments <- as.list(cwl.list1$arguments)
         }
-        cwl <- do.call(cwlParam, cwl.list1[idx])
+        cwl <- do.call(cwlProcess, cwl.list1[idx])
     }else if(cwl.origin$cwlClass == "Workflow"){
-        cwl <- do.call(cwlStepParam, cwl.list1[idx])
+        cwl <- do.call(cwlWorkflow, cwl.list1[idx])
     }else {
         stop(cwl.origin$cwlClass, "is not supported!")
     }

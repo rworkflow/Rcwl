@@ -7,7 +7,7 @@
 cwlShiny(cwl, inputList = list(), upload = FALSE, ...)
 }
 \arguments{
-\item{cwl}{A cwlParam object.}
+\item{cwl}{A cwlProcess object.}
 
 \item{inputList}{a list of choices for the inputs of cwl
 object. The name of the list must match the inputs of the cwl
@@ -22,11 +22,11 @@ will be text input (file path) instead of file input.}
 A shiny webapp.
 }
 \description{
-Function to generate shiny app automaticlly for a `cwlParam`
+Function to generate shiny app automaticlly for a `cwlProcess`
 object.
 }
 \examples{
 input1 <- InputParam(id = "sth")
-echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 echoApp <- cwlShiny(echo)
 }

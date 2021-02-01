@@ -11,7 +11,7 @@ readCWL(cwlfile)
 \item{cwlfile}{The cwl file to read.}
 }
 \value{
-A object of class `cwlParam` or `cwlStepParam`.
+A object of class `cwlProcess` or `cwlWorkflow`.
 }
 \description{
 Read CWL
@@ -19,7 +19,7 @@ Function to read CWL command or workflow files.
 }
 \examples{
 input1 <- InputParam(id = "sth")
-echo <- cwlParam(baseCommand = "echo",
+echo <- cwlProcess(baseCommand = "echo",
                  inputs = InputParamList(input1))
 tf <- tempfile()
 writeCWL(echo, tf)

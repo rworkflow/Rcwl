@@ -43,16 +43,16 @@ library(Rcwl)
 ```
 
 # First Example
-The main class and constructor function is `cwlParam`, which wrap a command line tool and its parameters in a `cwlParam` object. Let's start with a simple example, `echo hello world`.
+The main class and constructor function is `cwlProcess`, which wrap a command line tool and its parameters in a `cwlProcess` object. Let's start with a simple example, `echo hello world`.
 
 First, we load the package and then define the input parameter for "echo", a string without a prefix. Just an `id` option required.
 ```{r}
 input1 <- InputParam(id = "sth")
 ```
 
-Second, create a `cwlParam` object with `baseCommand` for the command to execute and `InputParamList` for the input parameters.
+Second, create a `cwlProcess` object with `baseCommand` for the command to execute and `InputParamList` for the input parameters.
 ```{r}
-echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 ```
 
 Now we have a command object to run. Let's send a string "Hello World!" to the object. Without defining the outputs, it will stream standard output to a temporary file by default.
@@ -68,7 +68,7 @@ r1
 readLines(r1$output)
 ```
 
-The `writeCWL` function will write the cwlParam object to a CWL file for the command and YML for the inputs. Then it will invoke `cwl-runner` by default to execute the two files. Thus the command tool `cwl-runner` is required to be installed and available in the system path.
+The `writeCWL` function will write the cwlProcess object to a CWL file for the command and YML for the inputs. Then it will invoke `cwl-runner` by default to execute the two files. Thus the command tool `cwl-runner` is required to be installed and available in the system path.
 
 # Commandline tool
 
@@ -88,7 +88,7 @@ e1 <- InputParam(id = "flag", type = "boolean", prefix = "-f")
 e2 <- InputParam(id = "string", type = "string", prefix = "-s")
 e3 <- InputParam(id = "int", type = "int", prefix = "-i")
 e4 <- InputParam(id = "file", type = "File", prefix = "--file=", separate = FALSE)
-echoA <- cwlParam(baseCommand = "echo",
+echoA <- cwlProcess(baseCommand = "echo",
                   inputs = InputParamList(e1, e2, e3, e4),
                   stdout = "output.txt")
 ```
@@ -120,7 +120,7 @@ a2 <- InputParam(id = "B",
                                         prefix="-B=", separate = FALSE))
 a3 <- InputParam(id = "C", type = "string[]", prefix = "-C=",
                  itemSeparator = ",", separate = FALSE)
-echoB <- cwlParam(baseCommand = "echo",
+echoB <- cwlProcess(baseCommand = "echo",
                  inputs = InputParamList(a1, a2, a3))
 ```
 
@@ -150,14 +150,14 @@ cat("sample(1:10, 5)", file = zz, sep = "\n")
 close(zz)
 ```
 
-We define a `cwlParam` object to use "gzip" to uncompress a input file.
+We define a `cwlProcess` object to use "gzip" to uncompress a input file.
 ```{r}
 ofile <- "sample.R"
 z1 <- InputParam(id = "uncomp", type = "boolean", prefix = "-d")
 z2 <- InputParam(id = "out", type = "boolean", prefix = "-c")
 z3 <- InputParam(id = "zfile", type = "File")
 o1 <- OutputParam(id = "rfile", type = "File", glob = ofile)
-gz <- cwlParam(baseCommand = "gzip",
+gz <- cwlProcess(baseCommand = "gzip",
                inputs = InputParamList(z1, z2, z3),
                outputs = OutputParamList(o1),
                stdout = ofile)
@@ -176,7 +176,7 @@ Or we can use `arguments` to set some default parameters.
 ```{r}
 z1 <- InputParam(id = "zfile", type = "File")
 o1 <- OutputParam(id = "rfile", type = "File", glob = ofile)
-Gz <- cwlParam(baseCommand = "gzip",
+Gz <- cwlProcess(baseCommand = "gzip",
                arguments = list("-d", "-c"),
                inputs = InputParamList(z1),
                outputs = OutputParamList(o1),
@@ -199,7 +199,7 @@ Or we can use the CWL built in file property, `nameroot`, directly.
 pfile <- "$(inputs.zfile.nameroot)"
 o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
 req1 <- requireJS()
-GZ <- cwlParam(baseCommand = "gzip",
+GZ <- cwlProcess(baseCommand = "gzip",
                arguments = list("-d", "-c"),
                requirements = list(), ## assign list(req1) if node installed.
                inputs = InputParamList(z1),
@@ -215,7 +215,7 @@ We can also capture multiple output files with `glob` pattern.
 ```{r}
 a <- InputParam(id = "a", type = InputArrayParam(items = "string"))
 b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
-touch <- cwlParam(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
+touch <- cwlProcess(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
 touch$a <- c("a.txt", "b.gz", "c.txt")
 r5 <- runCWL(touch, outdir = tempdir())
 r5$output
@@ -231,7 +231,7 @@ The CWL can work with docker to simplify your software management and communicat
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
 req1 <- requireDocker("r-base")
-doc <- cwlParam(baseCommand = "Rscript",
+doc <- cwlProcess(baseCommand = "Rscript",
                 inputs = InputParamList(d1),
                 stdout = "output.txt",
                 hints = list(req1))
@@ -271,7 +271,7 @@ We can connect multiple tools together into a pipeline. Here is an example to un
 Here we define a simple `Rscript` tool without using docker.
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
-Rs <- cwlParam(baseCommand = "Rscript",
+Rs <- cwlProcess(baseCommand = "Rscript",
                inputs = InputParamList(d1))
 Rs
 ```
@@ -299,8 +299,8 @@ The input "cwl_zfile", it is assigned to the `GZ` input `zfile` ih the
 frist step. Then the input of 'Rs' in the "Compile" step is assigned
 by the output "rfile" of the "GZ" tool in the previous step
 ("Uncomp/rfile"). The `run` option refer to the corresponding
-`cwlParam` object and the `In` option in steps should be linked to the
-input parameters defined by `cwlStepParam`.
+`cwlProcess` object and the `In` option in steps should be linked to the
+input parameters defined by `cwlWorkflow`.
 
 The pipeline output would be output of the 'Compile' step from the
 tool `Rs`.
@@ -309,11 +309,11 @@ tool `Rs`.
 o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
 ```
 
-The `cwlStepParam` is used to collect `inputs` and `outputs` from
+The `cwlWorkflow` is used to collect `inputs` and `outputs` from
 previous step. Then we can simply use `+` to connect all steps.
 
 ```{r}
-cwl <- cwlStepParam(inputs = InputParamList(i1),
+cwl <- cwlWorkflow(inputs = InputParamList(i1),
                     outputs = OutputParamList(o1))
 cwl <- cwl + s1 + s2
 cwl
@@ -350,9 +350,9 @@ Here is an example to execute multiple R scripts. First, we need to set the inpu
 i2 <- InputParam(id = "cwl_rfiles", type = "File[]")
 o2 <- OutputParam(id = "cwl_couts", type = "File[]", outputSource = "Compile/output")
 req1 <- requireScatter()
-cwl2 <- cwlStepParam(requirements = list(req1),
-                     inputs = InputParamList(i2),
-                     outputs = OutputParamList(o2))
+cwl2 <- cwlWorkflow(requirements = list(req1),
+                    inputs = InputParamList(i2),
+                    outputs = OutputParamList(o2))
 s1 <- Step(id = "Compile", run = Rs,
            In = list(rfile = "cwl_rfiles"),
            scatter = "rfile")
@@ -375,7 +375,7 @@ plotCWL(cwl)
 ```
 
 # Web Application
-## cwlParam example
+## cwlProcess example
 Here we build a tool with different types of input parameters.
 ```{r}
 e1 <- InputParam(id = "flag", type = "boolean",
@@ -387,14 +387,14 @@ e5 <- InputParam(id = "file", type = "File",
                  prefix = "--file=", separate = FALSE)
 e6 <- InputParam(id = "array", type = "string[]", prefix = "-A",
                  doc = "separated by comma")
-mulEcho <- cwlParam(baseCommand = "echo", id = "mulEcho",
+mulEcho <- cwlProcess(baseCommand = "echo", id = "mulEcho",
                  label = "Test parameter types",
                  inputs = InputParamList(e1, e2, e3, e4, e5, e6),
                  stdout = "output.txt")
 mulEcho
 ```
 
-## cwlParam to Shiny App
+## cwlProcess to Shiny App
 Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An `upload` parameter can be used to defined wether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.
 ```{r, eval=FALSE}
 inputList <- list(option = c("option1", "option2"))
@@ -404,7 +404,7 @@ runApp(app)
 ![shinyApp](cwlShiny.png)
 
 # Working with R functions
-We can wrap an R function to `cwlParam` object by simply assigning the R function to `baseCommand`. This could be useful to summarize results from other tools in a pipeline. It can also be used to benchmark different parameters for a method written in R. Please note that this feature is only implemented by `Rcwl`, but not available in the common workflow language.
+We can wrap an R function to `cwlProcess` object by simply assigning the R function to `baseCommand`. This could be useful to summarize results from other tools in a pipeline. It can also be used to benchmark different parameters for a method written in R. Please note that this feature is only implemented by `Rcwl`, but not available in the common workflow language.
 
 ```{r}
 fun1 <- function(x)x*2
@@ -416,7 +416,7 @@ assign("testFun", testFun, envir = .GlobalEnv)
 p1 <- InputParam(id = "a", type = "int", prefix = "a=", separate = F)
 p2 <- InputParam(id = "b", type = "int", prefix = "b=", separate = F)
 o1 <- OutputParam(id = "o", type = "File", glob = "rout.txt")
-TestFun <- cwlParam(baseCommand = testFun,
+TestFun <- cwlProcess(baseCommand = testFun,
                     inputs = InputParamList(p1, p2),
                     outputs = OutputParamList(o1),
                     stdout = "rout.txt")
@@ -445,7 +445,7 @@ BiocManager::install("hubentu/RcwlPipelines")
 More recipes will be collected in this package and we would like to invite community to submit more pipelines to this package.
 
 ## Tool collections in CWL format
-Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to `cwlParam` object by `readCWL` function, or can be used directly.
+Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to `cwlProcess` object by `readCWL` function, or can be used directly.
 
 * <https://github.com/common-workflow-language/workflows>
 * <https://github.com/Duke-GCB/GGR-cwl>

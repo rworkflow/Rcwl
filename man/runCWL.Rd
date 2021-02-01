@@ -2,7 +2,7 @@
 % Please edit documentation in R/runCWL.R
 \name{runCWL}
 \alias{runCWL}
-\title{run cwlParam}
+\title{run cwlProcess}
 \usage{
 runCWL(
   cwl,
@@ -19,7 +19,7 @@ runCWL(
 )
 }
 \arguments{
-\item{cwl}{A `cwlParam` or `cwlStepParam` object.}
+\item{cwl}{A `cwlProcess` or `cwlWorkflow` object.}
 
 \item{prefix}{The prefix of `cwl` and `yml` file to write.}
 
@@ -52,11 +52,11 @@ Singularity runtime to run container.}
 A list of outputs from tools and logs from cwltool.
 }
 \description{
-Execute a cwlParam object with assigned inputs.
+Execute a cwlProcess object with assigned inputs.
 }
 \examples{
 input1 <- InputParam(id = "sth")
-echo <- cwlParam(baseCommand = "echo",
+echo <- cwlProcess(baseCommand = "echo",
                  inputs = InputParamList(input1))
 echo$sth <- "Hello World!"
 ## res <- runCWL(echo)

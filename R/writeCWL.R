@@ -18,7 +18,7 @@
 }
 
 cwlToList <- function(cwl, docker, prefix = NULL){
-    stopifnot(is(cwl, "cwlParam"))
+    stopifnot(is(cwl, "cwlProcess"))
     if(!docker) cwl <- .rmDocker(cwl)
     if(is(baseCommand(cwl), "function")){
         rfile <- writeFun(cwl, prefix)
@@ -64,12 +64,12 @@ allRun <- function(cwl){
         nm1 <- names(Steps)[i]
         run1 <- Steps[[i]]@run
 
-        if(is(run1, "cwlParam") & !is(run1, "cwlStepParam")){
+        if(is(run1, "cwlProcess") & !is(run1, "cwlWorkflow")){
             nn <- names(Run)
             Run <- c(Run, run1)
             names(Run) <- c(nn, nm1)
-        }else if(is(run1, "cwlStepParam")){
-            ## record cwlStepParam
+        }else if(is(run1, "cwlWorkflow")){
+            ## record cwlWorkflow
             nn <- names(Run)
             Run <- c(Run, run1)
             names(Run) <- c(nn, nm1)
@@ -82,8 +82,8 @@ allRun <- function(cwl){
 
 #' Write CWL
 #' 
-#' write `cwlParam` to cwl and yml.
-#' @param cwl A `cwlParam` or `cwlStepParam` object.
+#' write `cwlProcess` to cwl and yml.
+#' @param cwl A `cwlProcess` or `cwlWorkflow` object.
 #' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param docker Whether to use docker. 
 #' @param ... Other options from `yaml::write_yaml`.
@@ -92,12 +92,12 @@ allRun <- function(cwl){
 #' @return A CWL file and A YML file.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo <- cwlParam(baseCommand = "echo",
+#' echo <- cwlProcess(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
 #' tf <- tempfile()
 #' writeCWL(echo, tf)
 writeCWL <- function(cwl, prefix, docker = TRUE, ...){
-    stopifnot(is(cwl, "cwlParam"))
+    stopifnot(is(cwl, "cwlProcess"))
     ## logical to true/false
     handlers  <-  list(
         logical = function(x) {
@@ -223,7 +223,7 @@ as.listSteps <- function(Steps){
             ilist1
         })
 
-        if(is(st@run, "cwlParam")){
+        if(is(st@run, "cwlProcess")){
             run <- paste0(st@id, ".cwl")
         }else{
             run <- st@run

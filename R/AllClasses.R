@@ -363,9 +363,9 @@ OutputParamList <- function(out = OutputParam(), ...){
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))
 setClassUnion("characterORlistORfunction", c("character", "list", "function"))
 
-#' @rdname cwlParam
+#' @rdname cwlProcess
 #' @export
-setClass("cwlParam",
+setClass("cwlProcess",
          slots = c(
              cwlVersion = "character",
              cwlClass = "character",
@@ -405,7 +405,7 @@ setClass("cwlParam",
 #' The main CWL parameter class and constructor for command
 #' tools. More details:
 #' https://www.commonwl.org/v1.0/CommandLineTool.html
-#' @rdname cwlParam
+#' @rdname cwlProcess
 #' @importFrom S4Vectors SimpleList
 #' @import methods
 #' @import utils
@@ -429,11 +429,11 @@ setClass("cwlParam",
 #'     operation, of this Process.
 #' @export
 #' @details https://www.commonwl.org/v1.0/CommandLineTool.html
-#' @return A `cwlParam` class object.
+#' @return A `cwlProcess` class object.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
-cwlParam <- function(cwlVersion = "v1.0",
+#' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
+cwlProcess <- function(cwlVersion = "v1.0",
                      cwlClass = "CommandLineTool",
                      baseCommand = character(), requirements = list(),
                      hints = list(), arguments = list(),
@@ -442,7 +442,7 @@ cwlParam <- function(cwlVersion = "v1.0",
                      outputs = OutputParamList(),
                      stdout = character(), expression = character(),
                      extensions = list(), intent = list()){
-    new("cwlParam", cwlVersion = cwlVersion,
+    new("cwlProcess", cwlVersion = cwlVersion,
         cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand,
         requirements = requirements, hints = hints,
@@ -511,13 +511,13 @@ stepInParamList <- function(...){
     new("stepInParamList", listData = iList)
 }
 
-setClassUnion("cwlParamORcharacter", c("cwlParam", "character"))
+setClassUnion("cwlProcessORcharacter", c("cwlProcess", "character"))
 #' stepParam
 #' @rdname stepParam
 #' @export
 setClass("stepParam",
          slots = c(id = "character",
-                   run = "cwlParamORcharacter",
+                   run = "cwlProcessORcharacter",
                    In = "stepInParamList",
                    Out = "list",
                    scatter = "characterORlist",
@@ -533,7 +533,7 @@ setClass("stepParam",
 #' https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @rdname stepParam
 #' @param id The unique identifier for this workflow step.
-#' @param run A `cwlParam` object or the path of a cwl file.
+#' @param run A `cwlProcess` object or the path of a cwl file.
 #' @param In A `stepInParamList`.
 #' @param Out A list of outputs
 #' @param scatter character or a list. The inputs to be scattered.
@@ -554,7 +554,7 @@ setClass("stepParam",
 #' @return An object of class `stepParam`.
 #' @examples
 #' s1 <- stepParam(id = "s1")
-stepParam <- function(id, run = cwlParam(),
+stepParam <- function(id, run = cwlProcess(),
                       In = stepInParamList(), Out = list(),
                       scatter = character(), scatterMethod = character(),
                       label = character(),
@@ -598,16 +598,16 @@ stepParamList <- function(...){
     new("stepParamList", listData = iList)
 }
 
-#' cwlStepParam
-#' @rdname cwlStepParam
+#' cwlWorkflow
+#' @rdname cwlWorkflow
 #' @export
-setClass("cwlStepParam",
-         contains = "cwlParam",
+setClass("cwlWorkflow",
+         contains = "cwlProcess",
          slots = c(steps = "stepParamList"),
          prototype = list(steps = stepParamList())
          )
 
-#' cwlStepParam
+#' cwlWorkflow
 #' 
 #' A workflow steps paramter, which connect multiple command line
 #' steps into a workflow. More details: stepInParamList.
@@ -627,31 +627,31 @@ setClass("cwlStepParam",
 #' @param steps A list of `stepParamList`.
 #' @param intent An identifier for the type of computational
 #'     operation, of this Process.
-#' @rdname cwlStepParam
+#' @rdname cwlWorkflow
 #' @export
-#' @return An object of class `cwlStepParam`.
+#' @return An object of class `cwlWorkflow`.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo1 <- cwlParam(baseCommand = "echo",
+#' echo1 <- cwlProcess(baseCommand = "echo",
 #'                   inputs = InputParamList(input1))
 #' input2 <- InputParam(id = "sthout", type = "File")
-#' echo2 <- cwlParam(baseCommand = "echo",
+#' echo2 <- cwlProcess(baseCommand = "echo",
 #'                   inputs = InputParamList(input2),
 #'                   stdout = "out.txt")
 #' i1 <- InputParam(id = "sth")
 #' o1 <- OutputParam(id = "out", type = "File", outputSource = "echo2/output")
-#' wf <- cwlStepParam(inputs = InputParamList(i1),
+#' wf <- cwlWorkflow(inputs = InputParamList(i1),
 #'                    outputs = OutputParamList(o1))
 #' s1 <- Step(id = "echo1", run = echo1, In = list(sth = "sth"))
 #' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
 #' wf <- wf + s1 + s2
-cwlStepParam <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
+cwlWorkflow <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
                          requirements = list(), id = character(),
                          label = character(), doc = list(), intent = list(),
                          hints = list(), arguments = list(), extensions = list(),
                          inputs = InputParamList(), outputs = OutputParamList(),
                          steps = stepParamList()){
-    new("cwlStepParam", cwlVersion = cwlVersion, cwlClass = cwlClass,
+    new("cwlWorkflow", cwlVersion = cwlVersion, cwlClass = cwlClass,
         requirements = requirements, id = id, label = label,
         doc = doc, intent = intent, hints = hints,
         arguments = arguments, inputs = inputs, outputs = outputs,

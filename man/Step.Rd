@@ -6,7 +6,7 @@
 \usage{
 Step(
   id,
-  run = cwlParam(),
+  run = cwlProcess(),
   In = list(),
   scatter = character(),
   scatterMethod = character()
@@ -15,7 +15,7 @@ Step(
 \arguments{
 \item{id}{The id of `stepParam` object.}
 
-\item{run}{A `cwlParam` object for command tool, or path to a CWL
+\item{run}{A `cwlProcess` object for command tool, or path to a CWL
 file.}
 
 \item{In}{one or two layes of list.}
@@ -34,5 +34,5 @@ An object of `stepParam`.
 Function to assign value to `stepParam` object.
 }
 \seealso{
-\code{\link{cwlStepParam}}
+\code{\link{cwlWorkflow}}
 }

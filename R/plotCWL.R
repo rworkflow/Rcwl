@@ -1,7 +1,7 @@
 #' plotCWL
 #'
-#' Function to plot cwlStepParam object.
-#' @param cwl A cwlStepParam object to plot
+#' Function to plot cwlWorkflow object.
+#' @param cwl A cwlWorkflow object to plot
 #' @param output A string specifying the output type. An option
 #'     inherits from `render_graph` and can also be "mermaid".
 #' @param layout Layout from `render_graph`.
@@ -17,15 +17,15 @@
 #' @return A workflow plot.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo1 <- cwlParam(baseCommand = "echo",
+#' echo1 <- cwlProcess(baseCommand = "echo",
 #'                   inputs = InputParamList(input1))
 #' input2 <- InputParam(id = "sthout", type = "File")
-#' echo2 <- cwlParam(baseCommand = "echo",
+#' echo2 <- cwlProcess(baseCommand = "echo",
 #'                   inputs = InputParamList(input2),
 #'                   stdout = "out.txt")
 #' i1 <- InputParam(id = "sth")
 #' o1 <- OutputParam(id = "out", type = "File", outputSource = "echo2/output")
-#' wf <- cwlStepParam(inputs = InputParamList(i1),
+#' wf <- cwlWorkflow(inputs = InputParamList(i1),
 #'                    outputs = OutputParamList(o1))
 #' s1 <- Step(id = "echo1", run = echo1, In = list(sth = "sth"))
 #' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))

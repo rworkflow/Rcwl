@@ -10,7 +10,7 @@ steps(cwl)
 steps(cwl) <- value
 }
 \arguments{
-\item{cwl}{A cwlStepParam object.}
+\item{cwl}{A cwlWorkflow object.}
 
 \item{value}{A list of steps.}
 }
@@ -21,5 +21,5 @@ steps: A list of stepParam objects.
 Function to extract step slots
 }
 \seealso{
-\code{\link{cwlStepParam}}
+\code{\link{cwlWorkflow}}
 }

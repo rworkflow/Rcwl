@@ -55,9 +55,9 @@
 
 #' cwlShiny
 #'
-#' Function to generate shiny app automaticlly for a `cwlParam`
+#' Function to generate shiny app automaticlly for a `cwlProcess`
 #' object.
-#' @param cwl A cwlParam object.
+#' @param cwl A cwlProcess object.
 #' @param inputList a list of choices for the inputs of cwl
 #'     object. The name of the list must match the inputs of the cwl
 #'     object.
@@ -69,11 +69,11 @@
 #' @return A shiny webapp.
 #' @examples
 #' input1 <- InputParam(id = "sth")
-#' echo <- cwlParam(baseCommand = "echo", inputs = InputParamList(input1))
+#' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 #' echoApp <- cwlShiny(echo)
 
 cwlShiny <- function(cwl, inputList = list(), upload = FALSE, ...){
-    stopifnot(is(cwl, "cwlParam"))
+    stopifnot(is(cwl, "cwlProcess"))
     tList <- titlePanel(cwl@id)
     if(length(cwl@label) > 0) tList <- list(tList, h3(cwl@label))
     divList <- .inputUI(cwl, inputList, upload)

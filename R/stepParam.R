@@ -3,7 +3,7 @@
 #' Function to assign value to `stepParam` object.
 #' 
 #' @param id The id of `stepParam` object.
-#' @param run A `cwlParam` object for command tool, or path to a CWL
+#' @param run A `cwlProcess` object for command tool, or path to a CWL
 #'     file.
 #' @param In one or two layes of list.
 #' @param scatter character or a list. The inputs to be scattered.
@@ -13,10 +13,10 @@
 #'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @export
 #' @return An object of `stepParam`.
-#' @seealso \code{\link{cwlStepParam}}
-Step <- function(id, run = cwlParam(), In = list(),
+#' @seealso \code{\link{cwlWorkflow}}
+Step <- function(id, run = cwlProcess(), In = list(),
                  scatter = character(), scatterMethod = character()) {
-    if(is(run, "cwlParam")){
+    if(is(run, "cwlProcess")){
         stopifnot(names(In) %in% names(inputs(run)))
         sout <- as.list(names(outputs(run)))
     }else if(is(run, "character")){
@@ -46,13 +46,13 @@ Step <- function(id, run = cwlParam(), In = list(),
 #' Pipeline
 #' 
 #' To build a pipeline by connecting multiple `stepParam` to a
-#' `cwlStepParam` object.
-#' @param e1 A `cwlStepParam` object.
+#' `cwlWorkflow` object.
+#' @param e1 A `cwlWorkflow` object.
 #' @param e2 A `stepParam` object.
 #' @export
-#' @seealso \code{\link{cwlStepParam}}
-#' @return A `cwlStepParam` object.
-setMethod("+", c("cwlStepParam", "stepParam"), function(e1, e2) {
+#' @seealso \code{\link{cwlWorkflow}}
+#' @return A `cwlWorkflow` object.
+setMethod("+", c("cwlWorkflow", "stepParam"), function(e1, e2) {
     ##if (length(e1@steps) == 0) {
     ##    e1@steps <- stepParamList(e2)
     ##} else {
@@ -66,11 +66,11 @@ setGeneric("+")
 #' Steps
 #' 
 #' Function to extract step slots
-#' @param cwl A cwlStepParam object.
+#' @param cwl A cwlWorkflow object.
 #' @export
 #' @return steps: A list of stepParam objects.
 #' @rdname steps
-#' @seealso \code{\link{cwlStepParam}}
+#' @seealso \code{\link{cwlWorkflow}}
 steps <- function(cwl) cwl@steps
 
 #' Steps
