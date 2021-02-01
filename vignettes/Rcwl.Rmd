@@ -70,8 +70,16 @@ readLines(r1$output)
 
 The `writeCWL` function will write the cwlParam object to a CWL file for the command and YML for the inputs. Then it will invoke `cwl-runner` by default to execute the two files. Thus the command tool `cwl-runner` is required to be installed and available in the system path.
 
-# Input Parameters
-## Essential Input parameters
+# Commandline tool
+
+The package provides functions to define a CWL syntax for Command Line
+Tools in a intuitive way. The functions were developped based on the
+CWL Command Line Tool Description (v1.0). More details can be found in
+the offical document:
+<https://www.commonwl.org/v1.0/CommandLineTool.html>.
+
+## Input Parameters
+### Essential Input parameters
 For the input parameters, three options need to be defined usually, *id*, *type*, and *prefix*. The type can be *string*, *int*, *long*, *float*, *double*, and so on. More detail can be found at: <https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType>.
 
 Here is an example from [CWL user guide](http://www.commonwl.org/user_guide/03-input/). Here we defined an `echo` with different type of input parameters by `InputParam`. The `stdout` option can be used to caputre the standard output stream to a file.
@@ -99,7 +107,11 @@ r2 <- runCWL(echoA, outdir = tempdir())
 r2$command
 ```
 
-## Array Inputs
+The command shows the parameters work as we defined. The parameter
+order is in alphabetical by default, but the option of "position" can
+be used to fix the orders.
+
+### Array Inputs
 A similar example to CWL user guide. We can define three different type of array as inputs. 
 ```{r}
 a1 <- InputParam(id = "A", type = "string[]", prefix = "-A")
@@ -126,8 +138,8 @@ r3 <- runCWL(echoB, outdir = tempdir())
 r3$command
 ```
 
-# Output Parameters
-## Capturing Output
+## Output Parameters
+### Capturing Output
 The outputs, similar to the inputs, is a list of output parameters. Three options *id*, *type* and *glob* can be defined. The glob option is used to define a pattern to find files relative to the output directory.
 
 Here is an example to unzip a compressed `gz` file. First, we generate a compressed R script file.
@@ -174,7 +186,10 @@ Gz$zfile <- zzfil
 r4a <- runCWL(Gz, outdir = tempdir())
 ```
 
-To make it for general usage, we can define a pattern with javascript to glob the output, which require `node` to be installed in your system PATH.
+To make it for general usage, we can define a pattern with javascript
+to glob the output, which require `node` from "nodejs" to be installed in your
+system PATH.
+
 ```{r}
 pfile <- "$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))"
 ```
@@ -183,8 +198,9 @@ Or we can use the CWL built in file property, `nameroot`, directly.
 ```{r}
 pfile <- "$(inputs.zfile.nameroot)"
 o2 <- OutputParam(id = "rfile", type = "File", glob = pfile)
-req1 <- list(class = "InlineJavascriptRequirement")
-GZ <- cwlParam(baseCommand = c("gzip", "-d", "-c"),
+req1 <- requireJS()
+GZ <- cwlParam(baseCommand = "gzip",
+               arguments = list("-d", "-c"),
                requirements = list(), ## assign list(req1) if node installed.
                inputs = InputParamList(z1),
                outputs = OutputParamList(o2),
@@ -193,7 +209,7 @@ GZ$zfile <- zzfil
 r4b <- runCWL(GZ, outdir = tempdir())
 ```
 
-## Array Outputs
+### Array Outputs
 
 We can also capture multiple output files with `glob` pattern.
 ```{r}
@@ -207,15 +223,14 @@ r5$output
 
 The "touch" comand generated three files, but the output shows that
 only two files with ".txt" suffix return in the output directory
-except the "gz" file, which behaves right as we defined in the
-"glob" pattern.
+except the "gz" file, which behaves right as we defined in the "glob"
+pattern.
 
 # Running Tools in Docker
 The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` or `requirements` option.
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
-req1 <- list(class = "DockerRequirement",
-             dockerPull = "r-base")
+req1 <- requireDocker("r-base")
 doc <- cwlParam(baseCommand = "Rscript",
                 inputs = InputParamList(d1),
                 stdout = "output.txt",
@@ -311,6 +326,16 @@ r7 <- runCWL(cwl, outdir = tempdir())
 readLines(r7$output)
 ```
 
+Tips: Sometimes, we need to adjust some arguments of certain tools in
+a pipeline besides of parameter inputs. The function `arguments` can
+help to modify arguments for a tool, tool in a pipeline, or even tool
+in a sub-workflow. For example,
+
+```{r}
+arguments(cwl, step = "Uncomp") <- list("-d", "-c", "-f")
+runs(cwl)$Uncomp
+```
+
 ## Scattering pipeline
 The scattering feature can specifies the associated workflow step or
 subworkflow to execute separately over a list of input elements. To
@@ -324,8 +349,7 @@ Here is an example to execute multiple R scripts. First, we need to set the inpu
 ```{r}
 i2 <- InputParam(id = "cwl_rfiles", type = "File[]")
 o2 <- OutputParam(id = "cwl_couts", type = "File[]", outputSource = "Compile/output")
-req1 <- list(class = "ScatterFeatureRequirement")
-
+req1 <- requireScatter()
 cwl2 <- cwlStepParam(requirements = list(req1),
                      inputs = InputParamList(i2),
                      outputs = OutputParamList(o2))
