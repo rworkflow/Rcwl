@@ -146,6 +146,24 @@ InputParam <- function(id, label= "", type = "string",
                        separate = TRUE, itemSeparator = character(),
                        valueFrom = character(), shellQuote = logical(),
                        default = character(), value = character()){
+    ## init value by type
+    if(is(type, "InputArrayParam")){
+        value <- list()
+    }else{
+        if(!is.na(pmatch("int", type))){
+            value <- integer()
+        }else if(!is.na(pmatch("boolean", type))){
+            value <- logical()
+        }else if(!is.na(pmatch("float", type))){
+            value <- numeric()
+        }else if(!is.na(pmatch("int", type))){
+            value <- numeric()
+        }else if(grepl("\\[\\]", type)){
+            value <- list()
+        }else{
+            value <- character()
+        }
+    }
     new("InputParam",
         id = id,
         label = label,
