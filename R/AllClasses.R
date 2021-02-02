@@ -158,7 +158,7 @@ InputParam <- function(id, label= "", type = "string",
             value <- numeric()
         }else if(!is.na(pmatch("int", type))){
             value <- numeric()
-        }else if(grepl("\\[\\]", type)){
+        }else if(any(grepl("\\[\\]", type))){
             value <- list()
         }else{
             value <- character()

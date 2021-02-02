@@ -270,7 +270,8 @@ requireManifest <- function(inputID, sep = "\\n"){
 inputs <- function(cwl) cwl@inputs
 
 .assignInput <- function(x, name, value){
-    stopifnot(name %in% names(inputs(x)))
+    if(!name %in% names(inputs(x)))
+        stop(name, " is not in the inputs")
     itype <- inputs(x)[[name]]@type
     if(is(itype, "InputArrayParam")){
         if(inputs(x)[[name]]@type@items == "File"){
@@ -287,7 +288,10 @@ inputs <- function(cwl) cwl@inputs
         if(itype == "int"){
             v <- as.integer(value)
         }else if(itype %in% c("File", "Directory")){
-            if(!file.exists(value)) stop(value, " does not exist!")
+            if(length(value) == 0 || value == "")
+                stop(name, " is empty!")
+            if(!file.exists(value))
+                stop(value, " does not exist!")
             v <- list(class = itype, path = normalizePath(value))
         }else if(itype == "File[]"){
             v <- lapply(value, function(x)list(class="File",

@@ -32,7 +32,20 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    cwlTemp = NULL, outdir = ".", cwlArgs = character(),
                    stdout = TRUE, stderr = TRUE, showLog = FALSE,
                    docker = TRUE, ...){
-    if(length(unlist(.cwl2yml(cwl))) == 0) stop("Inputs are not defined")
+    ## check missing inputs
+    yml0 <- .removeEmpty(.cwl2yml(cwl))
+    if(length(yml0) < length(inputs(cwl))){
+        mis <- setdiff(names(inputs(cwl)), names(yml0))
+        ifReq <- rep(TRUE, length(mis))
+        for(i in seq_along(mis)){
+            type1 <- inputs(cwl)[[mis[i]]]@type
+            if(is.character(type1) | is.list(type1)){
+                ifReq[i] <- !any(grepl("\\?", type1))
+            }
+        }
+        mis <- mis[ifReq]
+        stop(paste(mis, collapse = ", "), " not assigned.")
+    }
     if(docker == "singularity"){
         cwlArgs <- paste("--singularity", cwlArgs)
         docker <- TRUE
@@ -94,7 +107,11 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
 
 runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
     library(Rcwl)
-    stopifnot(all(names(inputList) %in% names(inputs(cwl))))
+    idx <- names(inputList) %in% names(inputs(cwl))
+    if(!all(idx)){
+        warning(paste(names(inputList)[!idx], collapse = ", "),
+                " oare not assigned")
+    }
     ## change output directory
     sname <- names(inputList[[1]])
     outdir <- file.path(outdir, sname[idx])
