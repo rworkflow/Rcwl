@@ -1,0 +1,16 @@
+url: https://rworkflow.github.io/Rcwl
+
+template:
+  params:
+    bootswatch: flatly
+    ganalytics: UA-93043521-1
+
+home:
+  title: "Rcwl"
+  type: inverse
+
+
+navbar:
+  right:
+   - icon: fa-github
+     href: https://github.com/rworkflow/Rcwl
