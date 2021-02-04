@@ -412,8 +412,9 @@ setClass("cwlProcess",
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
 #' @param baseCommand Specifies the program or R function to execute
-#' @param requirements A list of Requirement lists that apply to
-#'     either the runtime environment or the workflow engine.
+#' @param requirements A list of requirements that apply to either
+#'     the runtime environment or the workflow engine that must be met
+#'     in order to execute this process.
 #' @param hints Any or a list for the workflow engine.
 #' @param arguments Command line bindings which are not directly
 #'     associated with input parameters.
@@ -512,10 +513,11 @@ stepInParamList <- function(...){
 }
 
 setClassUnion("cwlProcessORcharacter", c("cwlProcess", "character"))
-#' stepParam
-#' @rdname stepParam
+
+#' cwlStep
+#' @rdname cwlStep
 #' @export
-setClass("stepParam",
+setClass("cwlStep",
          slots = c(id = "character",
                    run = "cwlProcessORcharacter",
                    In = "stepInParamList",
@@ -527,46 +529,71 @@ setClass("stepParam",
                    requirements = "list",
                    hints = "list",
                    when = "character"))
-#' stepParam
-#' 
-#' A workflow step parameters. More details:
-#' https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
-#' @rdname stepParam
-#' @param id The unique identifier for this workflow step.
-#' @param run A `cwlProcess` object or the path of a cwl file.
-#' @param In A `stepInParamList`.
-#' @param Out A list of outputs
+
+#' cwlStep function
+#' @description Constructor function for `cwlStep` object.
+#' @param id A user-defined unique identifier for this workflow step.
+#' @param run A `cwlProcess` object for command line tool, or path to
+#'     a CWL file.
+#' @param In A list of input parameters which will be constructed into
+#'     `stepInParamList`.
+#' @param Out A list of outputs.
 #' @param scatter character or a list. The inputs to be scattered.
 #' @param scatterMethod required if scatter is an array of more than
 #'     one element. It can be one of "dotproduct",
-#'     "nested_crossproduct" and "flat_crossproduct". Details:
-#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
+#'     "nested_crossproduct" and "flat_crossproduct".
 #' @param label A short, human-readable label of this object.
 #' @param doc A documentation string for this object, or an array of
 #'     strings which should be concatenated.
-#' @param requirements requirements that apply to either the runtime
+#' @param requirements Requirements that apply to either the runtime
 #'     environment or the workflow engine.
-#' @param hints hints applying to either the runtime environment or
-#'     the workflow engine
+#' @param hints Hints applying to either the runtime environment or
+#'     the workflow engine.
 #' @param when If defined, only run the step when the expression
 #'     evaluates to true. If false the step is skipped.
 #' @export
-#' @return An object of class `stepParam`.
+#' @return An object of class `cwlStep`.
+#' @details For more details:
+#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
 #' @examples
-#' s1 <- stepParam(id = "s1")
-stepParam <- function(id, run = cwlProcess(),
-                      In = stepInParamList(), Out = list(),
-                      scatter = character(), scatterMethod = character(),
-                      label = character(),
-                      doc = character(),
-                      requirements = list(),
-                      hints = list(),
-                      when = character()) {
-    new("stepParam",
+#' s1 <- cwlStep(id = "s1")
+#' @seealso \code{\link{cwlWorkflow}}
+cwlStep <- function(id, run = cwlProcess(),
+                    In = list(), Out = list(),
+                    scatter = character(), scatterMethod = character(),
+                    label = character(),
+                    doc = character(),
+                    requirements = list(),
+                    hints = list(),
+                    when = character()) {
+    if(is(run, "cwlProcess")){
+        stopifnot(names(In) %in% names(inputs(run)))
+        sout <- as.list(names(outputs(run)))
+    }else if(is(run, "character")){
+        stopifnot(file.exists(run))
+        clist <- read_yaml(run)
+        stopifnot(names(In) %in% names(clist$inputs))
+        sout <- as.list(names(clist$outputs))
+    }
+    slist <- list()
+    for(i in seq(In)) {
+        if(is.list(In[[i]])) {
+            si <- stepInParam(id = names(In)[i])
+            for(j in seq(In[[i]])){
+                slot(si, names(In[[i]])[j]) <- In[[i]][[j]]
+            }
+        }else{
+            si <- stepInParam(id = names(In)[i],
+                              source = In[[i]])
+        }
+        slist[[i]] <- si
+    }
+    names(slist) <- names(In)
+    new("cwlStep",
         id = id,
         run = run,
-        In = In,
-        Out = Out,
+        In = do.call(stepInParamList, slist),
+        Out = sout,
         scatter = scatter,
         scatterMethod = scatterMethod,
         label = label,
@@ -576,90 +603,30 @@ stepParam <- function(id, run = cwlProcess(),
         when = when)
 }
 
-#' stepParamList
-#' @rdname stepParamList
+#' cwlStepList
+#' @rdname cwlStepList
 #' @export
-setClass("stepParamList",
+setClass("cwlStepList",
          ## representation(steps = "SimpleList"),
-         prototype = list(elementType = "stepParam"),
+         prototype = list(elementType = "cwlStep"),
          contains = "SimpleList")
 
-#' stepParamList
-#' @rdname stepParamList
-#' @param ... A list of `stepParam`.
+#' cwlStepList
+#' @rdname cwlStepList
+#' @param ... A list of `cwlStep`.
 #' @export
-#' @return An object of class `stepParamList`.
+#' @return An object of class `cwlStepList`.
 #' @examples
-#' s1 <- stepParam(id = "s1")
-#' stepParamList(s1)
-stepParamList <- function(...){
+#' s1 <- cwlStep(id = "s1")
+#' cwlStepList(s1)
+cwlStepList <- function(...){
     iList <- list(...)
     names(iList) <- lapply(iList, function(x)x@id)
-    new("stepParamList", listData = iList)
+    new("cwlStepList", listData = iList)
 }
 
-#' cwlWorkflow
-#' @rdname cwlWorkflow
-#' @export
-setClass("cwlWorkflow",
-         contains = "cwlProcess",
-         slots = c(steps = "stepParamList"),
-         prototype = list(steps = stepParamList())
-         )
-
-#' cwlWorkflow
-#' 
-#' A workflow steps paramter, which connect multiple command line
-#' steps into a workflow. More details: stepInParamList.
-#' @param cwlVersion CWL version
-#' @param cwlClass "Workflow".
-#' @param requirements Requirements that apply to either the runtime
-#'     environment or the workflow engine.
-#' @param hints Any or a list for the workflow engine.
-#' @param extensions A list of extensions and metadata.
-#' @param arguments Command line bindings which are not directly
-#'     associated with input parameters.
-#' @param id The unique identifier for this process object.
-#' @param label A short, human-readable label of this object.
-#' @param doc A documentation string for this object.
-#' @param inputs A object of `InputParamList`.
-#' @param outputs A object of `OutputParamList`.
-#' @param steps A list of `stepParamList`.
-#' @param intent An identifier for the type of computational
-#'     operation, of this Process.
-#' @rdname cwlWorkflow
-#' @export
-#' @return An object of class `cwlWorkflow`.
-#' @examples
-#' input1 <- InputParam(id = "sth")
-#' echo1 <- cwlProcess(baseCommand = "echo",
-#'                   inputs = InputParamList(input1))
-#' input2 <- InputParam(id = "sthout", type = "File")
-#' echo2 <- cwlProcess(baseCommand = "echo",
-#'                   inputs = InputParamList(input2),
-#'                   stdout = "out.txt")
-#' i1 <- InputParam(id = "sth")
-#' o1 <- OutputParam(id = "out", type = "File", outputSource = "echo2/output")
-#' wf <- cwlWorkflow(inputs = InputParamList(i1),
-#'                    outputs = OutputParamList(o1))
-#' s1 <- Step(id = "echo1", run = echo1, In = list(sth = "sth"))
-#' s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
-#' wf <- wf + s1 + s2
-cwlWorkflow <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
-                         requirements = list(), id = character(),
-                         label = character(), doc = list(), intent = list(),
-                         hints = list(), arguments = list(), extensions = list(),
-                         inputs = InputParamList(), outputs = OutputParamList(),
-                         steps = stepParamList()){
-    new("cwlWorkflow", cwlVersion = cwlVersion, cwlClass = cwlClass,
-        requirements = requirements, id = id, label = label,
-        doc = doc, intent = intent, hints = hints,
-        arguments = arguments, inputs = inputs, outputs = outputs,
-        steps = steps, extensions = extensions)
-}
-
-# show methods for stepParam
-setMethod(show, "stepParam", function(object) {
+# show methods for cwlStep
+setMethod(show, "cwlStep", function(object) {
     cat(as.yaml(as.listSteps(list(object))))
     ## cat("  ", object@id, ":\n", sep = "")
     ## cat("    run: ", paste0(object@id, ".cwl"), "\n", sep = "")
@@ -675,10 +642,46 @@ setMethod(show, "stepParam", function(object) {
     ## }
 })
 
-setMethod(show, "stepParamList", function(object) {
+setMethod(show, "cwlStepList", function(object) {
     cat("steps:\n")
     cat(as.yaml(as.listSteps(object)))
     ## lapply(object, function(x) {
     ##     show(x)
     ## })
+})
+
+
+
+
+#' cwlWorkflow
+#'
+#' @rdname cwlWorkflow
+#' @export
+setClass("cwlWorkflow",
+         contains = "cwlProcess",
+         slots = c(steps = "cwlStepList"),
+         prototype = list(steps = cwlStepList())
+         )
+
+setMethod(show, "cwlWorkflow", function(object){
+    cat("class:", class(object), "\n",
+        "cwlClass:", cwlClass(object), "\n",
+        "cwlVersion:", cwlVersion(object), "\n")
+    if(length(object@requirements) > 0){
+        cat("requirements:\n")
+        cat(as.yaml(object@requirements))
+    }
+    if(length(object@hints) > 0){
+        cat("hints:\n")
+        cat(as.yaml(object@hints))
+    }
+    if(length(object@arguments) > 0){
+        cat("arguments:", unlist(object@arguments), "\n")
+    }
+    show(object@inputs)
+    show(object@outputs)
+    if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
+    if(cwlClass(object) == "Workflow") {
+        show(object@steps)
+    }
 })

@@ -22,7 +22,11 @@ vignette: >
 knitr::opts_knit$set(root.dir = tempdir())
 ```
 
-The `Rcwl` package is aimed to be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at <http://www.commonwl.org>.
+The `Rcwl` package is aimed to be a simple and user-friendly way to
+manage command line tools and build data analysis pipelines in R using
+Common Workflow Language (CWL). It can be a bridge between heavy
+bioinformatics tools and pipeline to R/Bioconductor. More details
+about CWL can be found at <http://www.commonwl.org>.
 
 # Installation
 1. Download the package. 
@@ -32,9 +36,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("Rcwl")
 ```
-The development version is also available to download from Github. 
+The development version is also available to download from GitHub. 
 ```{r getDevel, eval=FALSE}
-BiocManager::install("hubentu/Rcwl")
+BiocManager::install("rworkflow/Rcwl")
 ```
 
 2. Load the package into the R session.
@@ -241,14 +245,23 @@ doc$rfile <- r4$output
 r6 <- runCWL(doc)
 ```
 
-The tools defined with docker requirements can also be run locally by disabling the docker option. In case your `Rscript` depends some local libraries to run, an option from `cwltools`, "--preserve-entire-environment", can be used to pass all environment variables.
+The tools defined with docker requirements can also be run locally by
+disabling the docker option. In case your `Rscript` depends some local
+libraries to run, an option from `cwltools`,
+"--preserve-entire-environment", can be used to pass all environment
+variables.
+
 ```{r}
 r6a <- runCWL(doc, docker = FALSE, outdir = tempdir(),
               cwlArgs = "--preserve-entire-environment")
 ```
 
 # Running Tools in Cluster server
-The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package `BiocParallel`. Here is an example to submit jobs with "Multiicore" and "SGE". A more detailed example can be found (<https://hubentu.github.io/others/Rcwl_RNASeq.html>).
+The CWL also can work in high performance clusters with batch-queuing
+system, such as SGE, PBS, SLURM and so on, using the Bioconductor
+package `BiocParallel`. Here is an example to submit jobs with
+"Multicore" and "SGE". A more detailed example can be found
+(<https://hubentu.github.io/others/Rcwl_RNASeq.html>).
 
 ```{r, eval=FALSE}
 library(BiocParallel)
@@ -266,7 +279,8 @@ result2 <- runCWLBatch(cwl = echo, outdir = tempdir(), inputList = list(sth = st
 ```
 
 # Writing Pipeline
-We can connect multiple tools together into a pipeline. Here is an example to uncompress an R script and execute it with `Rscript`.
+We can connect multiple tools together into a pipeline. Here is an
+example to uncompress an R script and execute it with `Rscript`.
 
 Here we define a simple `Rscript` tool without using docker.
 ```{r}
@@ -283,20 +297,20 @@ tres <- runCWL(Rs, outdir = tempdir())
 readLines(tres$output)
 ```
 
-The pipeline includes two steps, decompressed by the predefined tool
-`GZ` and compiled by `Rs`. The input file is a compressed file for the
-first "Uncomp" step. 
+The pipeline includes two steps, decompressing with predefined
+`cwlProcess` of `GZ` and compiling with `cwlProcess` of `Rs`. The
+input file is a compressed file for the first "Uncomp" step. (FIXME: last sentence)
 
 ```{r}
 i1 <- InputParam(id = "cwl_zfile", type = "File")
-s1 <- Step(id = "Uncomp", run = GZ,
-           In = list(zfile = "cwl_zfile"))
-s2 <- Step(id = "Compile", run = Rs,
-           In = list(rfile = "Uncomp/rfile"))
+s1 <- cwlStep(id = "Uncomp", run = GZ,
+              In = list(zfile = "cwl_zfile"))
+s2 <- cwlStep(id = "Compile", run = Rs,
+              In = list(rfile = "Uncomp/rfile"))
 ```
 
-The input "cwl_zfile", it is assigned to the `GZ` input `zfile` ih the
-frist step. Then the input of 'Rs' in the "Compile" step is assigned
+The input "cwl_zfile", it is assigned to the `GZ` input `zfile` in the
+first step. Then the input of 'Rs' in the "Compile" step is assigned
 by the output "rfile" of the "GZ" tool in the previous step
 ("Uncomp/rfile"). The `run` option refer to the corresponding
 `cwlProcess` object and the `In` option in steps should be linked to the
@@ -353,9 +367,9 @@ req1 <- requireScatter()
 cwl2 <- cwlWorkflow(requirements = list(req1),
                     inputs = InputParamList(i2),
                     outputs = OutputParamList(o2))
-s1 <- Step(id = "Compile", run = Rs,
-           In = list(rfile = "cwl_rfiles"),
-           scatter = "rfile")
+s1 <- cwlStep(id = "Compile", run = Rs,
+              In = list(rfile = "cwl_rfiles"),
+              scatter = "rfile")
 cwl2 <- cwl2 + s1
 cwl2
 ```

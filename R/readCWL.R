@@ -107,7 +107,7 @@
         sList$Out <- as.list(sList$out)
         sList$"in" <- NULL
         sList$"out" <- NULL
-        cwl <- cwl + do.call(stepParam, sList)
+        cwl <- cwl + do.call(cwlStep, sList)
     }
     return(cwl)
 }

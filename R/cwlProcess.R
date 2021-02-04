@@ -1,26 +1,24 @@
 #' cwlProcess methods
 #' @rdname cwlProcess-methods
+#' @description Some useful methods for `cwlProcess` objects.
+#' @param cwl A `cwlProcess` (and `cwlWorkflow`) object.
+#' @param value A value to be assigned to the `cwlProcess` object.
+#' @return cwlVersion: cwl document version
 #' @export
-#' @return cwlVersion: cwl version
 cwlVersion <- function(cwl) cwl@cwlVersion
 
-#' cwlVersion
-#' CWL document version
-#' @export
-#' @param cwl A `cwlProcess` object.
-#' @param value Assign value to the `cwlProcess` object.
 #' @rdname cwlProcess-methods
+#' @export
 "cwlVersion<-" <- function(cwl, value){
     cwl@cwlVersion  <- value
     cwl
 }
 
-#' cwlClass
 #' @rdname cwlProcess-methods
+#' @return cwlClass: CWL class of `cwlProcess` or `cwlWorkflow` object.
 #' @export
-#' @return cwlClass: CWL Class
 cwlClass <- function(cwl) cwl@cwlClass
-#' cwlClass
+
 #' @rdname cwlProcess-methods
 #' @export
 "cwlClass<-" <- function(cwl, value){
@@ -28,12 +26,11 @@ cwlClass <- function(cwl) cwl@cwlClass
     cwl
 }
 
-#' baseCommand
 #' @rdname cwlProcess-methods
+#' @return baseCommand: base command for the `cwlProcess` object.
 #' @export
-#' @return baseCommand: CWL baseCommand
 baseCommand <- function(cwl) cwl@baseCommand
-#' baseCommand
+
 #' @rdname cwlProcess-methods
 #' @export
 "baseCommand<-" <- function(cwl, value){
@@ -41,13 +38,13 @@ baseCommand <- function(cwl) cwl@baseCommand
     cwl
 }
 
-#' arguments
 #' @rdname cwlProcess-methods
+#' @param step the ID of steps in a workflow. This is required if
+#'     "cwl" is a `cwlWorkflow` object. It can be multiple levels of
+#'     steps separated by "/" for nested workflow.
+#' @return arguments: CWL arguments.
 #' @export
-#' @return arguments: CWL arguments
-#' @param step To specifiy a step ID when `cwl` is a workflow. It can
-#'     be multiple levels of steps separated by "/" for nested
-#'     workflow.
+
 arguments <- function(cwl, step = NULL){
     if(cwlClass(cwl) == "CommandLineTool"){
         cwl@arguments        
@@ -65,7 +62,7 @@ arguments <- function(cwl, step = NULL){
         eval(parse(text = irun))
     }
 }
-#' arguments
+
 #' @rdname cwlProcess-methods
 #' @export
 "arguments<-" <- function(cwl, step = NULL, value){
@@ -92,12 +89,11 @@ arguments <- function(cwl, step = NULL){
     cwl
 }
 
-#' hints
-#' @export
 #' @rdname cwlProcess-methods
-#' @return hints: CWL hints
+#' @return hints: CWL hints.
+#' @export
 hints <- function(cwl) cwl@hints
-#' hints
+
 #' @rdname cwlProcess-methods
 #' @export
 "hints<-" <- function(cwl, value){
@@ -105,11 +101,9 @@ hints <- function(cwl) cwl@hints
     cwl
 }
 
-#' requirements
 #' @rdname cwlProcess-methods
-#' @export
 #' @return requirements: CWL requirments
-## requirements <- function(cwl) cwl@requirements
+#' @export
 requirements <- function(cwl, step = NULL){
     if(is.null(step)){
         return(cwl@requirements)
@@ -158,16 +152,29 @@ requirements <- function(cwl, step = NULL){
     cwl
 }
 
-#' requireDocker
 #' @rdname requirements
-#' @param docker The docker pull address.
-#' @param Load dockerLoad
-#' @param File dockerFile
-#' @param Import dockerImport
-#' @param ImageId dockerImageId
-#' @param OutputDir dockerOutputDirectory
+#' @description requireDocker: If a workflow component should be run
+#'     in a Docker container, this function specifies how to fetch or
+#'     build the image.
+#' @param docker String. Specify a Docker image to retrieve using
+#'     docker pull.
+#' @param Load String. Specify a HTTP URL from which to download a
+#'     Docker image using docker load.
+#' @param File String. Supply the contents of a Dockerfile which will
+#'     be built using docker build.
+#' @param Import String. Provide HTTP URL to download and gunzip a
+#'     Docker images using `docker import.
+#' @param ImageId String. The image id that will be used for docker
+#'     run. May be a human-readable image name or the image identifier
+#'     hash. May be skipped if dockerPull is specified, in which case
+#'     the dockerPull image id must be used.
+#' @param OutputDir String. Set the designated output directory to a
+#'     specific location inside the Docker container.
+#' @return requireDocker: A list of docker requirement to fetch or
+#'     build the image.
+#' @details For details, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#DockerRequirement
 #' @export
-#' @return A DockerRequirement list
 requireDocker <- function(docker = NULL, Load = NULL, File = NULL,
                           Import = NULL, ImageId = NULL,
                           OutputDir = NULL){
@@ -469,29 +476,6 @@ setMethod(show, "cwlProcess", function(object){
     show(object@inputs)
     show(object@outputs)
     if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
-})
-
-setMethod(show, "cwlWorkflow", function(object){
-    cat("class:", class(object), "\n",
-        "cwlClass:", cwlClass(object), "\n",
-        "cwlVersion:", cwlVersion(object), "\n")
-    if(length(object@requirements) > 0){
-        cat("requirements:\n")
-        cat(as.yaml(object@requirements))
-    }
-    if(length(object@hints) > 0){
-        cat("hints:\n")
-        cat(as.yaml(object@hints))
-    }
-    if(length(object@arguments) > 0){
-        cat("arguments:", unlist(object@arguments), "\n")
-    }
-    show(object@inputs)
-    show(object@outputs)
-    if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
-    if(cwlClass(object) == "Workflow") {
-        show(object@steps)
-    }
 })
 
 #' short
