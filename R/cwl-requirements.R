@@ -1,6 +1,7 @@
-#' requirements
+#' CWL requirements functions
 
-#' @rdname requirements
+#' @name cwl-requirements
+#' @rdname cwl-requirements
 #' @description requireDocker: If a workflow component should be run
 #'     in a Docker container, this function specifies how to fetch or
 #'     build the image.
@@ -38,7 +39,7 @@ requireDocker <- function(docker = NULL, Load = NULL, File = NULL,
     return(req)
 }
 
-#' @rdname requirements
+#' @rdname cwl-requirements
 #' @description requireJS: Indicates that the workflow platform must
 #'     support inline Javascript expressions. If this requirement is
 #'     not present, the workflow platform must not perform expression
@@ -59,7 +60,7 @@ requireJS <- function(expressionLib = list()){
     return(req)
 }
 
-#' @rdname requirements
+#' @rdname cwl-requirements
 #' @description requireSoftware: A list of software packages that
 #'     should be configured in the environment of the defined process.
 #' @param packages The list of software to be configured.
@@ -75,7 +76,7 @@ requireSoftware <- function(packages = list()){
     return(req)
 }
 
-#' @rdname requirements
+#' @rdname cwl-requirements
 #' @description InitialWorkDirRequirement: Define a list of files and
 #'     subdirectories that must be created by the workflow platform in
 #'     the designated output directory prior to executing the command
@@ -95,7 +96,7 @@ requireInitialWorkDir <- function(listing = list()){
     return(req)
 }
 
-#' @rdname requirements
+#' @rdname cwl-requirements
 #' @description: Dirent: Define a file or subdirectory that must be
 #'     placed in the designated output directory prior to executing
 #'     the command line tool. May be the result of executing an
@@ -124,7 +125,7 @@ Dirent <- function(entryname = character(), entry,
          writable = writable)
 }
 
-#' @rdname requirements
+#' @rdname cwl-requirements
 #' @description Create manifest for configure files.
 #' @param inputID The input ID from corresponding `InputParam`.
 #' @param sep The separator of the input files in the manifest config.
@@ -145,4 +146,32 @@ requireManifest <- function(inputID, sep = "\\n"){
         list(Dirent(entryname = inputID,
                     entry = js)))
     return(req1)
+}
+
+#' @rdname cwl-requirements
+#' @return requireSubworkflow: A SubworkflowFeatureRequirement list.
+#' @export
+requireSubworkflow <- function(){
+    list(class = "SubworkflowFeatureRequirement")
+}
+
+#' @rdname cwl-requirements
+#' @return rquireScatter: A ScatterFeatureRequirement list.
+#' @export
+requireScatter <- function(){
+    list(class = "ScatterFeatureRequirement")
+}
+
+#' @rdname cwl-requirements
+#' @return requireMultipleInput: A MultipleInputFeatureRequirement list.
+#' @export
+requireMultipleInput <- function(){
+    list(class = "MultipleInputFeatureRequirement")
+}
+
+#' @rdname cwl-requirements
+#' @return requireStepInputExpression: A StepInputExpressionRequirement list.
+#' @export
+requireStepInputExpression <- function(){
+    list(class = "StepInputExpressionRequirement")
 }
