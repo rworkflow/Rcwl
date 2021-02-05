@@ -1,9 +1,11 @@
-#' cwlProcess Amethods
+#' cwlProcess methods
+#' @name cwlProcess-methods
 #' @rdname cwlProcess-methods
 #' @description Some useful methods for `cwlProcess` objects.
-#' @param cwl A `cwlProcess` (and `cwlWorkflow`) object.
+#' @param cwl A `cwlProcess` (or `cwlWorkflow`) object.
 #' @param value A value to be assigned to the `cwlProcess` object.
 #' @return cwlVersion: cwl document version
+## #' @aliases cwlVersion cwlVersion,cwlProcess-methods
 #' @export
 cwlVersion <- function(cwl) cwl@cwlVersion
 
@@ -214,7 +216,7 @@ inputs <- function(cwl) cwl@inputs
 #' @rdname cwlProcess-methods
 #' @description `$`: Extract input values for `cwlProcess`
 #'     object. (Can auto-complete the input names using tab)
-#' @return: `$`: the `InputParam` value for `cwlProcess` object. 
+#' @return `$`: the `InputParam` value for `cwlProcess` object. 
 #' @importFrom S4Vectors wmsg
 #' @export
 #' 
@@ -261,7 +263,7 @@ stdOut <- function(cwl) cwl@stdout
 }
 
 #' @rdname cwlProcess-methods
-#' @description: extensions: Extensions and metadata of `cwlProcess` object.
+#' @description extensions: Extensions and metadata of `cwlProcess` object.
 #' @return extensions: A list of extensions or metadata.
 #' @export
 extensions <- function(cwl) cwl@extensions
@@ -276,23 +278,24 @@ extensions <- function(cwl) cwl@extensions
 #' @rdname cwlProcess-methods
 #' @description short: The function to show a short summary of `cwlProcess` or
 #' `cwlWorkflow` object.
-#' @param object An `cwlProcess` or `cwlWorkflow` object.
-#' @return A short summary of an object of cwlProcess or cwlWorkflow.
+#' @return short: A short summary of an object of `cwlProcess` or `cwlWorkflow`.
 #' @export
 #' @examples
 #' s1 <- cwlWorkflow()
+#' s1
 #' short(s1)
-short <- function(object){
-    if(is(object, "cwlProcess")){
-        cat(as.yaml(list(inputs = names(inputs(object)))))
-        cat(as.yaml(list(outputs = names(outputs(object)))))
+short <- function(cwl){
+    if(is(cwl, "cwlProcess")){
+        cat(as.yaml(list(inputs = names(inputs(cwl)))))
+        cat(as.yaml(list(outputs = names(outputs(cwl)))))
     }
-    if(is(object, "cwlWorkflow")) {
-        cat(as.yaml(list(steps = names(steps(object)))))
+    if(is(cwl, "cwlWorkflow")) {
+        cat(as.yaml(list(steps = names(steps(cwl)))))
     }
 }
 
 #' cwlWorkflow methods
+#' @name cwlWorkflow-methods
 #' @rdname cwlWorkflow-methods
 #' @description runs: The function to access all runs of a `cwlWorkflow` object.
 #' @param object A `cwlWorkflow` object.
