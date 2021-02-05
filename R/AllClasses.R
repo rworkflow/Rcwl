@@ -1,6 +1,7 @@
 setClassUnion("characterORlist", c("character", "list"))
-#' InputArrayParam
-#' @rdname InputArrayParam
+
+#' All classes defined in the package of `Rcwl` and the class constructor functions.
+#' @rdname AllClasses
 #' @export
 setClass("InputArrayParam",
          slots = c(
@@ -18,17 +19,13 @@ setClass("InputArrayParam",
                                  itemSeparator = character(),
                                  valueFrom = character()))
          )
-#' InputArrayParam
-#'
-#' Parameters for array inputs. To specify an array parameter, the
-#' array definition is nested under the type field with 'type: array'
-#' and items defining the valid data types that may appear in the
-#' array. More details:
-#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
-#'
-#' @export
-#' @rdname InputArrayParam
-#' @param label A short description for this object
+
+#' @rdname AllClasses
+#' @description InputArrayParam: Parameters for array inputs. To
+#'     specify an array parameter, the array definition is nested
+#'     under the type field with 'type: array' and items defining the
+#'     valid data types that may appear in the array. 
+#' @param label A short description for the `InputArrayParam` object.
 #' @param type Must be "array".
 #' @param items Defines the type of the array elements.
 #' @param prefix Command line prefix to add before the value.
@@ -39,7 +36,10 @@ setClass("InputArrayParam",
 #' @param itemSeparator Join the array elements into a single string
 #'     with separator.
 #' @param valueFrom String or Expression.
-#' @return An object of class `InputArrayParam`.
+#' @return InputArrayParam: An object of class `InputArrayParam`.
+#' @details More details of `InputArrayParam`, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputArraySchema
+#' @export
 #' @examples
 #' InputArrayParam(items = "string", prefix="-B=", separate = FALSE)
 InputArrayParam <- function(label = "", type = "array",
@@ -57,9 +57,8 @@ InputArrayParam <- function(label = "", type = "array",
 }
 
 setClassUnion("characterORInputArrayParamORlist", c("character", "InputArrayParam", "list"))
-#' Input parameters
-#' InputParam
-#' @rdname InputParam
+
+#' @rdname AllClasses
 #' @export
 setClass("InputParam",
          slots = c(
@@ -96,11 +95,8 @@ setClass("InputParam",
              value = character())
          )
 
-#' InputParam
-#' 
-#' parameter for a command tool. More details:
-#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
-#' @rdname InputParam
+#' @rdname AllClasses
+#' @description InputParam: parameter for a command line tool.
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
 #' @param type valid types of data that may be assigned to this
@@ -134,10 +130,13 @@ setClass("InputParam",
 #'     quoted on the command line (default is true).
 #' @param default The default value for this parameter
 #' @param value Assigned value for this parameter
-#' @export
 #' @return An object of class `InputParam`.
+#' @details More details for `InputParam`, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#CommandInputParameter
+#' @export
 #' @examples
 #' input1 <- InputParam(id = "sth")
+#' InputParamList(input1)
 InputParam <- function(id, label= "", type = "string",
                        doc = character(), secondaryFiles = character(),
                        streamable = logical(), format = character(),
@@ -184,23 +183,23 @@ InputParam <- function(id, label= "", type = "string",
         value = value)
 }
 
-#' InputParamList
-#' @rdname InputParamList
+setMethod(show, "InputParam", function(object){
+    cat(as.yaml(as.listInputs(list(object))))
+})
+
+#' @rdname AllClasses
 #' @export
 setClass("InputParamList",
          ## representation(inputs = "SimpleList"),
          prototype = list(elementType = "InputParam"),
          contains = "SimpleList")
 
-#' InputParamList
-#' A list of InputParam
-#' @param ... The InputParam objects.
-#' @rdname InputParamList
+#' @rdname AllClasses
+#' @description InputParamList: A list of `InputParam` objects.
+#' @param ... The `InputParam` objects.
+#' @return InputParamList: An object of class `InputParamList`.
 #' @export
-#' @return An object of class `InputParamList`.
-#' @examples
-#' input1 <- InputParam(id = "sth")
-#' InputParamList(input1)
+
 InputParamList <- function(...){
     iList <- list(...)
     names(iList) <- lapply(iList, function(x)x@id)
@@ -208,9 +207,54 @@ InputParamList <- function(...){
     new("InputParamList", listData = iList)
 }
 
+setMethod(show, "InputParamList", function(object) {
+    cat("inputs:\n")
+    lapply(seq(object), function(i){
+        if(object[[i]]@label != ""){
+            iname <- paste0(names(object)[i], " (", object[[i]]@label, ") ")
+        }else{
+            iname <- names(object)[i]
+        }
+        if(is(object[[i]]@type, "character")){
+            if(length(object[[i]]@value) > 0){
+                v <- object[[i]]@value
+            }else{
+                v <- object[[i]]@default
+            }
+            if(object[[i]]@type %in% c("File", "Directory")){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
+                }else{
+                    v <- object[[i]]@value
+                }
+            }
 
-#' Output array parameters
-#' @rdname OutputArrayParam
+            cat("  ", iname, " (", object[[i]]@type, "): ",
+                object[[i]]@inputBinding$prefix, " ",
+                paste(unlist(v), collapse = " "), "\n", sep = "")
+        }else if(is(object[[i]]@type, "InputArrayParam")){
+            if(any(object[[i]]@type@items %in% c("File", "Directory"))){
+                if(length(object[[i]]@value) > 0){
+                    v <- object[[i]]@value$path
+                }else{
+                    v <- object[[i]]@value
+                }
+            }else{
+                v <- object[[i]]@value
+            }
+            cat("  ", iname, ":\n", sep = "")
+            cat("    type: ", object[[i]]@type@type, "\n", sep = "")
+            cat("    prefix: ",
+                object[[i]]@type@inputBinding$prefix, " ",
+                paste(unlist(v), collapse=" "), "\n", sep = "")
+        }else if(is(object[[i]]@type, "list")){
+            cat(" ", iname, " (", paste0(unlist(object[[i]]@type),
+                                          collapse = "|"), "): \n")
+        }
+    })
+})
+
+#' @rdname AllClasses
 #' @export
 setClass("OutputArrayParam",
          slots = c(
@@ -224,14 +268,12 @@ setClass("OutputArrayParam",
              type = character(),
              items = character(),
              outputBinding = list(glob = character(),
-                                 loadContents = logical(),
-                                 outputEval = character()))
+                                  loadContents = logical(),
+                                  outputEval = character()))
          )
-#' Output array parameters
-#' 
-#' Parameters for array outputs. More details:
-#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
-#' @rdname OutputArrayParam
+
+#' @rdname AllClasses
+#' @description OutputArrayParam: Parameters for array outputs.
 #' @param label A short, human-readable label of this object.
 #' @param type Must be "array".
 #' @param items Defines the type of the array elements.
@@ -239,10 +281,12 @@ setClass("OutputArrayParam",
 #' @param loadContents Read text from globbed file.
 #' @param outputEval Evaluate an expression to generate the output
 #'     value.
-#' @export
+#' @details More details for `OutputArrayParam`, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputArraySchema
 #' @return An object of class `OutputArrayParam`.
+#' @export
 #' @examples
-#' b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
+#' OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
 OutputArrayParam <- function(label= character(), type = "array",
                              items = character(), glob = character(),
                              loadContents = logical(),
@@ -258,8 +302,7 @@ OutputArrayParam <- function(label= character(), type = "array",
 
 setClassUnion("characterOROutputArrayParamORlist", c("character", "OutputArrayParam", "list"))
 
-#' Output parameters
-#' @rdname OutputParam
+#' @rdname AllClasses
 #' @export
 setClass("OutputParam",
          slots = c(
@@ -286,10 +329,9 @@ setClass("OutputParam",
                           outputSource = character())
          )
 
-#' Output parameters
-#' 
-#' An output parameter for a Command Line Tool. More details:
-#' https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
+#' @rdname AllClasses
+#' @description OutputParam: An output parameter for a Command Line
+#'     Tool.
 #' @param id The unique identifier for this parameter object.
 #' @param label A short, human-readable label of this object.
 #' @param doc A documentation string for this object, or an array of
@@ -311,11 +353,14 @@ setClass("OutputParam",
 #'     value.
 #' @param outputSource Specifies one or more workflow parameters that
 #'     supply the value of to the output parameter.
-#' @rdname OutputParam
+#' @details More details for `OutputParam`, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
+#' @return OutputParam: An object of class `OutputParam`.
 #' @export
-#' @return An object of class `OutputParam`.
 #' @examples
 #' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
+#' o1
+#' 
 OutputParam <- function(id = "output", label = character(), doc = character(),
                         type = "stdout",  format = character(),
                         secondaryFiles = character(), streamable = logical(),
@@ -336,21 +381,23 @@ OutputParam <- function(id = "output", label = character(), doc = character(),
         outputSource = outputSource)
 }
 
-#' OutputParamList
-#' @rdname OutputParamList
+setMethod(show, "OutputParam", function(object){
+    cat(as.yaml(as.listOutputs(list(object))))
+})
+
+#' @rdname AllClasses
 #' @export
 setClass("OutputParamList",
          ## representation(outputs = "SimpleList"),
          prototype = list(elementType = "OutputParam"),
          contains = "SimpleList")
 
-#' OutputParamList
-#' #' A list of InputParam
+#' @rdname AllClasses
+#' @description OutputParamList: A list of `InputParam` objects.
 #' @param out The default stdout parameter.
-#' @param ... The InputParam objects.
-#' @rdname OutputParamList
+#' @param ... The `OutputParam` objects.
+#' @return OutputParamList: An object of class `OutputParamList`.
 #' @export
-#' @return An object of class `OutputParamList`.
 #' @examples
 #' o1 <- OutputParam(id = "file", type = "File", glob = "*.txt")
 #' OutputParamList(o1)
@@ -360,10 +407,15 @@ OutputParamList <- function(out = OutputParam(), ...){
     new("OutputParamList", listData = oList)
 }
 
+setMethod(show, "OutputParamList", function(object) {
+    cat("outputs:\n")
+    cat(as.yaml(as.listOutputs(object)))
+})
+
 setClassUnion("OutputParamListORlist", c("OutputParamList", "list"))
 setClassUnion("characterORlistORfunction", c("character", "list", "function"))
 
-#' @rdname cwlProcess
+#' @rdname AllClasses
 #' @export
 setClass("cwlProcess",
          slots = c(
@@ -400,62 +452,33 @@ setClass("cwlProcess",
                           intent = list()
          ))
 
-#' Parameters for CWL
-#' 
-#' The main CWL parameter class and constructor for command
-#' tools. More details:
-#' https://www.commonwl.org/v1.0/CommandLineTool.html
-#' @rdname cwlProcess
-#' @importFrom S4Vectors SimpleList
-#' @import methods
-#' @import utils
-#' @param cwlVersion CWL version
-#' @param cwlClass "CommandLineTool"
-#' @param baseCommand Specifies the program or R function to execute
-#' @param requirements A list of requirements that apply to either
-#'     the runtime environment or the workflow engine that must be met
-#'     in order to execute this process.
-#' @param hints Any or a list for the workflow engine.
-#' @param arguments Command line bindings which are not directly
-#'     associated with input parameters.
-#' @param id The unique identifier for this process object.
-#' @param label A short, human-readable label of this process object.
-#' @param inputs A object of `InputParamList`.
-#' @param outputs A object of `OutputParamList`.
-#' @param stdout Capture the command's standard output stream to a
-#'     file written to the designated output directory.
-#' @param expression Javascripts for ExpressionTool class.
-#' @param extensions A list of extensions and metadata
-#' @param intent An identifier for the type of computational
-#'     operation, of this Process.
-#' @export
-#' @details https://www.commonwl.org/v1.0/CommandLineTool.html
-#' @return A `cwlProcess` class object.
-#' @examples
-#' input1 <- InputParam(id = "sth")
-#' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
-cwlProcess <- function(cwlVersion = "v1.0",
-                     cwlClass = "CommandLineTool",
-                     baseCommand = character(), requirements = list(),
-                     hints = list(), arguments = list(),
-                     id = character(), label = character(),
-                     inputs = InputParamList(),
-                     outputs = OutputParamList(),
-                     stdout = character(), expression = character(),
-                     extensions = list(), intent = list()){
-    new("cwlProcess", cwlVersion = cwlVersion,
-        cwlClass = cwlClass, id = id, label = label,
-        baseCommand = baseCommand,
-        requirements = requirements, hints = hints,
-        arguments = arguments, inputs = inputs,
-        outputs = outputs, stdout = stdout,
-        expression = expression,
-        extensions = extensions,
-        intent = intent)
-}
+setMethod(show, "cwlProcess", function(object){
+    if(is(baseCommand(object), "function")){
+        bc <- c("baseCommand: R function", "\n")
+    }else{
+        bc <- c("baseCommand:", unlist(baseCommand(object)), "\n")
+    }
+    cat("class:", class(object), "\n",
+        "cwlClass:", cwlClass(object), "\n",
+        "cwlVersion:", cwlVersion(object), "\n",
+        bc)
+    if(length(object@requirements) > 0){
+        cat("requirements:\n")
+        cat(as.yaml(object@requirements))
+    }
+    if(length(object@hints) > 0){
+        cat("hints:\n")
+        cat(as.yaml(object@hints))
+    }
+    if(length(object@arguments) > 0){
+        cat("arguments:", unlist(object@arguments), "\n")
+    }
+    show(object@inputs)
+    show(object@outputs)
+    if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
+})
 
-#' stepInParam
-#' @rdname stepInParam
+#' @rdname AllClasses
 #' @export
 setClass("stepInParam",
          slots = c(id = "character",
@@ -463,11 +486,9 @@ setClass("stepInParam",
                    linkMerge = "character",
                    default = "ANY",
                    valueFrom = "character"))
-#' stepInParam
-#' 
-#' The input parameter of a workflow step. More details:
-#' https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
-#' @rdname stepInParam
+
+#' @rdname AllClasses
+#' @description stepInParam: The input parameter of a workflow step.
 #' @param id A unique identifier for this workflow input parameter.
 #' @param source Specifies one or more workflow parameters that will
 #'     provide input to the underlying step parameter.
@@ -477,10 +498,13 @@ setClass("stepInParam",
 #'     either there is no source field, or the value produced by the
 #'     source is null.
 #' @param valueFrom value from string or expression.
+#' @details More details for `stepInParam`, see:
+#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStepInput
+#' @return stepInParam: An object of class `stepInParam`.
 #' @export
-#' @return An object of class `stepInParam`.
 #' @examples
 #' s1 <- stepInParam(id = "s1")
+#' 
 stepInParam <- function(id, source = character(),
                         linkMerge = character(), default = character(),
                         valueFrom = character()){
@@ -489,19 +513,18 @@ stepInParam <- function(id, source = character(),
         default = default, valueFrom = valueFrom)
 }
 
-#' stepInParamList
-#' @rdname stepInParamList
+#' @rdname AllClasses
 #' @export
 setClass("stepInParamList",
          ## representation(Ins = "SimpleList"),
          prototype = list(elementType = "stepInParam"),
          contains = "SimpleList")
 
-#' stepInParamList
-#' @rdname stepInParamList
+#' @rdname AllClasses
+#' @description stepInParamList: A list of `stepInParam` objects.
 #' @param ... A list of `stepInParam` objects.
-#' @export
 #' @return An object of class `stepInParamList`.
+#' @export
 #' @examples
 #' s1 <- stepInParam(id = "s1")
 #' stepInParamList(s1)
@@ -514,8 +537,7 @@ stepInParamList <- function(...){
 
 setClassUnion("cwlProcessORcharacter", c("cwlProcess", "character"))
 
-#' cwlStep
-#' @rdname cwlStep
+#' @rdname AllClasses
 #' @export
 setClass("cwlStep",
          slots = c(id = "character",
@@ -529,101 +551,6 @@ setClass("cwlStep",
                    requirements = "list",
                    hints = "list",
                    when = "character"))
-
-#' cwlStep function
-#' @description Constructor function for `cwlStep` object.
-#' @param id A user-defined unique identifier for this workflow step.
-#' @param run A `cwlProcess` object for command line tool, or path to
-#'     a CWL file.
-#' @param In A list of input parameters which will be constructed into
-#'     `stepInParamList`.
-#' @param Out A list of outputs.
-#' @param scatter character or a list. The inputs to be scattered.
-#' @param scatterMethod required if scatter is an array of more than
-#'     one element. It can be one of "dotproduct",
-#'     "nested_crossproduct" and "flat_crossproduct".
-#' @param label A short, human-readable label of this object.
-#' @param doc A documentation string for this object, or an array of
-#'     strings which should be concatenated.
-#' @param requirements Requirements that apply to either the runtime
-#'     environment or the workflow engine.
-#' @param hints Hints applying to either the runtime environment or
-#'     the workflow engine.
-#' @param when If defined, only run the step when the expression
-#'     evaluates to true. If false the step is skipped.
-#' @export
-#' @return An object of class `cwlStep`.
-#' @details For more details:
-#'     https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep
-#' @examples
-#' s1 <- cwlStep(id = "s1")
-#' @seealso \code{\link{cwlWorkflow}}
-cwlStep <- function(id, run = cwlProcess(),
-                    In = list(), Out = list(),
-                    scatter = character(), scatterMethod = character(),
-                    label = character(),
-                    doc = character(),
-                    requirements = list(),
-                    hints = list(),
-                    when = character()) {
-    if(is(run, "cwlProcess")){
-        stopifnot(names(In) %in% names(inputs(run)))
-        sout <- as.list(names(outputs(run)))
-    }else if(is(run, "character")){
-        stopifnot(file.exists(run))
-        clist <- read_yaml(run)
-        stopifnot(names(In) %in% names(clist$inputs))
-        sout <- as.list(names(clist$outputs))
-    }
-    slist <- list()
-    for(i in seq(In)) {
-        if(is.list(In[[i]])) {
-            si <- stepInParam(id = names(In)[i])
-            for(j in seq(In[[i]])){
-                slot(si, names(In[[i]])[j]) <- In[[i]][[j]]
-            }
-        }else{
-            si <- stepInParam(id = names(In)[i],
-                              source = In[[i]])
-        }
-        slist[[i]] <- si
-    }
-    names(slist) <- names(In)
-    new("cwlStep",
-        id = id,
-        run = run,
-        In = do.call(stepInParamList, slist),
-        Out = sout,
-        scatter = scatter,
-        scatterMethod = scatterMethod,
-        label = label,
-        doc = doc,
-        requirements = requirements,
-        hints = hints,
-        when = when)
-}
-
-#' cwlStepList
-#' @rdname cwlStepList
-#' @export
-setClass("cwlStepList",
-         ## representation(steps = "SimpleList"),
-         prototype = list(elementType = "cwlStep"),
-         contains = "SimpleList")
-
-#' cwlStepList
-#' @rdname cwlStepList
-#' @param ... A list of `cwlStep`.
-#' @export
-#' @return An object of class `cwlStepList`.
-#' @examples
-#' s1 <- cwlStep(id = "s1")
-#' cwlStepList(s1)
-cwlStepList <- function(...){
-    iList <- list(...)
-    names(iList) <- lapply(iList, function(x)x@id)
-    new("cwlStepList", listData = iList)
-}
 
 # show methods for cwlStep
 setMethod(show, "cwlStep", function(object) {
@@ -642,6 +569,27 @@ setMethod(show, "cwlStep", function(object) {
     ## }
 })
 
+#' @rdname AllClasses
+#' @export
+setClass("cwlStepList",
+         ## representation(steps = "SimpleList"),
+         prototype = list(elementType = "cwlStep"),
+         contains = "SimpleList")
+
+#' @rdname AllClasses
+#' @description cwlStepList: A list of `cwlStep` objects.
+#' @param ... A list of `cwlStep` objects.
+#' @return cwlStepList: An object of class `cwlStepList`.
+#' @export
+#' @examples
+#' s1 <- cwlStep(id = "s1")
+#' cwlStepList(s1)
+cwlStepList <- function(...){
+    iList <- list(...)
+    names(iList) <- lapply(iList, function(x)x@id)
+    new("cwlStepList", listData = iList)
+}
+
 setMethod(show, "cwlStepList", function(object) {
     cat("steps:\n")
     cat(as.yaml(as.listSteps(object)))
@@ -650,12 +598,7 @@ setMethod(show, "cwlStepList", function(object) {
     ## })
 })
 
-
-
-
-#' cwlWorkflow
-#'
-#' @rdname cwlWorkflow
+#' @rdname AllClasses
 #' @export
 setClass("cwlWorkflow",
          contains = "cwlProcess",

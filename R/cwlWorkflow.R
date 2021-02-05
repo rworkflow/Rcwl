@@ -1,4 +1,5 @@
-#' @rdname cwlWorkflow
+#' cwlWorkflow function
+#'
 #' @description The constructor function for `cwlWorkflow` object,
 #'     which connects multiple command line steps into a workflow.
 #' @param cwlVersion CWL version
