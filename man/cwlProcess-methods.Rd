@@ -121,12 +121,20 @@ short: The function to show a short summary of `cwlProcess` or
 `cwlWorkflow` object.
 }
 \examples{
-## Inputs
-input1 <- InputParam(id = "sth")
-echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
+ip <- InputParam(id = "sth")
+echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(ip))
+cwlVersion(echo)
+cwlClass(echo)
+baseCommand(echo)
+hints(echo)
+requirements(echo)
 inputs(echo)
 outputs(echo)
+stdOut(echo)
+extensions(echo)
+
 s1 <- cwlWorkflow()
+runs(s1)
 s1
 short(s1)
 }

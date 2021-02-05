@@ -19,5 +19,6 @@ runs: The function to access all runs of a `cwlWorkflow` object.
 \examples{
 s1 <- cwlWorkflow()
 runs(s1)
-
+s1
+short(s1)
 }

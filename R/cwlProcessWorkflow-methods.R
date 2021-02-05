@@ -5,8 +5,25 @@
 #' @param cwl A `cwlProcess` (or `cwlWorkflow`) object.
 #' @param value A value to be assigned to the `cwlProcess` object.
 #' @return cwlVersion: cwl document version
-## #' @aliases cwlVersion cwlVersion,cwlProcess-methods
 #' @export
+#' @examples
+#' ip <- InputParam(id = "sth")
+#' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(ip))
+#' cwlVersion(echo)
+#' cwlClass(echo)
+#' baseCommand(echo)
+#' hints(echo)
+#' requirements(echo)
+#' inputs(echo)
+#' outputs(echo)
+#' stdOut(echo)
+#' extensions(echo)
+#' 
+#' s1 <- cwlWorkflow()
+#' runs(s1)
+#' s1
+#' short(s1)
+ 
 cwlVersion <- function(cwl) cwl@cwlVersion
 
 #' @rdname cwlProcess-methods
@@ -156,12 +173,6 @@ requirements <- function(cwl, step = NULL){
 #' @rdname cwlProcess-methods
 #' @return inputs: A list of `InputParam`.
 #' @export
-#' @examples
-#' ## Inputs
-#' input1 <- InputParam(id = "sth")
-#' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
-#' inputs(echo)
-#' outputs(echo)
 
 inputs <- function(cwl) cwl@inputs
 
@@ -280,10 +291,7 @@ extensions <- function(cwl) cwl@extensions
 #' `cwlWorkflow` object.
 #' @return short: A short summary of an object of `cwlProcess` or `cwlWorkflow`.
 #' @export
-#' @examples
-#' s1 <- cwlWorkflow()
-#' s1
-#' short(s1)
+
 short <- function(cwl){
     if(is(cwl, "cwlProcess")){
         cat(as.yaml(list(inputs = names(inputs(cwl)))))
@@ -304,7 +312,9 @@ short <- function(cwl){
 #' @examples
 #' s1 <- cwlWorkflow()
 #' runs(s1)
-#' 
+#' s1
+#' short(s1)
+
 runs <- function(object){
     stopifnot(is(object, "cwlWorkflow"))
     SimpleList(lapply(steps(object), function(x)x@run))
