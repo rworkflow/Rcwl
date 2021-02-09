@@ -79,7 +79,15 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
                    stdout = stdout, stderr = stderr, ...)
     ##return(res)
     message(tail(res, 1))
-
+    if(!any(grepl("path", res)) & any(grepl("location", res))){
+        path <- read.table(textConnection(res[grep('\"location\":', res)]),
+                           stringsAsFactors = FALSE)[,3]
+    }else if(any(grepl("path", res))){
+        path <- read.table(textConnection(res[grep('\"path\":', res)]),
+                           stringsAsFactors = FALSE)[,3]
+    }else{
+        path <- NULL
+    }
     if(stderr == TRUE) {
         if(cwlClass(cwl) == "CommandLineTool"){
             idx <- grep("\\[job", res)
@@ -87,21 +95,12 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
         }else{
             command <- NULL
         }
-        if(!any(grepl("path", res)) & any(grepl("location", res))){
-            path <- read.table(textConnection(res[grep('\"location\":', res)]),
-                               stringsAsFactors = FALSE)[,3]
-        }else if(any(grepl("path", res))){
-            path <- read.table(textConnection(res[grep('\"path\":', res)]),
-                               stringsAsFactors = FALSE)[,3]
-        }else{
-            path <- NULL
-        }
-        SimpleList(command = command,
-                   output = path,
-                   logs = res)
     }else{
-        res
+        command <- NULL
     }
+    SimpleList(command = command,
+               output = path,
+               logs = res)
 }
 
 
