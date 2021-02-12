@@ -20,13 +20,12 @@
 #' @importFrom R.utils commandArgs
 #' @importFrom codetools findGlobals
 #' 
-writeFun <- function(cwl, prefix = NULL){
-    Dir <- ifelse(is.null(prefix), tempdir(), dirname(prefix))
-    Fname <- ifelse(is.null(prefix), basename(tempfile()), basename(prefix))
+writeFun <- function(cwl, prefix, outdir){
+    Fname <- ifelse(is.null(prefix), basename(tempfile()), prefix)
     if(length(cwl@id) > 0){
-        file <- file.path(Dir, paste0(cwl@id, ".R"))
+        file <- file.path(outdir, paste0(cwl@id, ".R"))
     }else{        
-        file <- file.path(Dir, paste0(Fname, ".R"))
+        file <- file.path(outdir, paste0(Fname, ".R"))
     }
     funName <- sub(".R", "", basename(file))
     assign(funName, baseCommand(cwl))
@@ -61,11 +60,11 @@ writeFun <- function(cwl, prefix = NULL){
     return(file)
 }
 
-cwlToList <- function(cwl, docker, prefix = NULL){
+cwlToList <- function(cwl, docker, prefix, outdir){
     stopifnot(is(cwl, "cwlProcess"))
     if(!docker) cwl <- .rmDocker(cwl)
     if(is(baseCommand(cwl), "function")){
-        rfile <- writeFun(cwl, prefix)
+        rfile <- writeFun(cwl, prefix, outdir)
         bc <- c("Rscript", rfile)
     }else{
         bc <- baseCommand(cwl)
@@ -128,7 +127,8 @@ allRun <- function(cwl){
 #' 
 #' write `cwlProcess` to cwl and yml.
 #' @param cwl A `cwlProcess` or `cwlWorkflow` object.
-#' @param prefix The prefix of `cwl` and `yml` file to write.
+#' @param prefix The prefix of `.cwl` and `.yml` files to be generated.
+#' @param outdir The output directory for the `.cwl` and `.yml` files. 
 #' @param docker Whether to use docker. 
 #' @param ... Other options from `yaml::write_yaml`.
 #' @import yaml
@@ -140,7 +140,10 @@ allRun <- function(cwl){
 #'                  inputs = InputParamList(input1))
 #' tf <- tempfile()
 #' writeCWL(echo, tf)
-writeCWL <- function(cwl, prefix, docker = TRUE, ...){
+writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
+                     outdir = tempfile(),
+                     docker = TRUE, ...){
+    if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
     stopifnot(is(cwl, "cwlProcess"))
     ## logical to true/false
     handlers  <-  list(
@@ -155,25 +158,30 @@ writeCWL <- function(cwl, prefix, docker = TRUE, ...){
     if(cwlClass(cwl) == "Workflow") {
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
-            cfile <- paste0(file.path(dirname(prefix),
+            cfile <- paste0(file.path(outdir, 
                                     names(Runs)[[i]]), ".cwl")
             write_yaml(cwlToList(Runs[[i]], docker,
-                                 prefix = sub(".cwl", "", cfile)),
+                                 prefix = sub(".cwl", "", cfile),
+                                 outdir),
                        file = cfile,
                        handlers = handlers, ...)
         })
         
-        cList <- cwlToList(cwl, docker, prefix)
+        cList <- cwlToList(cwl, docker, prefix, outdir)
         for(i in seq(cList$steps)){
             if(!grepl("^/", cList$steps[[i]]$run)){
-                cList$steps[[i]]$run <- file.path(dirname(prefix), cList$steps[[i]]$run)
+                cList$steps[[i]]$run <- file.path(outdir,
+                                                  cList$steps[[i]]$run)
             }
         }
     }else{
-        cList <- cwlToList(cwl, docker, prefix)
+        cList <- cwlToList(cwl, docker, prefix, outdir)
     }
-    write_yaml(cList, file = paste0(prefix, ".cwl"), handlers = handlers, ...)
-    write_yaml(yml, file = paste0(prefix, ".yml"), handlers = handlers, ...)
+    cwlout <- file.path(outdir, paste0(prefix, ".cwl"))
+    ymlout <- file.path(outdir, paste0(prefix, ".yml"))
+    write_yaml(cList, file = cwlout, handlers = handlers, ...)
+    write_yaml(yml, file = ymlout, handlers = handlers, ...)
+    return(c(cwlout = cwlout, ymlout = ymlout))
 }
 
 .cwl2yml <- function(cwl){

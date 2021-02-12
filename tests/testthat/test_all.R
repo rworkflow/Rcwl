@@ -18,7 +18,7 @@ p2 <- InputParam(id = "outfile", type = "string",
 Cat <- cwlProcess(baseCommand = "cat",
                 inputs = InputParamList(p1, p2),
                 stdout = "$(inputs.outfile)")
-writeCWL(Cat, file.path(tempdir(), "cat"))
+writeCWL(Cat, prefix = "cat", outdir = tempdir())
 Cat1 <- readCWL(file.path(tempdir(), "cat.cwl"))
 test_that("negative position", {
     expect_equal(inputs(Cat1)$outfile@inputBinding$position, -1)})
@@ -88,7 +88,7 @@ test_that("extensions", {
                 ))
     extensions(echo) <- ext
     r1 <- runCWL(echo)
-    writeCWL(echo, file.path(tempdir(), "echo"))
+    writeCWL(echo, prefix = "echo", outdir = tempdir())
     cwlfile <- file.path(tempdir(), "echo.cwl")
     
     expect_match(tail(r1$logs, 1), "success")

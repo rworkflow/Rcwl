@@ -4,12 +4,20 @@
 \alias{writeCWL}
 \title{Write CWL}
 \usage{
-writeCWL(cwl, prefix, docker = TRUE, ...)
+writeCWL(
+  cwl,
+  prefix = deparse(substitute(cwl)),
+  outdir = tempfile(),
+  docker = TRUE,
+  ...
+)
 }
 \arguments{
 \item{cwl}{A `cwlProcess` or `cwlWorkflow` object.}
 
-\item{prefix}{The prefix of `cwl` and `yml` file to write.}
+\item{prefix}{The prefix of `.cwl` and `.yml` files to be generated.}
+
+\item{outdir}{The output directory for the `.cwl` and `.yml` files.}
 
 \item{docker}{Whether to use docker.}
 

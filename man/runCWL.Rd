@@ -6,30 +6,31 @@
 \usage{
 runCWL(
   cwl,
-  prefix = tempfile(),
   cwlRunner = "cwltool",
-  cwlTemp = NULL,
   outdir = ".",
+  cwlTemp = NULL,
   cwlArgs = character(),
   stdout = TRUE,
   stderr = TRUE,
   showLog = FALSE,
   docker = TRUE,
+  yml_prefix = deparse(substitute(cwl)),
+  yml_outdir = tempfile(),
   ...
 )
 }
 \arguments{
 \item{cwl}{A `cwlProcess` or `cwlWorkflow` object.}
 
-\item{prefix}{The prefix of `cwl` and `yml` file to write.}
-
 \item{cwlRunner}{The path to the `cwltool` or `cwl-runner`. If not
 exists, the cwltool package will be installed by `reticulate`.}
 
-\item{cwlTemp}{Path to keep temporary files. If a directory path is
-given, the temporary files will be kept in the directory.}
+\item{outdir}{Output directory, default is current working
+directory.}
 
-\item{outdir}{Output directory, default current directory.}
+\item{cwlTemp}{File path to keep intermediate files. If a directory
+path is given, the intermediate files will be kept in the
+directory. Default is NULL to remove all intermediate files.}
 
 \item{cwlArgs}{The arguments for `cwltool` or `cwl-runner`. For
 example, "--debug" can work with `cwltool` to show debug
@@ -40,11 +41,17 @@ information.}
 \item{stderr}{standard error from `system2`. By setting it to "",
 the detailed running logs will return directly.}
 
-\item{showLog}{Whether to show log details to standard out. i.e. stderr
-= "".}
+\item{showLog}{Whether to show log details to standard
+out. i.e. stderr = "".}
 
 \item{docker}{Whether to use docker, or "sigularity" if use
 Singularity runtime to run container.}
+
+\item{yml_prefix}{The prefix of `.cwl` and `.yml` files that are to
+be internally executed.}
+
+\item{yml_outdir}{The output directory for the `.cwl` and `.yml`
+files.}
 
 \item{...}{The other options from `writeCWL` and `system2`.}
 }

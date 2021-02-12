@@ -2,22 +2,27 @@
 #' 
 #' Execute a cwlProcess object with assigned inputs.
 #' @param cwl A `cwlProcess` or `cwlWorkflow` object.
-#' @param prefix The prefix of `cwl` and `yml` file to write.
 #' @param cwlRunner The path to the `cwltool` or `cwl-runner`. If not
 #'     exists, the cwltool package will be installed by `reticulate`.
-#' @param cwlTemp Path to keep temporary files. If a directory path is
-#'     given, the temporary files will be kept in the directory.
-#' @param outdir Output directory, default current directory.
+#' @param outdir Output directory, default is current working
+#'     directory.
+#' @param cwlTemp File path to keep intermediate files. If a directory
+#'     path is given, the intermediate files will be kept in the
+#'     directory. Default is NULL to remove all intermediate files.
 #' @param cwlArgs The arguments for `cwltool` or `cwl-runner`. For
 #'     example, "--debug" can work with `cwltool` to show debug
 #'     information.
 #' @param stdout standard output from `system2`.
 #' @param stderr standard error from `system2`. By setting it to "",
 #'     the detailed running logs will return directly.
-#' @param showLog Whether to show log details to standard out. i.e. stderr
-#'     = "".
+#' @param showLog Whether to show log details to standard
+#'     out. i.e. stderr = "".
 #' @param docker Whether to use docker, or "sigularity" if use
 #'     Singularity runtime to run container.
+#' @param yml_prefix The prefix of `.cwl` and `.yml` files that are to
+#'     be internally executed.
+#' @param yml_outdir The output directory for the `.cwl` and `.yml`
+#'     files.
 #' @param ... The other options from `writeCWL` and `system2`.
 #' @importFrom basilisk basiliskStart basiliskStop
 #' @export
@@ -28,10 +33,12 @@
 #'                  inputs = InputParamList(input1))
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
-runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
-                   cwlTemp = NULL, outdir = ".", cwlArgs = character(),
+runCWL <- function(cwl, cwlRunner = "cwltool",
+                   outdir = ".", cwlTemp = NULL, cwlArgs = character(),
                    stdout = TRUE, stderr = TRUE, showLog = FALSE,
-                   docker = TRUE, ...){
+                   docker = TRUE,
+                   yml_prefix = deparse(substitute(cwl)),
+                   yml_outdir = tempfile(), ...){
     ## check missing inputs
     yml0 <- .removeEmpty(.cwl2yml(cwl))
     if(length(yml0) < length(inputs(cwl))){
@@ -53,7 +60,8 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
         cwlArgs <- paste("--user-space-docker-cmd=udocker", cwlArgs)
         docker <- TRUE
     }
-    writeCWL(cwl, prefix = prefix, docker = docker, ...)
+    if (!dir.exists(yml_outdir)) dir.create(yml_outdir)
+    writeCWL(cwl, prefix = yml_prefix, outdir = yml_outdir, docker = docker, ...)
 
     ## ## check cwltool
     ## ext <- suppressWarnings(system(paste("which", cwlRunner),
@@ -75,7 +83,8 @@ runCWL <- function(cwl, prefix = tempfile(), cwlRunner = "cwltool",
     }
     res <- system2(cwlRunner,
                    args = paste0("--outdir ", outdir, " ", cwlArgs, " ",
-                                 prefix, ".cwl ", prefix, ".yml"),
+                                 file.path(yml_outdir, paste0(yml_prefix, ".cwl ")),
+                                 file.path(yml_outdir, paste0(yml_prefix, ".yml"))),
                    stdout = stdout, stderr = stderr, ...)
     ##return(res)
     message(tail(res, 1))
