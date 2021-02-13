@@ -23,70 +23,135 @@ knitr::opts_knit$set(root.dir = tempdir())
 ```
 
 The `Rcwl` package is aimed to be a simple and user-friendly way to
-manage command line tools and build data analysis pipelines in R using
-Common Workflow Language (CWL). It can be a bridge between heavy
-bioinformatics tools and pipeline to R/Bioconductor. More details
+manage command line tools and build data analysis pipelines in _R_
+using Common Workflow Language (CWL). It can be a bridge between heavy
+bioinformatics tools and pipeline to R/Bioconductor_. More details
 about CWL can be found at <http://www.commonwl.org>.
 
 # Installation
-1. Download the package. 
+
+1. Download and install the package. 
 
 ```{r getPackage, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("Rcwl")
 ```
-The development version is also available to download from GitHub. 
+
+The development version with most up-to-date functionalities is also
+available from GitHub.
+
 ```{r getDevel, eval=FALSE}
 BiocManager::install("rworkflow/Rcwl")
 ```
 
-2. Load the package into the R session.
+2. Load the package into _R_ session.
 ```{r Load, message=FALSE}
 library(Rcwl)
 ```
 
 # First Example
-The main class and constructor function is `cwlProcess`, which wrap a command line tool and its parameters in a `cwlProcess` object. Let's start with a simple example, `echo hello world`.
 
-First, we load the package and then define the input parameter for "echo", a string without a prefix. Just an `id` option required.
+`cwlProcess` is the main constructor function to wrap a command line
+tool into an _R_ tool as a `cwlProcess` object (S4 class).  Let's
+start with a simple example to wrap the `echo` command and execute
+`echo hello world` in _R_.
+
+First, we need to define the input parameter for the base command
+`echo`, here it is a string without a prefix. An `id` argument is
+required here.
+
 ```{r}
 input1 <- InputParam(id = "sth")
 ```
 
-Second, create a `cwlProcess` object with `baseCommand` for the command to execute and `InputParamList` for the input parameters.
+Second, we can construct a `cwlProcess` object by specifying the
+`baseCommand` for the command line tool, and `InputParamList` for the
+input parameters. 
 ```{r}
 echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 ```
 
-Now we have a command object to run. Let's send a string "Hello World!" to the object. Without defining the outputs, it will stream standard output to a temporary file by default.
+Now we have converted the command line tool `echo` into an _R_ tool:
+an _R_ object of class `cwlProcess` with the name of `echo`. We can
+take a look at the this _R_ object and use some utility functions to
+extract specific information.
+
 ```{r}
-echo$sth <- "Hello World!"
 echo
+class(echo)
+cwlClass(echo)
+cwlVersion(echo)
+baseCommand(echo)
+inputs(echo)
+outputs(echo)
 ```
 
-Let's run it. A list including the command executed, temporary output and logs. The output directory is the current folder by default, but it can be changed by setting `outdir` option. All standard out and standard error stream can also be printed by setting `stderr = ""`.
+The `inputs(echo)` will show the value once it is assigned in next
+step. Since we didn't define the outputs for this tool, it will stream
+standard output to a temporary file by default.
+
+The third step is to assign values (here is "Hello World!") for the
+input parameters.
+
+```{r}
+echo$sth <- "Hello World!"
+inputs(echo)
+```
+
+Now this _R_ version of command line tool `echo` is ready to be
+executed. 
+
+The function `runCWL` runs the tools in _R_ and returns a list of: 1)
+actual command line that was executed, 2) filepath to the output, and
+3) running logs. The output directory by default takes the working
+directory, but can be specified in `outdir` argument.
+
 ```{r}
 r1 <- runCWL(echo, outdir = tempdir())
 r1
+r1$command
 readLines(r1$output)
+r1$logs
 ```
 
-The `writeCWL` function will write the cwlProcess object to a CWL file for the command and YML for the inputs. Then it will invoke `cwl-runner` by default to execute the two files. Thus the command tool `cwl-runner` is required to be installed and available in the system path.
+Users can also have the log printed out by specifying `showLog = TRUE`.
 
-# Commandline tool
+```{r}
+r1 <- runCWL(echo, outdir = tempdir(), showLog = TRUE)
+```
+
+A utility function `writeCWL` converts the `cwlProcess` object into 2
+files: a `.cwl` file for the command and `.yml` file for the inputs,
+which are the internal cwl files to be executed when `runCWL` is
+invoked. The internal execution requires a `cwl-runner` (e.g.,
+`cwltool`), which will be installed automatically with `runCWL`.
+
+```{r}
+writeCWL(echo)
+```
+
+# Command line tool
 
 The package provides functions to define a CWL syntax for Command Line
-Tools in a intuitive way. The functions were developped based on the
+Tools in an intuitive way. The functions were developped based on the
 CWL Command Line Tool Description (v1.0). More details can be found in
 the offical document:
 <https://www.commonwl.org/v1.0/CommandLineTool.html>.
 
 ## Input Parameters
 ### Essential Input parameters
-For the input parameters, three options need to be defined usually, *id*, *type*, and *prefix*. The type can be *string*, *int*, *long*, *float*, *double*, and so on. More detail can be found at: <https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType>.
+For the input parameters, three options need to be defined usually,
+*id*, *type*, and *prefix*. The type can be *string*, *int*, *long*,
+*float*, *double*, and so on. More detail can be found at:
+<https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType>.
 
-Here is an example from [CWL user guide](http://www.commonwl.org/user_guide/03-input/). Here we defined an `echo` with different type of input parameters by `InputParam`. The `stdout` option can be used to caputre the standard output stream to a file.
+Here is an example from [CWL user
+guide](http://www.commonwl.org/user_guide/03-input/). Here we defined
+an `echo` with different type of input parameters by `InputParam`. The
+`stdout` option can be used to caputre the standard output stream to a
+file.
+
 ```{r}
 e1 <- InputParam(id = "flag", type = "boolean", prefix = "-f")
 e2 <- InputParam(id = "string", type = "string", prefix = "-s")
