@@ -154,13 +154,24 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
     )
     yml <- .removeEmpty(.cwl2yml(cwl))
 
+    .R2cwl <- function(x, prefix, outdir){
+        rfile <- writeFun(x, prefix, outdir = outdir)
+        baseCommand(x) <- "Rscript"
+        requirements(x) <- c(list(requireRscript(rfile)), requirements(x))
+        arguments(x) <- c(list(basename(rfile)), arguments(x))
+        return(x)
+    }
+    
     if(cwlClass(cwl) == "Workflow") {
         Runs <- allRun(cwl)
         lapply(seq(Runs), function(i){
             cfile <- paste0(file.path(outdir, 
-                                    names(Runs)[[i]]), ".cwl")
+                                      names(Runs)[i]), ".cwl")
+            if (is(baseCommand(Runs[[i]]), "function")) {
+                Runs[[i]] <- .R2cwl(Runs[[i]], names(Runs)[i], outdir)
+            }
             write_yaml(cwlToList(Runs[[i]], docker,
-                                 prefix = sub(".cwl", "", cfile),
+                                 prefix = sub(".cwl", "", basename(cfile)),
                                  outdir),
                        file = cfile,
                        handlers = handlers, ...)
@@ -178,10 +189,7 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         ##                                           cList$steps[[i]]$run)
         ##     }
     }else if(is(baseCommand(cwl), "function")){
-        rfile <- writeFun(cwl, prefix, outdir = outdir)
-        baseCommand(cwl) <- "Rscript"
-        requirements(cwl) <- c(list(requireRscript(rfile)), requirements(cwl))
-        arguments(cwl) <- c(list(basename(rfile)), arguments(cwl))
+        cwl <- .R2cwl(cwl, prefix, outdir)
     }
     cList <- cwlToList(cwl, docker, prefix, outdir)
     
