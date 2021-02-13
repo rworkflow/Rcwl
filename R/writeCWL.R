@@ -178,7 +178,7 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         ##                                           cList$steps[[i]]$run)
         ##     }
     }else if(is(baseCommand(cwl), "function")){
-        rfile <- writeFun(cwl, prefix = paste0(prefix, ".R"), outdir = outdir)
+        rfile <- writeFun(cwl, prefix, outdir = outdir)
         baseCommand(cwl) <- "Rscript"
         requirements(cwl) <- c(list(requireRscript(rfile)), requirements(cwl))
         arguments(cwl) <- c(list(basename(rfile)), arguments(cwl))
