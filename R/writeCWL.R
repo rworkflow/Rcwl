@@ -168,13 +168,18 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         })
         
         cList <- cwlToList(cwl, docker, prefix, outdir)
-        for(i in seq(cList$steps)){
-            if(!grepl("^/", cList$steps[[i]]$run)){
-                cList$steps[[i]]$run <- file.path(outdir,
-                                                  cList$steps[[i]]$run)
-            }
-        }
-    }else{
+        ## NOTE: Now nested pipelines and related tools are all written
+        ## in the same directory. Future conflict may rise when  nested
+        ## pipelines are using the same tool but with different options,
+        ## there will be different "id" for each tool. Or we can later add
+        ## a prefix of the pipeline name on that specific tool. 2/12/2012
+        
+        ## for(i in seq(cList$steps)){
+        ##     if(!grepl("^/", cList$steps[[i]]$run)){
+        ##         cList$steps[[i]]$run <- file.path(outdir,
+        ##                                           cList$steps[[i]]$run)
+        ##     }
+    } else{
         cList <- cwlToList(cwl, docker, prefix, outdir)
     }
     cwlout <- file.path(outdir, paste0(prefix, ".cwl"))
