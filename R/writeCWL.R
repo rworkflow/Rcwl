@@ -60,7 +60,7 @@ writeFun <- function(cwl, prefix, outdir){
     return(file)
 }
 
-cwlToList <- function(cwl, docker, prefix, outdir){
+cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
     stopifnot(is(cwl, "cwlProcess"))
     if(!docker) cwl <- .rmDocker(cwl)
     if(is(baseCommand(cwl), "function")){
@@ -138,8 +138,7 @@ allRun <- function(cwl){
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlProcess(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
-#' tf <- tempfile()
-#' writeCWL(echo, tf)
+#' writeCWL(echo)
 writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
                      outdir = tempfile(),
                      docker = TRUE, ...){
@@ -167,7 +166,6 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
                        handlers = handlers, ...)
         })
         
-        cList <- cwlToList(cwl, docker, prefix, outdir)
         ## NOTE: Now nested pipelines and related tools are all written
         ## in the same directory. Future conflict may rise when  nested
         ## pipelines are using the same tool but with different options,
@@ -179,9 +177,14 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         ##         cList$steps[[i]]$run <- file.path(outdir,
         ##                                           cList$steps[[i]]$run)
         ##     }
-    } else{
-        cList <- cwlToList(cwl, docker, prefix, outdir)
+    }else if(is(baseCommand(cwl), "function")){
+        rfile <- writeFun(cwl, prefix = paste0(prefix, ".R"), outdir = outdir)
+        baseCommand(cwl) <- "Rscript"
+        requirements(cwl) <- c(list(requireRscript(rfile)), requirements(cwl))
+        arguments(cwl) <- c(list(basename(rfile)), arguments(cwl))
     }
+    cList <- cwlToList(cwl, docker, prefix, outdir)
+    
     cwlout <- file.path(outdir, paste0(prefix, ".cwl"))
     ymlout <- file.path(outdir, paste0(prefix, ".yml"))
     write_yaml(cList, file = cwlout, handlers = handlers, ...)

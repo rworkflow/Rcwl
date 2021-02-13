@@ -16,6 +16,9 @@
             idx <- match("inputBinding", names(ilist))
             ilist <- c(ilist[-idx], ilist[[idx]])
         }else{
+            if(!is(ilist, "list") & is.null(names(ilist))){
+                ilist <- list(type = ilist)
+            }
             ilist$position = -1
         }
         if(is(ilist$type, "list") &&
@@ -48,8 +51,10 @@
     for(i in seq_along(outputList)){
         if(cwlClass(cwl) == "Workflow"){
             olist <- c(id = names(outputList)[i], outputList[[i]])
-        }else{
+        }else if(is(outputList[[i]], "list")){
             olist <- outputList[[i]]
+        }else{
+            olist <- list(type = outputList[[i]])
         }
         if("outputBinding" %in% names(olist)){
             idx <- match("outputBinding", names(olist))
@@ -121,9 +126,8 @@
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlProcess(baseCommand = "echo",
 #'                  inputs = InputParamList(input1))
-#' tf <- tempfile()
-#' writeCWL(echo, tf)
-#' readCWL(paste0(tf, ".cwl"))
+#' tf <- writeCWL(echo)
+#' readCWL(tf[1])
 readCWL <- function(cwlfile){
     float.handler <- function(x){
         if(x == "."){

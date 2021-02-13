@@ -175,3 +175,15 @@ requireMultipleInput <- function(){
 requireStepInputExpression <- function(){
     list(class = "StepInputExpressionRequirement")
 }
+
+#' @rdname cwl-requirements
+#' @param rscript An R script to run.
+#' @return A requirement list with Rscript as manifest entry.
+#' @export
+requireRscript <- function(rscript){
+    rs <- paste0(readLines(rscript), collapse = "\n")
+    req1 <- requireInitialWorkDir(
+        list(Dirent(entryname = basename(rscript),
+                    entry = rs)))
+    return(req1)
+}

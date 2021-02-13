@@ -21,7 +21,6 @@ Function to read CWL command or workflow files.
 input1 <- InputParam(id = "sth")
 echo <- cwlProcess(baseCommand = "echo",
                  inputs = InputParamList(input1))
-tf <- tempfile()
-writeCWL(echo, tf)
-readCWL(paste0(tf, ".cwl"))
+tf <- writeCWL(echo)
+readCWL(tf[1])
 }
