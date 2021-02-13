@@ -94,3 +94,25 @@ test_that("extensions", {
     expect_match(tail(r1$logs, 1), "success")
     expect_true(all(ext %in% read_yaml(cwlfile)))
 })
+
+## test R function
+fun1 <- function(x)x*2
+testFun <- function(a, b){
+    cat(fun1(a) + b^2, sep="\n")
+}
+assign("fun1", fun1, envir = .GlobalEnv)
+assign("testFun", testFun, envir = .GlobalEnv)
+p1 <- InputParam(id = "a", type = "int", prefix = "a=", separate = F)
+p2 <- InputParam(id = "b", type = "int", prefix = "b=", separate = F)
+o1 <- OutputParam(id = "o", type = "File", glob = "rout.txt")
+TestFun <- cwlProcess(baseCommand = testFun,
+                      inputs = InputParamList(p1, p2),
+                      outputs = OutputParamList(o1),
+                      stdout = "rout.txt")
+TestFun$a <- 1
+TestFun$b <- 2
+res <- runCWL(TestFun, outdir = tempdir())
+test_that("R function", {
+    expect_equal(readLines(res$output), "6")
+})
+

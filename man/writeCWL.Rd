@@ -33,6 +33,5 @@ write `cwlProcess` to cwl and yml.
 input1 <- InputParam(id = "sth")
 echo <- cwlProcess(baseCommand = "echo",
                  inputs = InputParamList(input1))
-tf <- tempfile()
-writeCWL(echo, tf)
+writeCWL(echo)
 }

@@ -12,6 +12,7 @@
 \alias{requireScatter}
 \alias{requireMultipleInput}
 \alias{requireStepInputExpression}
+\alias{requireRscript}
 \title{CWL requirements functions}
 \usage{
 requireDocker(
@@ -40,6 +41,8 @@ requireScatter()
 requireMultipleInput()
 
 requireStepInputExpression()
+
+requireRscript(rscript)
 }
 \arguments{
 \item{docker}{Character. Specify a Docker image to retrieve using
@@ -90,6 +93,8 @@ read-only). Optional.}
 \item{inputID}{The input ID from corresponding `InputParam`.}
 
 \item{sep}{The separator of the input files in the manifest config.}
+
+\item{rscript}{An R script to run.}
 }
 \value{
 requireDocker: A list of docker requirement to fetch or
@@ -110,6 +115,8 @@ rquireScatter: A ScatterFeatureRequirement list.
 requireMultipleInput: A MultipleInputFeatureRequirement list.
 
 requireStepInputExpression: A StepInputExpressionRequirement list.
+
+A requirement list with Rscript as manifest entry.
 }
 \description{
 requireDocker: If a workflow component should be run

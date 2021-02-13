@@ -35,8 +35,8 @@ i1 <- InputParam(id = "sth")
 o1 <- OutputParam(id = "out", type = "File", outputSource = "echo2/output")
 wf <- cwlWorkflow(inputs = InputParamList(i1),
                    outputs = OutputParamList(o1))
-s1 <- Step(id = "echo1", run = echo1, In = list(sth = "sth"))
-s2 <- Step(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
+s1 <- cwlStep(id = "echo1", run = echo1, In = list(sth = "sth"))
+s2 <- cwlStep(id = "echo2", run = echo2, In = list(sthout = "echo1/output"))
 wf <- wf + s1 + s2
 plotCWL(wf)
 }
