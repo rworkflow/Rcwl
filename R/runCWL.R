@@ -115,10 +115,10 @@ runCWL <- function(cwl, cwlRunner = "cwltool",
 
 runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
     library(Rcwl)
-    idx <- names(inputList) %in% names(inputs(cwl))
-    if(!all(idx)){
-        warning(paste(names(inputList)[!idx], collapse = ", "),
-                " oare not assigned")
+    iidx <- names(inputList) %in% names(inputs(cwl))
+    if(!all(iidx)){
+        warning(paste(names(inputList)[!iidx], collapse = ", "),
+                " are not assigned")
     }
     ## change output directory
     sname <- names(inputList[[1]])
