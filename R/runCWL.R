@@ -51,7 +51,8 @@ runCWL <- function(cwl, cwlRunner = "cwltool",
             }
         }
         mis <- mis[ifReq]
-        stop("Input parameter(s): ", paste(mis, collapse = ", "), " not assigned.")
+        if(length(mis) > 0)
+            stop("Input parameter(s): ", paste(mis, collapse = ", "), " not assigned.")
     }
     if(docker == "singularity"){
         cwlArgs <- paste("--singularity", cwlArgs)
