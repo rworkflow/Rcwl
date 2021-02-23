@@ -475,6 +475,7 @@ mulEcho
 
 ## cwlProcess to Shiny App
 Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An `upload` parameter can be used to defined wether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.
+
 ```{r, eval=FALSE}
 inputList <- list(option = c("option1", "option2"))
 app <- cwlShiny(mulEcho, inputList, upload = TRUE)
@@ -514,11 +515,11 @@ The `Rcwl` package can be utilized to develop pipelines for best practices of re
 
 The package is currently available in github.
 
-* <https://github.com/hubentu/RcwlPipelines>
+* <https://github.com/rworkflow/RcwlPipelines>
 
 To install the package.
 ```{r, eval=FALSE}
-BiocManager::install("hubentu/RcwlPipelines")
+BiocManager::install("rworkflow/RcwlPipelines")
 ```
 
 More recipes will be collected in this package and we would like to invite community to submit more pipelines to this package.
@@ -526,16 +527,16 @@ More recipes will be collected in this package and we would like to invite commu
 ## Tool collections in CWL format
 Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to `cwlProcess` object by `readCWL` function, or can be used directly.
 
-* <https://github.com/common-workflow-language/workflows>
+* <https://github.com/common-workflow-library/bio-cwl-tools>
 * <https://github.com/Duke-GCB/GGR-cwl>
-* <https://github.com/pitagora-galaxy/cwl>
+* <https://github.com/pitagora-network/pitagora-cwl> 
 
 ## Docker for Bioinformatics tools
 Most of the Bioinformatics software are available in docker containers, which can be very convenient to be adopted to build portable CWL tools and pipelines.
 
 * <https://dockstore.org>
 * <https://biocontainers.pro>
-  
+		
 # SessionInfo
 ```{r}
 sessionInfo()
