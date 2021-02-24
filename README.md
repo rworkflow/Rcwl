@@ -12,7 +12,18 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("Rcwl")
 	
 # Or from github
-BiocManager::install("hubentu/Rcwl")
+BiocManager::install("rworkflow/Rcwl")
+```
+
+## Hello world!
+``` r
+library(Rcwl)
+inputs <- InputParamList(
+    InputParam(id = "sth")
+)
+echo <- cwlProcess(baseCommand = "echo", inputs)
+echo$sth <- "Hello World!"
+res <- runCWL(echo)
 ```
 
 ## User Guide
