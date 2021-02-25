@@ -20,7 +20,7 @@
 #' @importFrom R.utils commandArgs
 #' @importFrom codetools findGlobals
 #' 
-writeFun <- function(cwl, prefix, outdir){
+writeFun <- function(cwl, prefix, outdir, libPaths = TRUE){
     Fname <- ifelse(is.null(prefix), basename(tempfile()), prefix)
     if(length(cwl@id) > 0){
         file <- file.path(outdir, paste0(cwl@id, ".R"))
@@ -30,12 +30,13 @@ writeFun <- function(cwl, prefix, outdir){
     funName <- sub(".R", "", basename(file))
     assign(funName, baseCommand(cwl))
     types <- lapply(inputs(cwl), function(x)x@type)
-    ## add user libPaths
-    libs <- .libPaths()[1]
-    comArg <- c(paste0(".libPaths('", libs, "')"),
-                "suppressPackageStartupMessages(library(R.utils))",
-                "suppressPackageStartupMessages(library(codetools))",
+    comArg <- c("suppressPackageStartupMessages(library(R.utils))",                
                 "args <- commandArgs(trailingOnly = TRUE, asValues = TRUE)")
+    ## add user libPaths
+    if(libPaths){
+        libs <- .libPaths()
+        comArg <- c(paste0(".libPaths('", libs, "')"), comArg)
+    }
     write(comArg, file = file)
 
     for(i in seq_along(types)){
@@ -129,7 +130,8 @@ allRun <- function(cwl){
 #' @param cwl A `cwlProcess` or `cwlWorkflow` object.
 #' @param prefix The prefix of `.cwl` and `.yml` files to be generated.
 #' @param outdir The output directory for the `.cwl` and `.yml` files. 
-#' @param docker Whether to use docker. 
+#' @param docker Whether to use docker.
+#' @param libPaths Whether to add local R libaray paths to R script.
 #' @param ... Other options from `yaml::write_yaml`.
 #' @import yaml
 #' @export
@@ -141,7 +143,7 @@ allRun <- function(cwl){
 #' writeCWL(echo)
 writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
                      outdir = tempfile(),
-                     docker = TRUE, ...){
+                     docker = TRUE, libPaths = TRUE, ...){
     if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
     stopifnot(is(cwl, "cwlProcess"))
     ## logical to true/false
@@ -155,7 +157,7 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
     yml <- .removeEmpty(.cwl2yml(cwl))
 
     .R2cwl <- function(x, prefix, outdir){
-        rfile <- writeFun(x, prefix, outdir = outdir)
+        rfile <- writeFun(x, prefix, outdir = outdir, libPaths)
         baseCommand(x) <- "Rscript"
         requirements(x) <- c(list(requireRscript(rfile)), requirements(x))
         arguments(x) <- c(list(basename(rfile)), arguments(x))
