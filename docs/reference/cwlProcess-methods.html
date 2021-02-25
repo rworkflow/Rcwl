@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cwlProcess methods — cwlVersion • Rcwl</title>
+<title>cwlProcess methods — cwlProcess-methods • Rcwl</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -39,23 +39,16 @@
 
 
 
-<meta property="og:title" content="cwlProcess methods — cwlVersion" />
-<meta property="og:description" content="cwlProcess methods
-cwlVersion
-CWL document version
-cwlClass
-cwlClass
-baseCommand
-baseCommand
-arguments
-arguments
-hints
-hints
-requirements
-requirements
-stdout of cwlProcess
-stdout of cwlProcess
-Extensions and metadata of cwlProcess" />
+<meta property="og:title" content="cwlProcess methods — cwlProcess-methods" />
+<meta property="og:description" content="Some useful methods for `cwlProcess` objects.
+`$`: Extract input values for `cwlProcess`
+    object. (Can auto-complete the input names using tab)
+`$&amp;lt;-`: Set input values for `cwlProcess` object by name.
+outputs: The outputs of a `cwlProcess` object.
+stdOut: stdout of `cwlProcess` object.
+extensions: Extensions and metadata of `cwlProcess` object.
+short: The function to show a short summary of `cwlProcess` or
+`cwlWorkflow` object." />
 
 
 
@@ -69,6 +62,16 @@ Extensions and metadata of cwlProcess" />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-93043521-1');
+</script>
 
 
   </head>
@@ -87,7 +90,7 @@ Extensions and metadata of cwlProcess" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rcwl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.12</span>
       </span>
     </div>
 
@@ -107,7 +110,12 @@ Extensions and metadata of cwlProcess" />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/rworkflow/Rcwl">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -127,62 +135,67 @@ Extensions and metadata of cwlProcess" />
     </div>
 
     <div class="ref-description">
-    <p>cwlProcess methods</p>
-<p>cwlVersion
-CWL document version</p>
-<p>cwlClass</p>
-<p>cwlClass</p>
-<p>baseCommand</p>
-<p>baseCommand</p>
-<p>arguments</p>
-<p>arguments</p>
-<p>hints</p>
-<p>hints</p>
-<p>requirements</p>
-<p>requirements</p>
-<p>stdout of cwlProcess</p>
-<p>stdout of cwlProcess</p>
-<p>Extensions and metadata of cwlProcess</p>
+    <p>Some useful methods for `cwlProcess` objects.</p>
+<p>`$`: Extract input values for `cwlProcess`
+    object. (Can auto-complete the input names using tab)</p>
+<p>`$&lt;-`: Set input values for `cwlProcess` object by name.</p>
+<p>outputs: The outputs of a `cwlProcess` object.</p>
+<p>stdOut: stdout of `cwlProcess` object.</p>
+<p>extensions: Extensions and metadata of `cwlProcess` object.</p>
+<p>short: The function to show a short summary of `cwlProcess` or
+`cwlWorkflow` object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cwlVersion</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+    <pre class="usage">cwlVersion(cwl)
 
-<span class='fu'>cwlVersion</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+cwlVersion(cwl) &lt;- value
 
-<span class='fu'>cwlClass</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+cwlClass(cwl)
 
-<span class='fu'>cwlClass</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+cwlClass(cwl) &lt;- value
 
-<span class='fu'>baseCommand</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+baseCommand(cwl)
 
-<span class='fu'>baseCommand</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+baseCommand(cwl) &lt;- value
 
-<span class='fu'>arguments</span><span class='op'>(</span><span class='va'>cwl</span>, step <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+arguments(cwl, step = NULL)
 
-<span class='fu'>arguments</span><span class='op'>(</span><span class='va'>cwl</span>, step <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+arguments(cwl, step = NULL) &lt;- value
 
-<span class='fu'>hints</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+hints(cwl)
 
-<span class='fu'>hints</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+hints(cwl) &lt;- value
 
-<span class='fu'>requirements</span><span class='op'>(</span><span class='va'>cwl</span>, step <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+requirements(cwl, step = NULL)
 
-<span class='fu'>requirements</span><span class='op'>(</span><span class='va'>cwl</span>, step <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+requirements(cwl, step = NULL) &lt;- value
 
-<span class='fu'>stdOut</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+inputs(cwl)
 
-<span class='fu'>stdOut</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+# S4 method for cwlProcess
+$(x, name)
 
-<span class='fu'>extensions</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span>
+# S4 method for cwlProcess
+$(x, name) &lt;- value
 
-<span class='fu'>extensions</span><span class='op'>(</span><span class='va'>cwl</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
+outputs(cwl)
+
+stdOut(cwl)
+
+stdOut(cwl) &lt;- value
+
+extensions(cwl)
+
+extensions(cwl) &lt;- value
+
+short(cwl)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cwl</th>
-      <td><p>A `cwlProcess` object.</p></td>
+      <td><p>A `cwlProcess` (or `cwlWorkflow`) object.</p></td>
     </tr>
     <tr>
       <th>value</th>
@@ -192,19 +205,63 @@ CWL document version</p>
       <th>step</th>
       <td><p>To specifiy a step ID when `cwl` is a workflow.</p></td>
     </tr>
+    <tr>
+      <th>x</th>
+      <td><p>A `cwlProcess` object.</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>One of input list.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>cwlVersion: cwl version</p>
-<p>cwlClass: CWL Class</p>
-<p>baseCommand: CWL baseCommand</p>
-<p>arguments: CWL arguments</p>
-<p>hints: CWL hints</p>
-<p>requirements: CWL requirments</p>
-<p>stdOut: CWL stdout</p>
-<p>extensions: A list of extensions or metadata</p>
+    <p>cwlVersion: cwl document version</p>
+<p>cwlClass: CWL class of `cwlProcess` or `cwlWorkflow` object.</p>
+<p>baseCommand: base command for the `cwlProcess` object.</p>
+<p>arguments: CWL arguments.</p>
+<p>hints: CWL hints.</p>
+<p>requirements: CWL requirments.</p>
+<p>inputs: A list of `InputParam`.</p>
+<p>`$`: the `InputParam` value for `cwlProcess` object.</p>
+<p>outputs: A list of `OutputParam`.</p>
+<p>stdOut: CWL stdout.</p>
+<p>extensions: A list of extensions or metadata.</p>
+<p>short: A short summary of an object of `cwlProcess` or `cwlWorkflow`.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='fu'><a href='InputArrayParam-class.html'>InputParam</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='st'>"sth"</span><span class='op'>)</span>
+<span class='va'>echo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cwlProcess.html'>cwlProcess</a></span><span class='op'>(</span>baseCommand <span class='op'>=</span> <span class='st'>"echo"</span>, inputs <span class='op'>=</span> <span class='fu'><a href='InputArrayParam-class.html'>InputParamList</a></span><span class='op'>(</span><span class='va'>ip</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>cwlVersion</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "v1.0"</div><div class='input'><span class='fu'>cwlClass</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "CommandLineTool"</div><div class='input'><span class='fu'>baseCommand</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "echo"</div><div class='input'><span class='fu'>hints</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; list()</div><div class='input'><span class='fu'>requirements</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; list()</div><div class='input'><span class='fu'>inputs</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; inputs:
+#&gt;   sth (string):  </div><div class='input'><span class='fu'>outputs</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; outputs:
+#&gt; output:
+#&gt;   type: stdout</div><div class='input'><span class='fu'>stdOut</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; character(0)</div><div class='input'><span class='fu'>extensions</span><span class='op'>(</span><span class='va'>echo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; list()</div><div class='input'>
+<span class='va'>s1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cwlWorkflow.html'>cwlWorkflow</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='cwlWorkflow-methods.html'>runs</a></span><span class='op'>(</span><span class='va'>s1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of length 0
+#&gt; names(0): </div><div class='input'><span class='va'>s1</span>
+</div><div class='output co'>#&gt; class: cwlWorkflow 
+#&gt;  cwlClass: Workflow 
+#&gt;  cwlVersion: v1.0 
+#&gt; inputs:
+#&gt; outputs:
+#&gt; output:
+#&gt;   type: stdout
+#&gt; steps:
+#&gt; {}</div><div class='input'><span class='fu'>short</span><span class='op'>(</span><span class='va'>s1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; inputs: []
+#&gt; outputs: output
+#&gt; steps: []</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

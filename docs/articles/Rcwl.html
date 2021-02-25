@@ -5,18 +5,24 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Guide for Rcwl • Rcwl</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<title>Rcwl: An R interface to the Common Workflow Language (CWL) • Rcwl</title>
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="User Guide for Rcwl">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Rcwl: An R interface to the Common Workflow Language (CWL)">
 <meta property="og:description" content="Rcwl">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-93043521-1');
+</script>
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
@@ -31,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rcwl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.12</span>
       </span>
     </div>
 
@@ -50,7 +56,14 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/rworkflow/Rcwl">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -60,14 +73,14 @@
 
       
 
-      </header><script src="Rcwl_files/header-attrs-2.6/header-attrs.js"></script><script src="Rcwl_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="Rcwl_files/viz-1.8.2/viz.js"></script><link href="Rcwl_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+      </header><script src="Rcwl_files/header-attrs-2.7/header-attrs.js"></script><script src="Rcwl_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="Rcwl_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="Rcwl_files/viz-1.8.2/viz.js"></script><link href="Rcwl_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="Rcwl_files/grViz-binding-1.0.6.1/grViz.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>User Guide for Rcwl</h1>
-                        <h4 class="author">Qiang Hu</h4>
+      <h1 data-toc-skip>Rcwl: An R interface to the Common Workflow Language (CWL)</h1>
+                        <h4 class="author">Qiang Hu, Qian Liu</h4>
             
-            <h4 class="date">2021-02-03</h4>
+            <h4 class="date">2021-02-24</h4>
       
       
       <div class="hidden name"><code>Rcwl.Rmd</code></div>
@@ -82,22 +95,24 @@
 <!--   comment = "#>" -->
 <!-- ) -->
 <!-- ``` -->
-<p>The <code>Rcwl</code> package is aimed to be a simple and user-friendly way to manage command line tools and build data analysis pipelines in R using Common Workflow Language (CWL). It can be a bridge between heavy bioinformatics tools and pipeline to R/Bioconductor. More details about CWL can be found at <a href="http://www.commonwl.org" class="uri">http://www.commonwl.org</a>.</p>
+<p>Here we introduce the <em>Bioconductor</em> toolchain for usage and development of reproducible bioinformatics pipelines using packages of <a href="https://bioconductor.org/packages/Rcwl/">Rcwl</a> and <a href="https://bioconductor.org/packages/RcwlPipelines/">RcwlPipelines</a>.</p>
+<p><code>Rcwl</code> provides a simple way to wrap command line tools and build CWL data analysis pipelines programmatically within <em>R</em>. It increases the ease of use, development, and maintenance of CWL pipelines. <code>RcwlPipelines</code> manages a collection of more than a hundred of pre-built and tested CWL tools and pipelines, which are highly modularized with easy customization to meet different bioinformatics data analysis needs.</p>
+<p>In this vignette, we will introduce how to build and run CWL pipelines within <em>R/Bioconductor</em> using <code>Rcwl</code>package. More details about CWL can be found at <a href="https://www.commonwl.org" class="uri">https://www.commonwl.org</a>.</p>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <ol style="list-style-type: decimal">
-<li>Download the package.</li>
+<li>Download and install the package.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
 <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"Rcwl"</span><span class="op">)</span></code></pre></div>
-<p>The development version is also available to download from Github.</p>
+<p>The development version with most up-to-date functionalities is also available from GitHub.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"hubentu/Rcwl"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"rworkflow/Rcwl"</span><span class="op">)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Load the package into the R session.</li>
+<li>Load the package into <em>R</em> session.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Rcwl</span><span class="op">)</span></code></pre></div>
@@ -105,43 +120,105 @@
 <div id="first-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#first-example" class="anchor"></a>First Example</h1>
-<p>The main class and constructor function is <code>cwlProcess</code>, which wrap a command line tool and its parameters in a <code>cwlProcess</code> object. Let’s start with a simple example, <code>echo hello world</code>.</p>
-<p>First, we load the package and then define the input parameter for “echo”, a string without a prefix. Just an <code>id</code> option required.</p>
+<p><code>cwlProcess</code> is the main constructor function to wrap a command line tool into an <em>R</em> tool as a <code>cwlProcess</code> object (S4 class). Let’s start with a simple example to wrap the <code>echo</code> command and execute <code>echo hello world</code> in <em>R</em>.</p>
+<p>First, we need to define the input parameter for the base command <code>echo</code>, here it is a string without a prefix. An <code>id</code> argument is required here.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">input1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"sth"</span><span class="op">)</span></code></pre></div>
-<p>Second, create a <code>cwlProcess</code> object with <code>baseCommand</code> for the command to execute and <code>InputParamList</code> for the input parameters.</p>
+<code class="sourceCode R"><span class="va">input1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"sth"</span><span class="op">)</span></code></pre></div>
+<p>Second, we can construct a <code>cwlProcess</code> object by specifying the <code>baseCommand</code> for the command line tool, and <code>InputParamList</code> for the input parameters.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">echo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>, inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">input1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Now we have a command object to run. Let’s send a string “Hello World!” to the object. Without defining the outputs, it will stream standard output to a temporary file by default.</p>
+<code class="sourceCode R"><span class="va">echo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>, inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">input1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Now we have converted the command line tool <code>echo</code> into an <em>R</em> tool: an <em>R</em> object of class <code>cwlProcess</code> with the name of <code>echo</code>. We can take a look at the this <em>R</em> object and use some utility functions to extract specific information.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">echo</span><span class="op">$</span><span class="va">sth</span> <span class="op">&lt;-</span> <span class="st">"Hello World!"</span>
-<span class="va">echo</span></code></pre></div>
+<code class="sourceCode R"><span class="va">echo</span></code></pre></div>
 <pre><code>## class: cwlProcess 
 ##  cwlClass: CommandLineTool 
 ##  cwlVersion: v1.0 
 ##  baseCommand: echo 
 ## inputs:
-##   sth (string):  Hello World!
+##   sth (string):  
 ## outputs:
 ## output:
 ##   type: stdout</code></pre>
-<p>Let’s run it. A list including the command executed, temporary output and logs. The output directory is the current folder by default, but it can be changed by setting <code>outdir</code> option. All standard out and standard error stream can also be printed by setting <code>stderr = ""</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "cwlProcess"
+## attr(,"package")
+## [1] "Rcwl"</code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">cwlClass</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "CommandLineTool"</code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">cwlVersion</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "v1.0"</code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">baseCommand</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "echo"</code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">inputs</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## inputs:
+##   sth (string):</code></pre>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">outputs</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## outputs:
+## output:
+##   type: stdout</code></pre>
+<p>The <code><a href="../reference/cwlProcess-methods.html">inputs(echo)</a></code> will show the value once it is assigned in next step. Since we didn’t define the outputs for this tool, it will stream standard output to a temporary file by default.</p>
+<p>The third step is to assign values (here is “Hello World!”) for the input parameters.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">echo</span><span class="op">$</span><span class="va">sth</span> <span class="op">&lt;-</span> <span class="st">"Hello World!"</span>
+<span class="fu"><a href="../reference/cwlProcess-methods.html">inputs</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>## inputs:
+##   sth (string):  Hello World!</code></pre>
+<p>Now this <em>R</em> version of command line tool <code>echo</code> is ready to be executed.</p>
+<p>The function <code>runCWL</code> runs the tools in <em>R</em> and returns a list of: 1) actual command line that was executed, 2) filepath to the output, and 3) running logs. The output directory by default takes the working directory, but can be specified in <code>outdir</code> argument.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">echo</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r1</span></code></pre></div>
 <pre><code>## List of length 3
 ## names(3): command output logs</code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">r1</span><span class="op">$</span><span class="va">command</span></code></pre></div>
+<pre><code>## [1] "\033[1;30mINFO\033[0m [job echo.cwl] /private/tmp/docker_tmp4_wmpqno$ echo \\"                
+## [2] "    'Hello World!' &gt; /private/tmp/docker_tmp4_wmpqno/30d6bd9a81a586a656cc7ca9ec98d1a692f05e40"</code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">r1</span><span class="op">$</span><span class="va">output</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "Hello World!"</code></pre>
-<p>The <code>writeCWL</code> function will write the cwlProcess object to a CWL file for the command and YML for the inputs. Then it will invoke <code>cwl-runner</code> by default to execute the two files. Thus the command tool <code>cwl-runner</code> is required to be installed and available in the system path.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">r1</span><span class="op">$</span><span class="va">logs</span></code></pre></div>
+<pre><code>##  [1] "\033[1;30mINFO\033[0m /Users/qi31566/Library/Python/3.7/bin/cwltool 3.0.20200324120055"                                                                                                                                 
+##  [2] "\033[1;30mINFO\033[0m Resolved '/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T//Rtmpt8cgVU/file49d288ebeac/echo.cwl' to 'file:///var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/file49d288ebeac/echo.cwl'"
+##  [3] "\033[1;30mINFO\033[0m [job echo.cwl] /private/tmp/docker_tmp4_wmpqno$ echo \\"                                                                                                                                          
+##  [4] "    'Hello World!' &gt; /private/tmp/docker_tmp4_wmpqno/30d6bd9a81a586a656cc7ca9ec98d1a692f05e40"                                                                                                                          
+##  [5] "\033[1;30mINFO\033[0m [job echo.cwl] completed success"                                                                                                                                                                 
+##  [6] "{"                                                                                                                                                                                                                      
+##  [7] "    \"output\": {"                                                                                                                                                                                                      
+##  [8] "        \"location\": \"file:///var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/30d6bd9a81a586a656cc7ca9ec98d1a692f05e40\","                                                                                 
+##  [9] "        \"basename\": \"30d6bd9a81a586a656cc7ca9ec98d1a692f05e40\","                                                                                                                                                    
+## [10] "        \"class\": \"File\","                                                                                                                                                                                           
+## [11] "        \"checksum\": \"sha1$a0b65939670bc2c010f4d5d6a0b3e4e4590fb92b\","                                                                                                                                               
+## [12] "        \"size\": 13,"                                                                                                                                                                                                  
+## [13] "        \"path\": \"/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/30d6bd9a81a586a656cc7ca9ec98d1a692f05e40\""                                                                                             
+## [14] "    }"                                                                                                                                                                                                                  
+## [15] "}"                                                                                                                                                                                                                      
+## [16] "\033[1;30mINFO\033[0m Final process status is success"</code></pre>
+<p>Users can also have the log printed out by specifying <code>showLog = TRUE</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">r1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">echo</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, showLog <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<pre><code>## }</code></pre>
+<p>A utility function <code>writeCWL</code> converts the <code>cwlProcess</code> object into 2 files: a <code>.cwl</code> file for the command and <code>.yml</code> file for the inputs, which are the internal cwl files to be executed when <code>runCWL</code> is invoked. The internal execution requires a <code>cwl-runner</code> (e.g., <code>cwltool</code>), which will be installed automatically with <code>runCWL</code>.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/writeCWL.html">writeCWL</a></span><span class="op">(</span><span class="va">echo</span><span class="op">)</span></code></pre></div>
+<pre><code>##                                                                                   cwlout 
+## "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T//Rtmpt8cgVU/file49d263e42147/echo.cwl" 
+##                                                                                   ymlout 
+## "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T//Rtmpt8cgVU/file49d263e42147/echo.yml"</code></pre>
 </div>
-<div id="commandline-tool" class="section level1">
+<div id="wrap-command-line-tools" class="section level1">
 <h1 class="hasAnchor">
-<a href="#commandline-tool" class="anchor"></a>Commandline tool</h1>
-<p>The package provides functions to define a CWL syntax for Command Line Tools in a intuitive way. The functions were developped based on the CWL Command Line Tool Description (v1.0). More details can be found in the offical document: <a href="https://www.commonwl.org/v1.0/CommandLineTool.html" class="uri">https://www.commonwl.org/v1.0/CommandLineTool.html</a>.</p>
+<a href="#wrap-command-line-tools" class="anchor"></a>Wrap command line tools</h1>
+<p>The package provides functions to define a CWL syntax for Command Line Tools in an intuitive way. The functions were developed based on the CWL Command Line Tool Description (v1.0). More details can be found in the official document: <a href="https://www.commonwl.org/v1.0/CommandLineTool.html" class="uri">https://www.commonwl.org/v1.0/CommandLineTool.html</a>.</p>
 <div id="input-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#input-parameters" class="anchor"></a>Input Parameters</h2>
@@ -149,17 +226,17 @@
 <h3 class="hasAnchor">
 <a href="#essential-input-parameters" class="anchor"></a>Essential Input parameters</h3>
 <p>For the input parameters, three options need to be defined usually, <em>id</em>, <em>type</em>, and <em>prefix</em>. The type can be <em>string</em>, <em>int</em>, <em>long</em>, <em>float</em>, <em>double</em>, and so on. More detail can be found at: <a href="https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType" class="uri">https://www.commonwl.org/v1.0/CommandLineTool.html#CWLType</a>.</p>
-<p>Here is an example from <a href="http://www.commonwl.org/user_guide/03-input/">CWL user guide</a>. Here we defined an <code>echo</code> with different type of input parameters by <code>InputParam</code>. The <code>stdout</code> option can be used to caputre the standard output stream to a file.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"flag"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-f"</span><span class="op">)</span>
-<span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"string"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-s"</span><span class="op">)</span>
-<span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"int"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"-i"</span><span class="op">)</span>
-<span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"file"</span>, type <span class="op">=</span> <span class="st">"File"</span>, prefix <span class="op">=</span> <span class="st">"--file="</span>, separate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">echoA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>,
-                  inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">e1</span>, <span class="va">e2</span>, <span class="va">e3</span>, <span class="va">e4</span><span class="op">)</span>,
+<p>Here is an example from <a href="http://www.commonwl.org/user_guide/03-input/">CWL user guide</a>. Here we defined an <code>echo</code> with different type of input parameters by <code>InputParam</code>. The <code>stdout</code> option can be used to capture the standard output stream to a file.</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"flag"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-f"</span><span class="op">)</span>
+<span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"string"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-s"</span><span class="op">)</span>
+<span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"int"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"-i"</span><span class="op">)</span>
+<span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"file"</span>, type <span class="op">=</span> <span class="st">"File"</span>, prefix <span class="op">=</span> <span class="st">"--file="</span>, separate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">echoA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>,
+                  inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">e1</span>, <span class="va">e2</span>, <span class="va">e3</span>, <span class="va">e4</span><span class="op">)</span>,
                   stdout <span class="op">=</span> <span class="st">"output.txt"</span><span class="op">)</span></code></pre></div>
 <p>Then we give it a try by setting values for the inputs.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">echoA</span><span class="op">$</span><span class="va">flag</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">echoA</span><span class="op">$</span><span class="va">string</span> <span class="op">&lt;-</span> <span class="st">"Hello"</span>
 <span class="va">echoA</span><span class="op">$</span><span class="va">int</span> <span class="op">&lt;-</span> <span class="fl">1</span>
@@ -170,32 +247,32 @@
 
 <span class="va">r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">echoA</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r2</span><span class="op">$</span><span class="va">command</span></code></pre></div>
-<pre><code>## [1] "\033[1;30mINFO\033[0m [job file1793f256b2a3f.cwl] /private/tmp/docker_tmppdv984fv$ echo \\"                                                  
-## [2] "    --file=/private/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/tmpnt3vjtth/stg0832ec91-9c05-4edc-9aa1-b50ad101a303/file1793f635415eb \\"
-## [3] "    -f \\"                                                                                                                                   
-## [4] "    -i \\"                                                                                                                                   
-## [5] "    1 \\"                                                                                                                                    
-## [6] "    -s \\"                                                                                                                                   
-## [7] "    Hello &gt; /private/tmp/docker_tmppdv984fv/output.txt"</code></pre>
+<pre><code>## [1] "\033[1;30mINFO\033[0m [job echoA.cwl] /private/tmp/docker_tmp2xt4jr76$ echo \\"                                                             
+## [2] "    --file=/private/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/tmp0lp79zis/stg36f80227-107a-42f3-9a40-a5eef5e4bc6c/file49d227f75930 \\"
+## [3] "    -f \\"                                                                                                                                  
+## [4] "    -i \\"                                                                                                                                  
+## [5] "    1 \\"                                                                                                                                   
+## [6] "    -s \\"                                                                                                                                  
+## [7] "    Hello &gt; /private/tmp/docker_tmp2xt4jr76/output.txt"</code></pre>
 <p>The command shows the parameters work as we defined. The parameter order is in alphabetical by default, but the option of “position” can be used to fix the orders.</p>
 </div>
 <div id="array-inputs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#array-inputs" class="anchor"></a>Array Inputs</h3>
 <p>A similar example to CWL user guide. We can define three different type of array as inputs.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-A"</span><span class="op">)</span>
-<span class="va">a2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-A"</span><span class="op">)</span>
+<span class="va">a2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,
                  type <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputArrayParam</a></span><span class="op">(</span>items <span class="op">=</span> <span class="st">"string"</span>,
                                         prefix<span class="op">=</span><span class="st">"-B="</span>, separate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-<span class="va">a3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"C"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-C="</span>,
+<span class="va">a3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"C"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-C="</span>,
                  itemSeparator <span class="op">=</span> <span class="st">","</span>, separate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">echoB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>,
-                 inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">a1</span>, <span class="va">a2</span>, <span class="va">a3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">echoB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>,
+                 inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">a1</span>, <span class="va">a2</span>, <span class="va">a3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Then set values for the three inputs.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">echoB</span><span class="op">$</span><span class="va">A</span> <span class="op">&lt;-</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>
 <span class="va">echoB</span><span class="op">$</span><span class="va">B</span> <span class="op">&lt;-</span> <span class="va">letters</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>
 <span class="va">echoB</span><span class="op">$</span><span class="va">C</span> <span class="op">&lt;-</span> <span class="va">letters</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span>
@@ -214,20 +291,20 @@
 ## output:
 ##   type: stdout</code></pre>
 <p>Now we can check whether the command behaves as we expected.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">echoB</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r3</span><span class="op">$</span><span class="va">command</span></code></pre></div>
-<pre><code>## [1] "\033[1;30mINFO\033[0m [job file1793f5f445e92.cwl] /private/tmp/docker_tmpoyc_j95q$ echo \\"
-## [2] "    -A \\"                                                                                 
-## [3] "    a \\"                                                                                  
-## [4] "    b \\"                                                                                  
-## [5] "    c \\"                                                                                  
-## [6] "    -B=d \\"                                                                               
-## [7] "    -B=e \\"                                                                               
-## [8] "    -B=f \\"                                                                               
-## [9] "    -C=g,h,i &gt; /private/tmp/docker_tmpoyc_j95q/c9d1fbec147a75a3e57ddcb33d4e6d827462ac9e"</code></pre>
+<pre><code>## [1] "\033[1;30mINFO\033[0m [job echoB.cwl] /private/tmp/docker_tmpv4hszi02$ echo \\"         
+## [2] "    -A \\"                                                                              
+## [3] "    a \\"                                                                               
+## [4] "    b \\"                                                                               
+## [5] "    c \\"                                                                               
+## [6] "    -B=d \\"                                                                            
+## [7] "    -B=e \\"                                                                            
+## [8] "    -B=f \\"                                                                            
+## [9] "    -C=g,h,i &gt; /private/tmp/docker_tmpv4hszi02/cf89575dc97103db92f466a558e5d0b8b42ec350"</code></pre>
 </div>
 </div>
 <div id="output-parameters" class="section level2">
@@ -238,40 +315,40 @@
 <a href="#capturing-output" class="anchor"></a>Capturing Output</h3>
 <p>The outputs, similar to the inputs, is a list of output parameters. Three options <em>id</em>, <em>type</em> and <em>glob</em> can be defined. The glob option is used to define a pattern to find files relative to the output directory.</p>
 <p>Here is an example to unzip a compressed <code>gz</code> file. First, we generate a compressed R script file.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zzfil</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"sample.R.gz"</span><span class="op">)</span>
 <span class="va">zz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/connections.html">gzfile</a></span><span class="op">(</span><span class="va">zzfil</span>, <span class="st">"w"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"sample(1:10, 5)"</span>, file <span class="op">=</span> <span class="va">zz</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/connections.html">close</a></span><span class="op">(</span><span class="va">zz</span><span class="op">)</span></code></pre></div>
 <p>We define a <code>cwlProcess</code> object to use “gzip” to uncompress a input file.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ofile</span> <span class="op">&lt;-</span> <span class="st">"sample.R"</span>
-<span class="va">z1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"uncomp"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-d"</span><span class="op">)</span>
-<span class="va">z2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"out"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-c"</span><span class="op">)</span>
-<span class="va">z3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
-<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span>
-<span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
-               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span>, <span class="va">z2</span>, <span class="va">z3</span><span class="op">)</span>,
-               outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
+<span class="va">z1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"uncomp"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-d"</span><span class="op">)</span>
+<span class="va">z2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"out"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>, prefix <span class="op">=</span> <span class="st">"-c"</span><span class="op">)</span>
+<span class="va">z3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
+<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span>
+<span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
+               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span>, <span class="va">z2</span>, <span class="va">z3</span><span class="op">)</span>,
+               outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
                stdout <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span></code></pre></div>
 <p>Now the <code>gz</code> object can be used to uncompress the previous generated compressed file.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gz</span><span class="op">$</span><span class="va">uncomp</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">gz</span><span class="op">$</span><span class="va">out</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">gz</span><span class="op">$</span><span class="va">zfile</span> <span class="op">&lt;-</span> <span class="va">zzfil</span>
 <span class="va">r4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">gz</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r4</span><span class="op">$</span><span class="va">output</span></code></pre></div>
-<pre><code>## [1] "/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/sample.R"</code></pre>
+<pre><code>## [1] "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/sample.R"</code></pre>
 <p>Or we can use <code>arguments</code> to set some default parameters.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">z1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
-<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span>
-<span class="va">Gz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">z1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
+<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span>
+<span class="va">Gz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
                arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-d"</span>, <span class="st">"-c"</span><span class="op">)</span>,
-               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span><span class="op">)</span>,
-               outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
+               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span><span class="op">)</span>,
+               outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
                stdout <span class="op">=</span> <span class="va">ofile</span><span class="op">)</span>
 <span class="va">Gz</span></code></pre></div>
 <pre><code>## class: cwlProcess 
@@ -287,23 +364,23 @@
 ##   outputBinding:
 ##     glob: sample.R
 ## stdout: sample.R</code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Gz</span><span class="op">$</span><span class="va">zfile</span> <span class="op">&lt;-</span> <span class="va">zzfil</span>
 <span class="va">r4a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">Gz</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
 <p>To make it for general usage, we can define a pattern with javascript to glob the output, which require <code>node</code> from “nodejs” to be installed in your system PATH.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pfile</span> <span class="op">&lt;-</span> <span class="st">"$(inputs.zfile.path.split('/').slice(-1)[0].split('.').slice(0,-1).join('.'))"</span></code></pre></div>
 <p>Or we can use the CWL built in file property, <code>nameroot</code>, directly.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pfile</span> <span class="op">&lt;-</span> <span class="st">"$(inputs.zfile.nameroot)"</span>
-<span class="va">o2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">pfile</span><span class="op">)</span>
-<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/requireDocker.html">requireJS</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">GZ</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
+<span class="va">o2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="va">pfile</span><span class="op">)</span>
+<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwl-requirements.html">requireJS</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">GZ</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"gzip"</span>,
                arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-d"</span>, <span class="st">"-c"</span><span class="op">)</span>,
                requirements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="co">## assign list(req1) if node installed.</span>
-               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span><span class="op">)</span>,
-               outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o2</span><span class="op">)</span>,
+               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">z1</span><span class="op">)</span>,
+               outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o2</span><span class="op">)</span>,
                stdout <span class="op">=</span> <span class="va">pfile</span><span class="op">)</span>
 <span class="va">GZ</span><span class="op">$</span><span class="va">zfile</span> <span class="op">&lt;-</span> <span class="va">zzfil</span>
 <span class="va">r4b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">GZ</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -313,18 +390,20 @@
 <h3 class="hasAnchor">
 <a href="#array-outputs" class="anchor"></a>Array Outputs</h3>
 <p>We can also capture multiple output files with <code>glob</code> pattern.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"a"</span>, type <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputArrayParam</a></span><span class="op">(</span>items <span class="op">=</span> <span class="st">"string"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"b"</span>, type <span class="op">=</span> <span class="fu"><a href="../reference/OutputArrayParam-class.html">OutputArrayParam</a></span><span class="op">(</span>items <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>, glob <span class="op">=</span> <span class="st">"*.txt"</span><span class="op">)</span>
-<span class="va">touch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"touch"</span>, inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>, outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span>
-<span class="va">touch</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a.txt"</span>, <span class="st">"b.gz"</span>, <span class="st">"c.txt"</span><span class="op">)</span>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"a"</span>, type <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputArrayParam</a></span><span class="op">(</span>items <span class="op">=</span> <span class="st">"string"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"b"</span>, type <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputArrayParam</a></span><span class="op">(</span>items <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>,
+                 glob <span class="op">=</span> <span class="st">"*.txt"</span><span class="op">)</span>
+<span class="va">touch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"touch"</span>, inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>,
+                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span>
+<span class="va">touch</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a.txt"</span>, <span class="st">"b.log"</span>, <span class="st">"c.txt"</span><span class="op">)</span>
 <span class="va">r5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">touch</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r5</span><span class="op">$</span><span class="va">output</span></code></pre></div>
-<pre><code>## [1] "/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/a.txt"
-## [2] "/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/c.txt"</code></pre>
-<p>The “touch” comand generated three files, but the output shows that only two files with “.txt” suffix return in the output directory except the “gz” file, which behaves right as we defined in the “glob” pattern.</p>
+<pre><code>## [1] "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/a.txt"
+## [2] "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/c.txt"</code></pre>
+<p>The “touch” command generates three files, but the output only collects two files with “.txt” suffix as defined in the <code>OutputParam</code> using the “glob” option.</p>
 </div>
 </div>
 </div>
@@ -332,18 +411,18 @@
 <h1 class="hasAnchor">
 <a href="#running-tools-in-docker" class="anchor"></a>Running Tools in Docker</h1>
 <p>The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the <code>hints</code> or <code>requirements</code> option.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
-<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/requireDocker.html">requireDocker</a></span><span class="op">(</span><span class="st">"r-base"</span><span class="op">)</span>
-<span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"Rscript"</span>,
-                inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span>,
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
+<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwl-requirements.html">requireDocker</a></span><span class="op">(</span><span class="st">"r-base"</span><span class="op">)</span>
+<span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"Rscript"</span>,
+                inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span>,
                 stdout <span class="op">=</span> <span class="st">"output.txt"</span>,
                 hints <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">req1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">doc</span><span class="op">$</span><span class="va">rfile</span> <span class="op">&lt;-</span> <span class="va">r4</span><span class="op">$</span><span class="va">output</span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">doc</span><span class="op">)</span></code></pre></div>
 <p>The tools defined with docker requirements can also be run locally by disabling the docker option. In case your <code>Rscript</code> depends some local libraries to run, an option from <code>cwltools</code>, “–preserve-entire-environment”, can be used to pass all environment variables.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r6a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">doc</span>, docker <span class="op">=</span> <span class="cn">FALSE</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>,
               cwlArgs <span class="op">=</span> <span class="st">"--preserve-entire-environment"</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
@@ -351,8 +430,8 @@
 <div id="running-tools-in-cluster-server" class="section level1">
 <h1 class="hasAnchor">
 <a href="#running-tools-in-cluster-server" class="anchor"></a>Running Tools in Cluster server</h1>
-<p>The CWL also can work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package <code>BiocParallel</code>. Here is an example to submit jobs with “Multiicore” and “SGE”. A more detailed example can be found (<a href="https://hubentu.github.io/others/Rcwl_RNASeq.html" class="uri">https://hubentu.github.io/others/Rcwl_RNASeq.html</a>).</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<p>The CWL can also work in high performance clusters with batch-queuing system, such as SGE, PBS, SLURM and so on, using the Bioconductor package <code>BiocParallel</code>. Here is an example to submit jobs with “Multicore” and “SGE”.</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel">BiocParallel</a></span><span class="op">)</span>
 <span class="va">sth.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">as.list</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">sth.list</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span>
@@ -371,10 +450,10 @@
 <a href="#writing-pipeline" class="anchor"></a>Writing Pipeline</h1>
 <p>We can connect multiple tools together into a pipeline. Here is an example to uncompress an R script and execute it with <code>Rscript</code>.</p>
 <p>Here we define a simple <code>Rscript</code> tool without using docker.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
-<span class="va">Rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"Rscript"</span>,
-               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"rfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
+<span class="va">Rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"Rscript"</span>,
+               inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">Rs</span></code></pre></div>
 <pre><code>## class: cwlProcess 
 ##  cwlClass: CommandLineTool 
@@ -386,28 +465,29 @@
 ## output:
 ##   type: stdout</code></pre>
 <p>Test run:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Rs</span><span class="op">$</span><span class="va">rfile</span> <span class="op">&lt;-</span> <span class="va">r4</span><span class="op">$</span><span class="va">output</span>
 <span class="va">tres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">Rs</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tres</span><span class="op">$</span><span class="va">output</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "[1] 10  5  6  4  9"</code></pre>
-<p>The pipeline includes two steps, decompressed by the predefined tool <code>GZ</code> and compiled by <code>Rs</code>. The input file is a compressed file for the first “Uncomp” step.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">i1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
-<span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Step.html">Step</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Uncomp"</span>, run <span class="op">=</span> <span class="va">GZ</span>,
-           In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>zfile <span class="op">=</span> <span class="st">"cwl_zfile"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Step.html">Step</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Compile"</span>, run <span class="op">=</span> <span class="va">Rs</span>,
-           In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rfile <span class="op">=</span> <span class="st">"Uncomp/rfile"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>The input “cwl_zfile”, it is assigned to the <code>GZ</code> input <code>zfile</code> ih the frist step. Then the input of ‘Rs’ in the “Compile” step is assigned by the output “rfile” of the “GZ” tool in the previous step (“Uncomp/rfile”). The <code>run</code> option refer to the corresponding <code>cwlProcess</code> object and the <code>In</code> option in steps should be linked to the input parameters defined by <code>cwlWorkflow</code>.</p>
-<p>The pipeline output would be output of the ‘Compile’ step from the tool <code>Rs</code>.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_cout"</span>, type <span class="op">=</span> <span class="st">"File"</span>, outputSource <span class="op">=</span> <span class="st">"Compile/output"</span><span class="op">)</span></code></pre></div>
-<p>The <code>cwlWorkflow</code> is used to collect <code>inputs</code> and <code>outputs</code> from previous step. Then we can simply use <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code> to connect all steps.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cwl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlWorkflow-class.html">cwlWorkflow</a></span><span class="op">(</span>inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">i1</span><span class="op">)</span>,
-                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span><span class="op">)</span>
+<pre><code>## [1] "[1]  9  2  3  5 10"</code></pre>
+<p>The pipeline includes two steps, decompressing with predefined <code>cwlProcess</code> of <code>GZ</code> and compiling with <code>cwlProcess</code> of <code>Rs</code>. The input file is a compressed file for the first “Uncomp” step.</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">i1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_zfile"</span>, type <span class="op">=</span> <span class="st">"File"</span><span class="op">)</span>
+<span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlStep.html">cwlStep</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Uncomp"</span>, run <span class="op">=</span> <span class="va">GZ</span>,
+              In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>zfile <span class="op">=</span> <span class="st">"cwl_zfile"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlStep.html">cwlStep</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Compile"</span>, run <span class="op">=</span> <span class="va">Rs</span>,
+              In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rfile <span class="op">=</span> <span class="st">"Uncomp/rfile"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In step 1 (‘s1’), the pipeline runs the <code>cwlProcess</code> of <code>GZ</code>, where the input <code>zfile</code> is defined in ‘i1’ with id of “cwl_zfile”. In step 2 (‘s2’), the pipeline runs the <code>cwlProcess</code> of <code>Rs</code>, where the input <code>rfile</code> is from the output of the step 1 (“Uncomp/rfile”) using the format of <code>&lt;step&gt;/&lt;output&gt;</code>.</p>
+<p>The pipeline output will be defined as the output of the step 2 (“Compile/output”) using the format of <code>&lt;step&gt;/&lt;output&gt;</code> as shown below.</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_cout"</span>, type <span class="op">=</span> <span class="st">"File"</span>,
+                  outputSource <span class="op">=</span> <span class="st">"Compile/output"</span><span class="op">)</span></code></pre></div>
+<p>The <code>cwlWorkflow</code> function is used to initiate the pipeline by specifying the <code>inputs</code> and <code>outputs</code>. Then we can simply use <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code> to connect all steps to build the final pipeline.</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cwl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlWorkflow.html">cwlWorkflow</a></span><span class="op">(</span>inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">i1</span><span class="op">)</span>,
+                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">cwl</span> <span class="op">&lt;-</span> <span class="va">cwl</span> <span class="op">+</span> <span class="va">s1</span> <span class="op">+</span> <span class="va">s2</span>
 <span class="va">cwl</span></code></pre></div>
 <pre><code>## class: cwlWorkflow 
@@ -433,24 +513,24 @@
 ##   out:
 ##   - output</code></pre>
 <p>Let’s run the pipeline.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cwl</span><span class="op">$</span><span class="va">cwl_zfile</span> <span class="op">&lt;-</span> <span class="va">zzfil</span>
 <span class="va">r7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">cwl</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">r7</span><span class="op">$</span><span class="va">output</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "[1] 8 2 9 1 5"</code></pre>
+<pre><code>## [1] "[1]  7 10  2  6  1"</code></pre>
 <p>Tips: Sometimes, we need to adjust some arguments of certain tools in a pipeline besides of parameter inputs. The function <code>arguments</code> can help to modify arguments for a tool, tool in a pipeline, or even tool in a sub-workflow. For example,</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cwlVersion.html">arguments</a></span><span class="op">(</span><span class="va">cwl</span>, step <span class="op">=</span> <span class="st">"Uncomp"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-d"</span>, <span class="st">"-c"</span>, <span class="st">"-f"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/runs.html">runs</a></span><span class="op">(</span><span class="va">cwl</span><span class="op">)</span><span class="op">$</span><span class="va">Uncomp</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cwlProcess-methods.html">arguments</a></span><span class="op">(</span><span class="va">cwl</span>, step <span class="op">=</span> <span class="st">"Uncomp"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-d"</span>, <span class="st">"-c"</span>, <span class="st">"-f"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cwlWorkflow-methods.html">runs</a></span><span class="op">(</span><span class="va">cwl</span><span class="op">)</span><span class="op">$</span><span class="va">Uncomp</span></code></pre></div>
 <pre><code>## class: cwlProcess 
 ##  cwlClass: CommandLineTool 
 ##  cwlVersion: v1.0 
 ##  baseCommand: gzip 
 ## arguments: -d -c -f 
 ## inputs:
-##   zfile (File):  /private/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/sample.R.gz
+##   zfile (File):  /private/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/sample.R.gz
 ## outputs:
 ## rfile:
 ##   type: File
@@ -461,17 +541,17 @@
 <h2 class="hasAnchor">
 <a href="#scattering-pipeline" class="anchor"></a>Scattering pipeline</h2>
 <p>The scattering feature can specifies the associated workflow step or subworkflow to execute separately over a list of input elements. To use this feature, <code>ScatterFeatureRequirement</code> must be specified in the workflow requirements. Different <code>scatter</code> methods can be used in the associated step to decompose the input into a discrete set of jobs. More details can be found at: <a href="https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep" class="uri">https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep</a>.</p>
-<p>Here is an example to execute multiple R scripts. First, we need to set the input and output types to be array of “File”, and add the requirments. In the “Compile” step, the scattering input is required to be set with the <code>scatter</code> option.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">i2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_rfiles"</span>, type <span class="op">=</span> <span class="st">"File[]"</span><span class="op">)</span>
-<span class="va">o2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_couts"</span>, type <span class="op">=</span> <span class="st">"File[]"</span>, outputSource <span class="op">=</span> <span class="st">"Compile/output"</span><span class="op">)</span>
-<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/requireDocker.html">requireScatter</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">cwl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlWorkflow-class.html">cwlWorkflow</a></span><span class="op">(</span>requirements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">req1</span><span class="op">)</span>,
-                    inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">i2</span><span class="op">)</span>,
-                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Step.html">Step</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Compile"</span>, run <span class="op">=</span> <span class="va">Rs</span>,
-           In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rfile <span class="op">=</span> <span class="st">"cwl_rfiles"</span><span class="op">)</span>,
-           scatter <span class="op">=</span> <span class="st">"rfile"</span><span class="op">)</span>
+<p>Here is an example to execute multiple R scripts. First, we need to set the input and output types to be array of “File”, and add the requirements. In the “Compile” step, the scattering input is required to be set with the <code>scatter</code> option.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">i2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_rfiles"</span>, type <span class="op">=</span> <span class="st">"File[]"</span><span class="op">)</span>
+<span class="va">o2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"cwl_couts"</span>, type <span class="op">=</span> <span class="st">"File[]"</span>, outputSource <span class="op">=</span> <span class="st">"Compile/output"</span><span class="op">)</span>
+<span class="va">req1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwl-requirements.html">requireScatter</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">cwl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlWorkflow.html">cwlWorkflow</a></span><span class="op">(</span>requirements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">req1</span><span class="op">)</span>,
+                    inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">i2</span><span class="op">)</span>,
+                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o2</span><span class="op">)</span><span class="op">)</span>
+<span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlStep.html">cwlStep</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Compile"</span>, run <span class="op">=</span> <span class="va">Rs</span>,
+              In <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rfile <span class="op">=</span> <span class="st">"cwl_rfiles"</span><span class="op">)</span>,
+              scatter <span class="op">=</span> <span class="st">"rfile"</span><span class="op">)</span>
 <span class="va">cwl2</span> <span class="op">&lt;-</span> <span class="va">cwl2</span> <span class="op">+</span> <span class="va">s1</span>
 <span class="va">cwl2</span></code></pre></div>
 <pre><code>## class: cwlWorkflow 
@@ -494,27 +574,25 @@
 ##   - output
 ##   scatter: rfile</code></pre>
 <p>Multiple R scripts can be assigned to the workflow inputs and executed.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cwl2</span><span class="op">$</span><span class="va">cwl_rfiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">r4b</span><span class="op">$</span><span class="va">output</span>, <span class="va">r4b</span><span class="op">$</span><span class="va">output</span><span class="op">)</span>
 <span class="va">r8</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">cwl2</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r8</span><span class="op">$</span><span class="va">output</span></code></pre></div>
-<pre><code>## [1] "/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/8cafc316c0bf32ba1bffad801cd3b7b2d886ff24"  
-## [2] "/var/folders/pv/qm6yts0j7hdgggvq53hrzfr0vfyhvv/T/RtmpiSqthE/8cafc316c0bf32ba1bffad801cd3b7b2d886ff24_2"</code></pre>
+<pre><code>## [1] "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/d197503c167721206ef2fc1631cd2a8b6c9c16d7"  
+## [2] "/var/folders/7t/9l4kkf_j2sqbpn321y9g5558z96ck_/T/Rtmpt8cgVU/d197503c167721206ef2fc1631cd2a8b6c9c16d7_2"</code></pre>
 </div>
 <div id="pipeline-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pipeline-plot" class="anchor"></a>Pipeline plot</h2>
 <p>The function <code>plotCWL</code> can be used to visualize the relationship of inputs, outputs and the analysis for a tool or pipeline.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotCWL.html">plotCWL</a></span><span class="op">(</span><span class="va">cwl</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
-## Using compatibility `.name_repair`.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div id="htmlwidget-d29d5a5f27a4bd1045cb" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d29d5a5f27a4bd1045cb">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"cwl_zfile\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,4!\"] \n  \"2\" [label = \"cwl_cout\", shape = \"circle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"3\" [label = \"Uncomp\", shape = \"diamond\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"4\" [label = \"Compile\", shape = \"diamond\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"1\"->\"3\" \n  \"3\"->\"4\" \n  \"4\"->\"2\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+## Using compatibility `.name_repair`.</code></pre>
+<div id="htmlwidget-6eb179be3017a10cdbcf" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6eb179be3017a10cdbcf">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"cwl_zfile\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,4!\"] \n  \"2\" [label = \"cwl_cout\", shape = \"circle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"3\" [label = \"Uncomp\", shape = \"diamond\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"4\" [label = \"Compile\", shape = \"diamond\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"1\"->\"3\" \n  \"3\"->\"4\" \n  \"4\"->\"2\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="web-application" class="section level1">
@@ -524,19 +602,19 @@
 <h2 class="hasAnchor">
 <a href="#cwlprocess-example" class="anchor"></a>cwlProcess example</h2>
 <p>Here we build a tool with different types of input parameters.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"flag"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>,
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"flag"</span>, type <span class="op">=</span> <span class="st">"boolean"</span>,
                  prefix <span class="op">=</span> <span class="st">"-f"</span>, doc <span class="op">=</span> <span class="st">"boolean flag"</span><span class="op">)</span>
-<span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"string"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-s"</span><span class="op">)</span>
-<span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"option"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-o"</span><span class="op">)</span>
-<span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"int"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"-i"</span>, default <span class="op">=</span> <span class="fl">123</span><span class="op">)</span>
-<span class="va">e5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"file"</span>, type <span class="op">=</span> <span class="st">"File"</span>,
+<span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"string"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-s"</span><span class="op">)</span>
+<span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"option"</span>, type <span class="op">=</span> <span class="st">"string"</span>, prefix <span class="op">=</span> <span class="st">"-o"</span><span class="op">)</span>
+<span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"int"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"-i"</span>, default <span class="op">=</span> <span class="fl">123</span><span class="op">)</span>
+<span class="va">e5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"file"</span>, type <span class="op">=</span> <span class="st">"File"</span>,
                  prefix <span class="op">=</span> <span class="st">"--file="</span>, separate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">e6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"array"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-A"</span>,
+<span class="va">e6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"array"</span>, type <span class="op">=</span> <span class="st">"string[]"</span>, prefix <span class="op">=</span> <span class="st">"-A"</span>,
                  doc <span class="op">=</span> <span class="st">"separated by comma"</span><span class="op">)</span>
-<span class="va">mulEcho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>, id <span class="op">=</span> <span class="st">"mulEcho"</span>,
+<span class="va">mulEcho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="st">"echo"</span>, id <span class="op">=</span> <span class="st">"mulEcho"</span>,
                  label <span class="op">=</span> <span class="st">"Test parameter types"</span>,
-                 inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">e1</span>, <span class="va">e2</span>, <span class="va">e3</span>, <span class="va">e4</span>, <span class="va">e5</span>, <span class="va">e6</span><span class="op">)</span>,
+                 inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">e1</span>, <span class="va">e2</span>, <span class="va">e3</span>, <span class="va">e4</span>, <span class="va">e5</span>, <span class="va">e6</span><span class="op">)</span>,
                  stdout <span class="op">=</span> <span class="st">"output.txt"</span><span class="op">)</span>
 <span class="va">mulEcho</span></code></pre></div>
 <pre><code>## class: cwlProcess 
@@ -558,8 +636,8 @@
 <div id="cwlprocess-to-shiny-app" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cwlprocess-to-shiny-app" class="anchor"></a>cwlProcess to Shiny App</h2>
-<p>Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An <code>upload</code> parameter can be used to defined wether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<p>Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An <code>upload</code> parameter can be used to defined whether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">inputList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>option <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"option1"</span>, <span class="st">"option2"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlShiny.html">cwlShiny</a></span><span class="op">(</span><span class="va">mulEcho</span>, <span class="va">inputList</span>, upload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu">runApp</span><span class="op">(</span><span class="va">app</span><span class="op">)</span></code></pre></div>
@@ -572,25 +650,25 @@
 <h1 class="hasAnchor">
 <a href="#working-with-r-functions" class="anchor"></a>Working with R functions</h1>
 <p>We can wrap an R function to <code>cwlProcess</code> object by simply assigning the R function to <code>baseCommand</code>. This could be useful to summarize results from other tools in a pipeline. It can also be used to benchmark different parameters for a method written in R. Please note that this feature is only implemented by <code>Rcwl</code>, but not available in the common workflow language.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fun1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="va">x</span><span class="op">*</span><span class="fl">2</span>
 <span class="va">testFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu">fun1</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">+</span> <span class="va">b</span><span class="op">^</span><span class="fl">2</span>, sep<span class="op">=</span><span class="st">"\n"</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="fu"><a href="https://rdrr.io/r/base/assign.html">assign</a></span><span class="op">(</span><span class="st">"fun1"</span>, <span class="va">fun1</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/assign.html">assign</a></span><span class="op">(</span><span class="st">"testFun"</span>, <span class="va">testFun</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span>
-<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"a"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"a="</span>, separate <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"b"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"b="</span>, separate <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutputParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"o"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="st">"rout.txt"</span><span class="op">)</span>
-<span class="va">TestFun</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess-class.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="va">testFun</span>,
-                    inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputParamList-class.html">InputParamList</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span>,
-                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/OutputParamList-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"a"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"a="</span>, separate <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"b"</span>, type <span class="op">=</span> <span class="st">"int"</span>, prefix <span class="op">=</span> <span class="st">"b="</span>, separate <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParam</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"o"</span>, type <span class="op">=</span> <span class="st">"File"</span>, glob <span class="op">=</span> <span class="st">"rout.txt"</span><span class="op">)</span>
+<span class="va">TestFun</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwlProcess.html">cwlProcess</a></span><span class="op">(</span>baseCommand <span class="op">=</span> <span class="va">testFun</span>,
+                    inputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">InputParamList</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span>,
+                    outputs <span class="op">=</span> <span class="fu"><a href="../reference/InputArrayParam-class.html">OutputParamList</a></span><span class="op">(</span><span class="va">o1</span><span class="op">)</span>,
                     stdout <span class="op">=</span> <span class="st">"rout.txt"</span><span class="op">)</span>
 <span class="va">TestFun</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">1</span>
 <span class="va">TestFun</span><span class="op">$</span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 <span class="va">r1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCWL.html">runCWL</a></span><span class="op">(</span><span class="va">TestFun</span>, cwlArgs <span class="op">=</span> <span class="st">"--preserve-entire-environment"</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1;30mINFO[0m Final process status is success</code></pre>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">r1</span><span class="op">$</span><span class="va">output</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "6"</code></pre>
 <p>The <code>runCWL</code> function wrote the <code>testFun</code> function and its dependencies into an R script file automatically and call <code>Rscript</code> to run the script with parameters. Each parameter requires a prefix from corresponding argument in the R function with “=” and without a separator. Here we assigned the R function and its dependencies into the global environment because it will start a new environment when the vignette is compiled.</p>
@@ -601,24 +679,34 @@
 <div id="rcwlpipelines" class="section level2">
 <h2 class="hasAnchor">
 <a href="#rcwlpipelines" class="anchor"></a>RcwlPipelines</h2>
-<p>The <code>Rcwl</code> package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNASeq alignment, quality control and quantification, DNASeq alignment and variant calling, have been developed based on the tool in an R package <code>RcwlPipelines</code>, which contains the CWL recipes and the scripts to create the pipelines. Examples to analyze real data are also included.</p>
-<p>The package is currently available in github.</p>
+<p>The <code>Rcwl</code> package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNA-seq alignment, quality control and quantification, DNA-seq alignment and variant calling, have been developed based on the tool in an R package <code>RcwlPipelines</code>, which contains the CWL recipes and the scripts to create the pipelines. Examples to analyze real data are also included.</p>
+<p>The package is currently available in GitHub.</p>
 <ul>
-<li><a href="https://github.com/hubentu/RcwlPipelines" class="uri">https://github.com/hubentu/RcwlPipelines</a></li>
+<li><a href="https://github.com/rworkflow/RcwlPipelines" class="uri">https://github.com/rworkflow/RcwlPipelines</a></li>
 </ul>
 <p>To install the package.</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"hubentu/RcwlPipelines"</span><span class="op">)</span></code></pre></div>
-<p>More recipes will be collected in this package and we would like to invite community to submit more pipelines to this package.</p>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"rworkflow/RcwlPipelines"</span><span class="op">)</span></code></pre></div>
+<p>The project website <a href="https://rcwl.org/" class="uri">https://rcwl.org/</a> serves as a central hub for all related resources. It provides guidance for new users and tutorials for both users and developers. Specific resources are listed below.</p>
+</div>
+<div id="tutorial-book" class="section level2">
+<h2 class="hasAnchor">
+<a href="#tutorial-book" class="anchor"></a>Tutorial book</h2>
+<p>The <a href="https://rcwl.org/RcwlBook/">tutorial book</a> provides detailed instructions for developing <code>Rcwl</code> tools/pipelines, and also includes examples of some commonly-used tools and pipelines that covers a wide range of Bioinformatics data analysis needs.</p>
+</div>
+<div id="the-r-recipes-and-cwl-scripts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-r-recipes-and-cwl-scripts" class="anchor"></a>The <em>R</em> recipes and cwl scripts</h2>
+<p>The <em>R</em> scripts to build the CWL tools and pipelines are now residing in a dedicated <a href="https://github.com/rworkflow/RcwlRecipes">GitHub repository</a>, which is intended to be a community effort to collect and contribute Bioinformatics tools and pipelines using <code>Rcwl</code> and CWL.</p>
 </div>
 <div id="tool-collections-in-cwl-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tool-collections-in-cwl-format" class="anchor"></a>Tool collections in CWL format</h2>
-<p>Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to <code>cwlProcess</code> object by <code>readCWL</code> function, or can be used directly.</p>
+<p>Plenty of Bioinformatics tools and workflows can be found from GitHub in CWL format. They can be imported to <code>cwlProcess</code> object by <code>readCWL</code> function, or can be used directly.</p>
 <ul>
-<li><a href="https://github.com/common-workflow-language/workflows" class="uri">https://github.com/common-workflow-language/workflows</a></li>
+<li><a href="https://github.com/common-workflow-library/bio-cwl-tools" class="uri">https://github.com/common-workflow-library/bio-cwl-tools</a></li>
 <li><a href="https://github.com/Duke-GCB/GGR-cwl" class="uri">https://github.com/Duke-GCB/GGR-cwl</a></li>
-<li><a href="https://github.com/pitagora-galaxy/cwl" class="uri">https://github.com/pitagora-galaxy/cwl</a></li>
+<li><a href="https://github.com/pitagora-network/pitagora-cwl" class="uri">https://github.com/pitagora-network/pitagora-cwl</a></li>
 </ul>
 </div>
 <div id="docker-for-bioinformatics-tools" class="section level2">
@@ -634,14 +722,14 @@
 <div id="sessioninfo" class="section level1">
 <h1 class="hasAnchor">
 <a href="#sessioninfo" class="anchor"></a>SessionInfo</h1>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R Under development (unstable) (2020-12-09 r79601)
+<pre><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: macOS Big Sur 11.1
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /Users/qi28068/miniconda3/envs/r-dev/lib/libopenblasp-r0.3.12.dylib
+## BLAS/LAPACK: /Users/qi31566/miniconda3/envs/r-base/lib/libopenblasp-r0.3.12.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -651,36 +739,38 @@
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] Rcwl_1.7.7          S4Vectors_0.29.6    BiocGenerics_0.37.0
-## [4] yaml_2.2.1          BiocStyle_2.19.1   
+## [1] Rcwl_1.7.12         S4Vectors_0.28.1    BiocGenerics_0.36.0
+## [4] yaml_2.2.1          BiocStyle_2.18.1   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.6           lattice_0.20-41      tidyr_1.1.2         
-##  [4] prettyunits_1.1.1    visNetwork_2.0.9     assertthat_0.2.1    
-##  [7] rprojroot_2.0.2      digest_0.6.27        mime_0.9            
-## [10] R6_2.5.0             backports_1.2.1      evaluate_0.14       
-## [13] pillar_1.4.7         basilisk_1.3.6       rlang_0.4.10        
-## [16] progress_1.2.2       rstudioapi_0.13      data.table_1.13.6   
-## [19] R.utils_2.10.1       R.oo_1.24.0          Matrix_1.3-2        
-## [22] checkmate_2.0.0      reticulate_1.18      rmarkdown_2.6       
-## [25] DiagrammeR_1.0.6.1   pkgdown_1.6.1        textshaping_0.2.1   
-## [28] desc_1.2.0           BiocParallel_1.25.3  stringr_1.4.0       
-## [31] htmlwidgets_1.5.3    igraph_1.2.6         shiny_1.5.0         
-## [34] compiler_4.1.0       httpuv_1.5.5         xfun_0.20           
-## [37] pkgconfig_2.0.3      systemfonts_0.3.2    htmltools_0.5.1.1   
-## [40] tidyselect_1.1.0     tibble_3.0.5         bookdown_0.21       
-## [43] batchtools_0.9.15    codetools_0.2-18     dplyr_1.0.3         
-## [46] crayon_1.3.4         withr_2.4.0          later_1.1.0.1       
-## [49] R.methodsS3_1.8.1    rappdirs_0.3.1       basilisk.utils_1.3.5
-## [52] grid_4.1.0           DBI_1.1.1            jsonlite_1.7.2      
-## [55] xtable_1.8-4         lifecycle_0.2.0      magrittr_2.0.1      
-## [58] stringi_1.5.3        fs_1.5.0             promises_1.1.1      
-## [61] generics_0.1.0       ellipsis_0.3.1       brew_1.0-6          
-## [64] filelock_1.0.2       ragg_0.4.1           vctrs_0.3.6         
-## [67] RColorBrewer_1.1-2   tools_4.1.0          glue_1.4.2          
-## [70] purrr_0.3.4          hms_1.0.0            fastmap_1.0.1       
-## [73] BiocManager_1.30.10  base64url_1.4        memoise_1.1.0       
-## [76] knitr_1.30</code></pre>
+##  [1] tidyr_1.1.2          sass_0.3.1           jsonlite_1.7.2      
+##  [4] R.utils_2.10.1       bslib_0.2.4          shiny_1.6.0         
+##  [7] assertthat_0.2.1     BiocManager_1.30.10  base64url_1.4       
+## [10] progress_1.2.2       pillar_1.5.0         backports_1.2.1     
+## [13] lattice_0.20-41      glue_1.4.2           reticulate_1.18     
+## [16] digest_0.6.27        RColorBrewer_1.1-2   promises_1.2.0.1    
+## [19] checkmate_2.0.0      htmltools_0.5.1.1    httpuv_1.5.5        
+## [22] Matrix_1.3-2         R.oo_1.24.0          pkgconfig_2.0.3     
+## [25] bookdown_0.21        DiagrammeR_1.0.6.1   purrr_0.3.4         
+## [28] xtable_1.8-4         brew_1.0-6           later_1.1.0.1       
+## [31] BiocParallel_1.24.1  tibble_3.0.6         generics_0.1.0      
+## [34] ellipsis_0.3.1       cachem_1.0.4         withr_2.4.1         
+## [37] magrittr_2.0.1       crayon_1.4.1         mime_0.10           
+## [40] memoise_2.0.0        evaluate_0.14        R.methodsS3_1.8.1   
+## [43] fs_1.5.0             fansi_0.4.2          textshaping_0.3.1   
+## [46] tools_4.0.3          data.table_1.14.0    prettyunits_1.1.1   
+## [49] hms_1.0.0            lifecycle_1.0.0      basilisk.utils_1.2.2
+## [52] stringr_1.4.0        compiler_4.0.3       pkgdown_1.6.1       
+## [55] jquerylib_0.1.3      systemfonts_1.0.1    rlang_0.4.10        
+## [58] grid_4.0.3           rstudioapi_0.13      rappdirs_0.3.3      
+## [61] htmlwidgets_1.5.3    visNetwork_2.0.9     igraph_1.2.6        
+## [64] rmarkdown_2.7        basilisk_1.2.1       codetools_0.2-18    
+## [67] DBI_1.1.1            R6_2.5.0             knitr_1.31          
+## [70] dplyr_1.0.4          fastmap_1.1.0        utf8_1.1.4          
+## [73] filelock_1.0.2       rprojroot_2.0.2      ragg_1.1.0          
+## [76] desc_1.2.0           stringi_1.5.3        Rcpp_1.0.6          
+## [79] vctrs_0.3.6          batchtools_0.9.15    tidyselect_1.1.0    
+## [82] xfun_0.21</code></pre>
 </div>
   </div>
 

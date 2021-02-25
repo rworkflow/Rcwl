@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -54,6 +54,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-93043521-1');
+</script>
+
 
   </head>
 
@@ -71,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rcwl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.12</span>
       </span>
     </div>
 
@@ -91,7 +101,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/rworkflow/Rcwl">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -131,56 +146,25 @@
       <tr>
         
         <td>
-          <p><code><a href="InputArrayParam.html">InputArrayParam()</a></code> </p>
+          <p><code><a href="AllClasses.html">InputArrayParam()</a></code> <code><a href="AllClasses.html">InputParam()</a></code> <code><a href="AllClasses.html">InputParamList()</a></code> <code><a href="AllClasses.html">OutputArrayParam()</a></code> <code><a href="AllClasses.html">OutputParam()</a></code> <code><a href="AllClasses.html">OutputParamList()</a></code> <code><a href="AllClasses.html">stepInParam()</a></code> <code><a href="AllClasses.html">stepInParamList()</a></code> <code><a href="AllClasses.html">cwlStepList()</a></code> </p>
         </td>
-        <td><p>InputArrayParam</p></td>
+        <td><p>All classes defined in the package of `Rcwl` and the class constructor functions.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="InputParam.html">InputParam()</a></code> <code><a href="InputParam.html">`$`(<i>&lt;cwlProcess&gt;</i>)</a></code> <code><a href="InputParam.html">`$&lt;-`(<i>&lt;cwlProcess&gt;</i>)</a></code> </p>
+          <p><code><a href="Rcwl-package.html">Rcwl-package</a></code> </p>
         </td>
-        <td><p>Input parameters
-InputParam</p></td>
+        <td><p>Rcwl-package</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="InputParamList.html">InputParamList()</a></code> <code><a href="InputParamList.html">inputs()</a></code> </p>
+          <p><code><a href="cwl-requirements.html">requireDocker()</a></code> <code><a href="cwl-requirements.html">requireJS()</a></code> <code><a href="cwl-requirements.html">requireSoftware()</a></code> <code><a href="cwl-requirements.html">requireInitialWorkDir()</a></code> <code><a href="cwl-requirements.html">Dirent()</a></code> <code><a href="cwl-requirements.html">requireManifest()</a></code> <code><a href="cwl-requirements.html">requireSubworkflow()</a></code> <code><a href="cwl-requirements.html">requireScatter()</a></code> <code><a href="cwl-requirements.html">requireMultipleInput()</a></code> <code><a href="cwl-requirements.html">requireStepInputExpression()</a></code> <code><a href="cwl-requirements.html">requireRscript()</a></code> </p>
         </td>
-        <td><p>InputParamList</p></td>
+        <td><p>CWL requirements functions</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="OutputArrayParam.html">OutputArrayParam()</a></code> </p>
-        </td>
-        <td><p>Output array parameters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="OutputParam.html">OutputParam()</a></code> </p>
-        </td>
-        <td><p>Output parameters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="OutputParamList.html">OutputParamList()</a></code> <code><a href="OutputParamList.html">outputs()</a></code> </p>
-        </td>
-        <td><p>OutputParamList</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Rcwl.html">Rcwl</a></code> </p>
-        </td>
-        <td><p>Rcwl</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Step.html">Step()</a></code> </p>
-        </td>
-        <td><p>Step function</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cwlProcess-methods.html">cwlVersion()</a></code> <code><a href="cwlProcess-methods.html">`cwlVersion&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">cwlClass()</a></code> <code><a href="cwlProcess-methods.html">`cwlClass&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">baseCommand()</a></code> <code><a href="cwlProcess-methods.html">`baseCommand&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">arguments()</a></code> <code><a href="cwlProcess-methods.html">`arguments&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">hints()</a></code> <code><a href="cwlProcess-methods.html">`hints&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">requirements()</a></code> <code><a href="cwlProcess-methods.html">`requirements&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">stdOut()</a></code> <code><a href="cwlProcess-methods.html">`stdOut&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">extensions()</a></code> <code><a href="cwlProcess-methods.html">`extensions&lt;-`()</a></code> </p>
+          <p><code><a href="cwlProcess-methods.html">cwlVersion()</a></code> <code><a href="cwlProcess-methods.html">`cwlVersion&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">cwlClass()</a></code> <code><a href="cwlProcess-methods.html">`cwlClass&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">baseCommand()</a></code> <code><a href="cwlProcess-methods.html">`baseCommand&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">arguments()</a></code> <code><a href="cwlProcess-methods.html">`arguments&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">hints()</a></code> <code><a href="cwlProcess-methods.html">`hints&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">requirements()</a></code> <code><a href="cwlProcess-methods.html">`requirements&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">inputs()</a></code> <code><a href="cwlProcess-methods.html">`$`(<i>&lt;cwlProcess&gt;</i>)</a></code> <code><a href="cwlProcess-methods.html">`$&lt;-`(<i>&lt;cwlProcess&gt;</i>)</a></code> <code><a href="cwlProcess-methods.html">outputs()</a></code> <code><a href="cwlProcess-methods.html">stdOut()</a></code> <code><a href="cwlProcess-methods.html">`stdOut&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">extensions()</a></code> <code><a href="cwlProcess-methods.html">`extensions&lt;-`()</a></code> <code><a href="cwlProcess-methods.html">short()</a></code> </p>
         </td>
         <td><p>cwlProcess methods</p></td>
       </tr><tr>
@@ -198,9 +182,21 @@ InputParam</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cwlWorkflow.html">cwlWorkflow()</a></code> </p>
+          <p><code><a href="cwlStep.html">cwlStep()</a></code> </p>
         </td>
-        <td><p>cwlWorkflow</p></td>
+        <td><p>cwlStep function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cwlWorkflow-methods.html">runs()</a></code> </p>
+        </td>
+        <td><p>cwlWorkflow methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cwlWorkflow.html">cwlWorkflow()</a></code> <code><a href="cwlWorkflow.html">`+`(<i>&lt;cwlWorkflow&gt;</i>,<i>&lt;cwlStep&gt;</i>)</a></code> <code><a href="cwlWorkflow.html">steps()</a></code> <code><a href="cwlWorkflow.html">`steps&lt;-`()</a></code> </p>
+        </td>
+        <td><p>cwlWorkflow function</p></td>
       </tr><tr>
         
         <td>
@@ -216,22 +212,10 @@ InputParam</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plus-cwlWorkflow-stepParam-method.html">`+`(<i>&lt;cwlWorkflow&gt;</i>,<i>&lt;stepParam&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Pipeline</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="readCWL.html">readCWL()</a></code> </p>
         </td>
         <td><p>Read CWL
 Function to read CWL command or workflow files.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="requirements.html">requireDocker()</a></code> <code><a href="requirements.html">requireJS()</a></code> <code><a href="requirements.html">requireSoftware()</a></code> <code><a href="requirements.html">requireInitialWorkDir()</a></code> <code><a href="requirements.html">Dirent()</a></code> <code><a href="requirements.html">requireManifest()</a></code> <code><a href="requirements.html">requireSubworkflow()</a></code> <code><a href="requirements.html">requireScatter()</a></code> <code><a href="requirements.html">requireMultipleInput()</a></code> <code><a href="requirements.html">requireStepInputExpression()</a></code> </p>
-        </td>
-        <td><p>requireDocker</p></td>
       </tr><tr>
         
         <td>
@@ -244,48 +228,6 @@ Function to read CWL command or workflow files.</p></td>
           <p><code><a href="runCWLBatch.html">runCWLBatch()</a></code> </p>
         </td>
         <td><p>run CWL with batchtools</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="runs.html">runs()</a></code> </p>
-        </td>
-        <td><p>runs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="short.html">short()</a></code> </p>
-        </td>
-        <td><p>short</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stepInParam.html">stepInParam()</a></code> </p>
-        </td>
-        <td><p>stepInParam</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stepInParamList.html">stepInParamList()</a></code> </p>
-        </td>
-        <td><p>stepInParamList</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stepParam.html">stepParam()</a></code> </p>
-        </td>
-        <td><p>stepParam</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stepParamList.html">stepParamList()</a></code> </p>
-        </td>
-        <td><p>stepParamList</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="steps.html">steps()</a></code> <code><a href="steps.html">`steps&lt;-`()</a></code> </p>
-        </td>
-        <td><p>Steps</p></td>
       </tr><tr>
         
         <td>

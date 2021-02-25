@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parameters for CWL — cwlProcess-class • Rcwl</title>
+<title>Parameters for CWL — cwlProcess • Rcwl</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Parameters for CWL — cwlProcess-class" />
+<meta property="og:title" content="Parameters for CWL — cwlProcess" />
 <meta property="og:description" content="The main CWL parameter class and constructor for command
 tools. More details:
 https://www.commonwl.org/v1.0/CommandLineTool.html" />
@@ -56,6 +56,16 @@ https://www.commonwl.org/v1.0/CommandLineTool.html" />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-93043521-1');
+</script>
 
 
   </head>
@@ -74,7 +84,7 @@ https://www.commonwl.org/v1.0/CommandLineTool.html" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rcwl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.12</span>
       </span>
     </div>
 
@@ -94,7 +104,12 @@ https://www.commonwl.org/v1.0/CommandLineTool.html" />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/rworkflow/Rcwl">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,8 +143,8 @@ https://www.commonwl.org/v1.0/CommandLineTool.html</p>
   arguments <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
   id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
-  inputs <span class='op'>=</span> <span class='fu'><a href='InputParamList-class.html'>InputParamList</a></span><span class='op'>(</span><span class='op'>)</span>,
-  outputs <span class='op'>=</span> <span class='fu'><a href='OutputParamList-class.html'>OutputParamList</a></span><span class='op'>(</span><span class='op'>)</span>,
+  inputs <span class='op'>=</span> <span class='fu'><a href='InputArrayParam-class.html'>InputParamList</a></span><span class='op'>(</span><span class='op'>)</span>,
+  outputs <span class='op'>=</span> <span class='fu'><a href='InputArrayParam-class.html'>OutputParamList</a></span><span class='op'>(</span><span class='op'>)</span>,
   stdout <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   expression <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   extensions <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
@@ -153,8 +168,9 @@ https://www.commonwl.org/v1.0/CommandLineTool.html</p>
     </tr>
     <tr>
       <th>requirements</th>
-      <td><p>A list of Requirement lists that apply to
-either the runtime environment or the workflow engine.</p></td>
+      <td><p>A list of requirements that apply to either
+the runtime environment or the workflow engine that must be met
+in order to execute this process.</p></td>
     </tr>
     <tr>
       <th>hints</th>
@@ -209,8 +225,8 @@ operation, of this Process.</p></td>
     <p>https://www.commonwl.org/v1.0/CommandLineTool.html</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>input1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='InputParam-class.html'>InputParam</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='st'>"sth"</span><span class='op'>)</span>
-<span class='va'>echo</span> <span class='op'>&lt;-</span> <span class='fu'>cwlProcess</span><span class='op'>(</span>baseCommand <span class='op'>=</span> <span class='st'>"echo"</span>, inputs <span class='op'>=</span> <span class='fu'><a href='InputParamList-class.html'>InputParamList</a></span><span class='op'>(</span><span class='va'>input1</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>input1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='InputArrayParam-class.html'>InputParam</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='st'>"sth"</span><span class='op'>)</span>
+<span class='va'>echo</span> <span class='op'>&lt;-</span> <span class='fu'>cwlProcess</span><span class='op'>(</span>baseCommand <span class='op'>=</span> <span class='st'>"echo"</span>, inputs <span class='op'>=</span> <span class='fu'><a href='InputArrayParam-class.html'>InputParamList</a></span><span class='op'>(</span><span class='va'>input1</span><span class='op'>)</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

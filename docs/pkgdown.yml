@@ -1,7 +1,10 @@
-pandoc: 2.10.1
+pandoc: 2.9.2.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   Rcwl: Rcwl.html
-last_built: 2021-02-03T16:51Z
+last_built: 2021-02-25T03:43Z
+urls:
+  reference: https://rworkflow.github.io/Rcwl/reference
+  article: https://rworkflow.github.io/Rcwl/articles
 
