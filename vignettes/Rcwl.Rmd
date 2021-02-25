@@ -1,13 +1,13 @@
 ---
-title: "User Guide for Rcwl"
-author: "Qiang Hu"
+title: "Rcwl: An R interface to the Common Workflow Language (CWL)"
+author: "Qiang Hu, Qian Liu"
 date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document:
     toc: true
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{User Guide for Rcwl}
+  %\VignetteIndexEntry{Rcwl: An R interface to the Common Workflow Language}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,11 +22,22 @@ vignette: >
 knitr::opts_knit$set(root.dir = tempdir())
 ```
 
-The `Rcwl` package is aimed to be a simple and user-friendly way to
-manage command line tools and build data analysis pipelines in _R_
-using Common Workflow Language (CWL). It can be a bridge between heavy
-bioinformatics tools and pipeline to R/Bioconductor_. More details
-about CWL can be found at <http://www.commonwl.org>.
+Here we introduce the _Bioconductor_ toolchain for usage and development
+of reproducible bioinformatics pipelines using packages of
+[Rcwl](https://bioconductor.org/packages/Rcwl/) and
+[RcwlPipelines](https://bioconductor.org/packages/RcwlPipelines/). 
+
+`Rcwl` provides a simple way to wrap command line tools and build CWL
+data analysis pipelines programmatically within _R_. It increases the
+ease of use, development, and maintenance of CWL
+pipelines. `RcwlPipelines` manages a collection of more than a hundred
+of pre-built and tested CWL tools and pipelines, which are highly
+modularized with easy customization to meet different bioinformatics
+data analysis needs.
+
+In this vignette, we will introduce how to build and run CWL pipelines
+within _R/Bioconductor_ using `Rcwl`package. More details about CWL
+can be found at <https://www.commonwl.org>.
 
 # Installation
 
@@ -131,12 +142,12 @@ invoked. The internal execution requires a `cwl-runner` (e.g.,
 writeCWL(echo)
 ```
 
-# Command line tool
+# Wrap command line tools
 
 The package provides functions to define a CWL syntax for Command Line
-Tools in an intuitive way. The functions were developped based on the
+Tools in an intuitive way. The functions were developed based on the
 CWL Command Line Tool Description (v1.0). More details can be found in
-the offical document:
+the official document:
 <https://www.commonwl.org/v1.0/CommandLineTool.html>.
 
 ## Input Parameters
@@ -149,7 +160,7 @@ For the input parameters, three options need to be defined usually,
 Here is an example from [CWL user
 guide](http://www.commonwl.org/user_guide/03-input/). Here we defined
 an `echo` with different type of input parameters by `InputParam`. The
-`stdout` option can be used to caputre the standard output stream to a
+`stdout` option can be used to capture the standard output stream to a
 file.
 
 ```{r}
@@ -281,22 +292,28 @@ r4b <- runCWL(GZ, outdir = tempdir())
 ### Array Outputs
 
 We can also capture multiple output files with `glob` pattern.
+
 ```{r}
 a <- InputParam(id = "a", type = InputArrayParam(items = "string"))
-b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
-touch <- cwlProcess(baseCommand = "touch", inputs = InputParamList(a), outputs = OutputParamList(b))
-touch$a <- c("a.txt", "b.gz", "c.txt")
+b <- OutputParam(id = "b", type = OutputArrayParam(items = "File"),
+                 glob = "*.txt")
+touch <- cwlProcess(baseCommand = "touch", inputs = InputParamList(a),
+                    outputs = OutputParamList(b))
+touch$a <- c("a.txt", "b.log", "c.txt")
 r5 <- runCWL(touch, outdir = tempdir())
 r5$output
 ```
 
-The "touch" comand generated three files, but the output shows that
-only two files with ".txt" suffix return in the output directory
-except the "gz" file, which behaves right as we defined in the "glob"
-pattern.
+The "touch" command generates three files, but the output only collects
+two files with ".txt" suffix as defined in the `OutputParam` using the
+"glob" option.
 
 # Running Tools in Docker
-The CWL can work with docker to simplify your software management and communicate files between host and container. The docker container can be defined by the `hints` or `requirements` option.
+
+The CWL can work with docker to simplify your software management and
+communicate files between host and container. The docker container can
+be defined by the `hints` or `requirements` option.
+
 ```{r}
 d1 <- InputParam(id = "rfile", type = "File")
 req1 <- requireDocker("r-base")
@@ -322,11 +339,10 @@ r6a <- runCWL(doc, docker = FALSE, outdir = tempdir(),
 ```
 
 # Running Tools in Cluster server
-The CWL also can work in high performance clusters with batch-queuing
+The CWL can also work in high performance clusters with batch-queuing
 system, such as SGE, PBS, SLURM and so on, using the Bioconductor
 package `BiocParallel`. Here is an example to submit jobs with
-"Multicore" and "SGE". A more detailed example can be found
-(<https://hubentu.github.io/others/Rcwl_RNASeq.html>).
+"Multicore" and "SGE".
 
 ```{r, eval=FALSE}
 library(BiocParallel)
@@ -343,7 +359,9 @@ result2 <- runCWLBatch(cwl = echo, outdir = tempdir(), inputList = list(sth = st
                                                  resources = list(queue = "all.q")))
 ```
 
+
 # Writing Pipeline
+
 We can connect multiple tools together into a pipeline. Here is an
 example to uncompress an R script and execute it with `Rscript`.
 
@@ -364,7 +382,7 @@ readLines(tres$output)
 
 The pipeline includes two steps, decompressing with predefined
 `cwlProcess` of `GZ` and compiling with `cwlProcess` of `Rs`. The
-input file is a compressed file for the first "Uncomp" step. (FIXME: last sentence)
+input file is a compressed file for the first "Uncomp" step.
 
 ```{r}
 i1 <- InputParam(id = "cwl_zfile", type = "File")
@@ -374,22 +392,24 @@ s2 <- cwlStep(id = "Compile", run = Rs,
               In = list(rfile = "Uncomp/rfile"))
 ```
 
-The input "cwl_zfile", it is assigned to the `GZ` input `zfile` in the
-first step. Then the input of 'Rs' in the "Compile" step is assigned
-by the output "rfile" of the "GZ" tool in the previous step
-("Uncomp/rfile"). The `run` option refer to the corresponding
-`cwlProcess` object and the `In` option in steps should be linked to the
-input parameters defined by `cwlWorkflow`.
+In step 1 ('s1'), the pipeline runs the `cwlProcess` of `GZ`, where
+the input `zfile` is defined in 'i1' with id of "cwl_zfile". In step 2
+('s2'), the pipeline runs the `cwlProcess` of `Rs`, where the input
+`rfile` is from the output of the step 1 ("Uncomp/rfile") using the
+format of `<step>/<output>`.
 
-The pipeline output would be output of the 'Compile' step from the
-tool `Rs`.
+The pipeline output will be defined as the output of the step 2
+("Compile/output") using the format of `<step>/<output>` as shown
+below.
 
 ```{r}
-o1 <- OutputParam(id = "cwl_cout", type = "File", outputSource = "Compile/output")
+o1 <- OutputParam(id = "cwl_cout", type = "File",
+                  outputSource = "Compile/output")
 ```
 
-The `cwlWorkflow` is used to collect `inputs` and `outputs` from
-previous step. Then we can simply use `+` to connect all steps.
+The `cwlWorkflow` function is used to initiate the pipeline by
+specifying the `inputs` and `outputs`. Then we can simply use `+` to
+connect all steps to build the final pipeline.
 
 ```{r}
 cwl <- cwlWorkflow(inputs = InputParamList(i1),
@@ -415,6 +435,7 @@ arguments(cwl, step = "Uncomp") <- list("-d", "-c", "-f")
 runs(cwl)$Uncomp
 ```
 
+
 ## Scattering pipeline
 The scattering feature can specifies the associated workflow step or
 subworkflow to execute separately over a list of input elements. To
@@ -424,7 +445,11 @@ associated step to decompose the input into a discrete set of
 jobs. More details can be found at:
 https://www.commonwl.org/v1.0/Workflow.html#WorkflowStep.
 
-Here is an example to execute multiple R scripts. First, we need to set the input and output types to be array of "File", and add the requirments. In the "Compile" step, the scattering input is required to be set with the `scatter` option.
+Here is an example to execute multiple R scripts. First, we need to
+set the input and output types to be array of "File", and add the
+requirements. In the "Compile" step, the scattering input is required
+to be set with the `scatter` option.
+
 ```{r}
 i2 <- InputParam(id = "cwl_rfiles", type = "File[]")
 o2 <- OutputParam(id = "cwl_couts", type = "File[]", outputSource = "Compile/output")
@@ -440,6 +465,7 @@ cwl2
 ```
 
 Multiple R scripts can be assigned to the workflow inputs and executed.
+
 ```{r}
 cwl2$cwl_rfiles <- c(r4b$output, r4b$output)
 r8 <- runCWL(cwl2, outdir = tempdir())
@@ -447,7 +473,8 @@ r8$output
 ```
 
 ## Pipeline plot
-The function `plotCWL` can be used to visualize the relationship of inputs, outputs and the analysis for a tool or pipeline.
+The function `plotCWL` can be used to visualize the relationship of
+inputs, outputs and the analysis for a tool or pipeline.
 
 ```{r}
 plotCWL(cwl)
@@ -473,8 +500,14 @@ mulEcho <- cwlProcess(baseCommand = "echo", id = "mulEcho",
 mulEcho
 ```
 
+
 ## cwlProcess to Shiny App
-Some input parameters can be predefined in a list, which will be converted to select options in the webapp. An `upload` parameter can be used to defined wether to generate an upload interface for the file type option. If FALSE, the upload field will be text input (file path) instead of file input.
+
+Some input parameters can be predefined in a list, which will be
+converted to select options in the webapp. An `upload` parameter can
+be used to defined whether to generate an upload interface for the
+file type option. If FALSE, the upload field will be text input (file
+path) instead of file input.
 
 ```{r, eval=FALSE}
 inputList <- list(option = c("option1", "option2"))
@@ -506,14 +539,27 @@ r1 <- runCWL(TestFun, cwlArgs = "--preserve-entire-environment")
 readLines(r1$output)
 ```
 
-The `runCWL` function wrote the `testFun` function and its dependencies into an R script file automatically and call `Rscript` to run the script with parameters. Each parameter requires a prefix from corresponding argument in the R function with "=" and without a separator. Here we assigned the R function and its dependencies into the global environment because it will start a new environment when the vignette is compiled.
+The `runCWL` function wrote the `testFun` function and its
+dependencies into an R script file automatically and call `Rscript` to
+run the script with parameters. Each parameter requires a prefix from
+corresponding argument in the R function with "=" and without a
+separator. Here we assigned the R function and its dependencies into
+the global environment because it will start a new environment when
+the vignette is compiled.
 
 # Resources
+
 ## RcwlPipelines
 
-The `Rcwl` package can be utilized to develop pipelines for best practices of reproducible research, especially for Bioinformatics study. Multiple Bioinformatics pipelines, such as RNASeq alignment, quality control and quantification, DNASeq alignment and variant calling, have been developed based on the tool in an R package `RcwlPipelines`, which contains the CWL recipes and the scripts to create the pipelines. Examples to analyze real data are also included. 
+The `Rcwl` package can be utilized to develop pipelines for best
+practices of reproducible research, especially for Bioinformatics
+study. Multiple Bioinformatics pipelines, such as RNA-seq alignment,
+quality control and quantification, DNA-seq alignment and variant
+calling, have been developed based on the tool in an R package
+`RcwlPipelines`, which contains the CWL recipes and the scripts to
+create the pipelines. Examples to analyze real data are also included.
 
-The package is currently available in github.
+The package is currently available in GitHub.
 
 * <https://github.com/rworkflow/RcwlPipelines>
 
@@ -522,17 +568,40 @@ To install the package.
 BiocManager::install("rworkflow/RcwlPipelines")
 ```
 
-More recipes will be collected in this package and we would like to invite community to submit more pipelines to this package.
+The project website https://rcwl.org/ serves as a central hub for all
+related resources. It provides guidance for new users and tutorials
+for both users and developers. Specific resources are listed below. 
+
+## Tutorial book
+
+The [tutorial book](https://rcwl.org/RcwlBook/) provides detailed
+instructions for developing `Rcwl` tools/pipelines, and also includes
+examples of some commonly-used tools and pipelines that covers a wide
+range of Bioinformatics data analysis needs.
+
+## The _R_ recipes and cwl scripts
+
+The _R_ scripts to build the CWL tools and pipelines are now residing
+in a dedicated [GitHub
+repository](https://github.com/rworkflow/RcwlRecipes), which is
+intended to be a community effort to collect and contribute
+Bioinformatics tools and pipelines using `Rcwl` and CWL.
 
 ## Tool collections in CWL format
-Plenty of Bioinformatics tools and workflows can be found from github in CWL format. They can be imported to `cwlProcess` object by `readCWL` function, or can be used directly.
+
+Plenty of Bioinformatics tools and workflows can be found from GitHub
+in CWL format. They can be imported to `cwlProcess` object by
+`readCWL` function, or can be used directly.
 
 * <https://github.com/common-workflow-library/bio-cwl-tools>
 * <https://github.com/Duke-GCB/GGR-cwl>
 * <https://github.com/pitagora-network/pitagora-cwl> 
 
 ## Docker for Bioinformatics tools
-Most of the Bioinformatics software are available in docker containers, which can be very convenient to be adopted to build portable CWL tools and pipelines.
+
+Most of the Bioinformatics software are available in docker
+containers, which can be very convenient to be adopted to build
+portable CWL tools and pipelines.
 
 * <https://dockstore.org>
 * <https://biocontainers.pro>
