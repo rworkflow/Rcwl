@@ -9,6 +9,7 @@ writeCWL(
   prefix = deparse(substitute(cwl)),
   outdir = tempfile(),
   docker = TRUE,
+  libPaths = TRUE,
   ...
 )
 }
@@ -20,6 +21,8 @@ writeCWL(
 \item{outdir}{The output directory for the `.cwl` and `.yml` files.}
 
 \item{docker}{Whether to use docker.}
+
+\item{libPaths}{Whether to add local R libaray paths to R script.}
 
 \item{...}{Other options from `yaml::write_yaml`.}
 }

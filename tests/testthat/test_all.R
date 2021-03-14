@@ -112,8 +112,8 @@ TestFun <- cwlProcess(baseCommand = testFun,
 TestFun$a <- 1
 TestFun$b <- 2
 res <- runCWL(TestFun, outdir = tempdir())
-test_that("R function", {
-    ## test failed in bioc macs
-    ## expect_equal(readLines(res$output), "6")
-})
+## test_that("R function", {
+##     ## test failed in bioc macos
+##     ## expect_equal(readLines(res$output), "6")
+## })
 
