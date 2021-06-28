@@ -431,6 +431,7 @@ setClass("cwlProcess",
              inputs = "InputParamList",
              outputs = "OutputParamListORlist",
              stdout = "character",
+             stdin = "character",
              expression = "character",
              extensions = "list",
              intent = "list"
@@ -447,6 +448,7 @@ setClass("cwlProcess",
                           inputs = InputParamList(),
                           outputs = OutputParamList(),
                           stdout = character(),
+                          stdin = character(),
                           expression = character(),
                           extensions = list(),
                           intent = list()
@@ -475,6 +477,7 @@ setMethod(show, "cwlProcess", function(object){
     }
     show(object@inputs)
     show(object@outputs)
+    if(length(object@stdin) > 0) cat("stdin:", object@stdin, "\n")
     if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
 })
 

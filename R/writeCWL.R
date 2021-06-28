@@ -80,6 +80,7 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
                label = cwl@label,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
+               stdin = cwl@stdin,
                stdout = cwl@stdout,
                expression = cwl@expression)
     CL <- c(CL, cwl@extensions)
@@ -90,6 +91,9 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
         ## remove inputBinding
         for(i in seq(CL$inputs)){
             CL$inputs[[i]]$inputBinding <- NULL
+            if("inputBinding" %in% names(CL$inputs[[i]]$type)){
+                CL$inputs[[i]]$type$inputBinding <- NULL
+            }
         }
     }else if (cwlClass(cwl) == "ExpressionTool") {
         for(i in seq(CL$inputs)){

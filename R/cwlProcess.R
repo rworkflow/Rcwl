@@ -10,9 +10,9 @@
 #' @param cwlVersion CWL version
 #' @param cwlClass "CommandLineTool"
 #' @param baseCommand Specifies the program or R function to execute
-#' @param requirements A list of requirements that apply to either
-#'     the runtime environment or the workflow engine that must be met
-#'     in order to execute this process.
+#' @param requirements A list of requirements that apply to either the
+#'     runtime environment or the workflow engine that must be met in
+#'     order to execute this process.
 #' @param hints Any or a list for the workflow engine.
 #' @param arguments Command line bindings which are not directly
 #'     associated with input parameters.
@@ -22,6 +22,8 @@
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a
 #'     file written to the designated output directory.
+#' @param stdin A path to a file whose contents must be piped into the
+#'     command's standard input stream.
 #' @param expression Javascripts for ExpressionTool class.
 #' @param extensions A list of extensions and metadata
 #' @param intent An identifier for the type of computational
@@ -39,14 +41,17 @@ cwlProcess <- function(cwlVersion = "v1.0",
                      id = character(), label = character(),
                      inputs = InputParamList(),
                      outputs = OutputParamList(),
-                     stdout = character(), expression = character(),
+                     stdout = character(), stdin = character(),
+                     expression = character(),
                      extensions = list(), intent = list()){
     new("cwlProcess", cwlVersion = cwlVersion,
         cwlClass = cwlClass, id = id, label = label,
         baseCommand = baseCommand,
         requirements = requirements, hints = hints,
         arguments = arguments, inputs = inputs,
-        outputs = outputs, stdout = stdout,
+        outputs = outputs,
+        stdout = stdout,
+        stdin = stdin,
         expression = expression,
         extensions = extensions,
         intent = intent)
