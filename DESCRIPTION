@@ -16,5 +16,4 @@ Suggests: testthat,
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 biocViews: Software, WorkflowStep, ImmunoOncology
-SystemRequirements: python (>= 2.7), cwltool (>= 1.0.2018)
 StagedInstall: no
