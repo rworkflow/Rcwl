@@ -221,9 +221,9 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         }else{
             Type <- x@type
         }        
-        if(is(v, "character") && Type == "int"){
+        if(is(v, "character") && any(Type == "int")){
             v <- as.integer(v)
-        }else if(is(v, "character") && Type == "boolean"){
+        }else if(is(v, "character") && any(Type == "boolean")){
             v <- as.logical(v)
         }
         if(length(x@format)!=0){
