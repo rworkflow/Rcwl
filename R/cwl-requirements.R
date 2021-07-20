@@ -189,6 +189,22 @@ requireRscript <- function(rscript){
 }
 
 #' @rdname cwl-requirements
+#' @param coresMin Minimum reserved number of CPU cores (default is
+#'     1).
+#' @param coresMax Maximum reserved number of CPU cores.
+#' @param ramMin Minimum reserved RAM in mebibytes (2**20) (default is
+#'     256).
+#' @param ramMax Maximum reserved RAM in mebibytes (2**20)
+#' @param tmpdirMin Minimum reserved filesystem based storage for the
+#'     designated temporary directory, in mebibytes (2**20) (default
+#'     is 1024).
+#' @param tmpdirMax Maximum reserved filesystem based storage for the
+#'     designated temporary directory, in mebibytes (2**20).
+#' @param outdirMin Minimum reserved filesystem based storage for the
+#'     designated output directory, in mebibytes (2**20) (default is
+#'     1024).
+#' @param outdirMax Maximum reserved filesystem based storage for the
+#'     designated output directory, in mebibytes (2**20).
 #' @return ResourceRequirement: A ResourceRequirement list.
 #' @export
 requireResource <- function(coresMin = NULL, coresMax = NULL,
@@ -201,4 +217,11 @@ requireResource <- function(coresMin = NULL, coresMax = NULL,
                  tmpdirMin = tmpdirMin, tmpdirMax = tmpdirMax,
                  outdirMin = outdirMin, outdirMax = outdirMax)
     .removeEmpty(req1)
+}
+
+#' @rdname cwl-requirements
+#' @return ShellCommandRequirement: A ShellCommandRequirement list.
+#' @export
+requireShellCommand <- function(){
+    list(class = "ShellCommandRequirement")
 }

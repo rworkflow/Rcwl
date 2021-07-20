@@ -13,6 +13,8 @@
 \alias{requireMultipleInput}
 \alias{requireStepInputExpression}
 \alias{requireRscript}
+\alias{requireResource}
+\alias{requireShellCommand}
 \title{CWL requirements functions}
 \usage{
 requireDocker(
@@ -43,6 +45,19 @@ requireMultipleInput()
 requireStepInputExpression()
 
 requireRscript(rscript)
+
+requireResource(
+  coresMin = NULL,
+  coresMax = NULL,
+  ramMin = NULL,
+  ramMax = NULL,
+  tmpdirMin = NULL,
+  tmpdirMax = NULL,
+  outdirMin = NULL,
+  outdirMax = NULL
+)
+
+requireShellCommand()
 }
 \arguments{
 \item{docker}{Character. Specify a Docker image to retrieve using
@@ -95,6 +110,30 @@ read-only). Optional.}
 \item{sep}{The separator of the input files in the manifest config.}
 
 \item{rscript}{An R script to run.}
+
+\item{coresMin}{Minimum reserved number of CPU cores (default is
+1).}
+
+\item{coresMax}{Maximum reserved number of CPU cores.}
+
+\item{ramMin}{Minimum reserved RAM in mebibytes (2**20) (default is
+256).}
+
+\item{ramMax}{Maximum reserved RAM in mebibytes (2**20)}
+
+\item{tmpdirMin}{Minimum reserved filesystem based storage for the
+designated temporary directory, in mebibytes (2**20) (default
+is 1024).}
+
+\item{tmpdirMax}{Maximum reserved filesystem based storage for the
+designated temporary directory, in mebibytes (2**20).}
+
+\item{outdirMin}{Minimum reserved filesystem based storage for the
+designated output directory, in mebibytes (2**20) (default is
+1024).}
+
+\item{outdirMax}{Maximum reserved filesystem based storage for the
+designated output directory, in mebibytes (2**20).}
 }
 \value{
 requireDocker: A list of docker requirement to fetch or
@@ -117,6 +156,10 @@ requireMultipleInput: A MultipleInputFeatureRequirement list.
 requireStepInputExpression: A StepInputExpressionRequirement list.
 
 A requirement list with Rscript as manifest entry.
+
+ResourceRequirement: A ResourceRequirement list.
+
+ShellCommandRequirement: A ShellCommandRequirement list.
 }
 \description{
 requireDocker: If a workflow component should be run
