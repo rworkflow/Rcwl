@@ -187,3 +187,18 @@ requireRscript <- function(rscript){
                     entry = rs)))
     return(req1)
 }
+
+#' @rdname cwl-requirements
+#' @return ResourceRequirement: A ResourceRequirement list.
+#' @export
+requireResource <- function(coresMin = NULL, coresMax = NULL,
+                            ramMin = NULL, ramMax = NULL,
+                            tmpdirMin = NULL, tmpdirMax = NULL,
+                            outdirMin = NULL, outdirMax = NULL){
+    req1 <- list(class = "ResourceRequirement",
+                 coresMin = coresMin, coresMax = coresMax,
+                 ramMin = ramMin, ramMax = ramMax,
+                 tmpdirMin = tmpdirMin, tmpdirMax = tmpdirMax,
+                 outdirMin = outdirMin, outdirMax = outdirMax)
+    .removeEmpty(req1)
+}
