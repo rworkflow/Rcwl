@@ -12,9 +12,14 @@
 \alias{requireScatter}
 \alias{requireMultipleInput}
 \alias{requireStepInputExpression}
+\alias{requireEnvVar}
 \alias{requireRscript}
 \alias{requireResource}
 \alias{requireShellCommand}
+\alias{requireShellScript}
+\alias{ShellScript}
+\alias{CondaTool}
+\alias{requireNetwork}
 \title{CWL requirements functions}
 \usage{
 requireDocker(
@@ -44,6 +49,8 @@ requireMultipleInput()
 
 requireStepInputExpression()
 
+requireEnvVar(envlist)
+
 requireRscript(rscript)
 
 requireResource(
@@ -58,6 +65,14 @@ requireResource(
 )
 
 requireShellCommand()
+
+requireShellScript(script)
+
+ShellScript(script = "script.sh")
+
+CondaTool(tools)
+
+requireNetwork(networkAccess = TRUE)
 }
 \arguments{
 \item{docker}{Character. Specify a Docker image to retrieve using
@@ -109,6 +124,8 @@ read-only). Optional.}
 
 \item{sep}{The separator of the input files in the manifest config.}
 
+\item{envlist}{A list of environment variables.}
+
 \item{rscript}{An R script to run.}
 
 \item{coresMin}{Minimum reserved number of CPU cores (default is
@@ -134,6 +151,12 @@ designated output directory, in mebibytes (2**20) (default is
 
 \item{outdirMax}{Maximum reserved filesystem based storage for the
 designated output directory, in mebibytes (2**20).}
+
+\item{script}{script.sh}
+
+\item{tools}{A character vector for tools to install by conda.}
+
+\item{networkAccess}{TRUE or FALSE.}
 }
 \value{
 requireDocker: A list of docker requirement to fetch or
@@ -155,11 +178,21 @@ requireMultipleInput: A MultipleInputFeatureRequirement list.
 
 requireStepInputExpression: A StepInputExpressionRequirement list.
 
+requireEnvVar: A EnvVarRequirementlist.
+
 A requirement list with Rscript as manifest entry.
 
 ResourceRequirement: A ResourceRequirement list.
 
 ShellCommandRequirement: A ShellCommandRequirement list.
+
+requireShellScript: Initial directory with shell script.
+
+baseCommand for shell script
+
+CondaTool: Dockerfile
+
+requireNetwork: a list of NetworkAccess requirement.
 }
 \description{
 requireDocker: If a workflow component should be run
@@ -186,6 +219,13 @@ InitialWorkDirRequirement: Define a list of files and
     template.
 
 Create manifest for configure files.
+
+requireShellScript: create shell script to work dir.
+
+CondaTool: create dockerfile for tools.
+
+requireNetwork: Whether a process requires network
+    access.
 }
 \details{
 More details about `requireDocker`, see:

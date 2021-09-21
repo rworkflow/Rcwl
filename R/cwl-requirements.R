@@ -177,6 +177,15 @@ requireStepInputExpression <- function(){
 }
 
 #' @rdname cwl-requirements
+#' @param envlist A list of environment variables.
+#' @return requireEnvVar: A EnvVarRequirementlist.
+#' @export
+requireEnvVar <- function(envlist){
+    list(class = "EnvVarRequirement",
+         envDef = envlist)
+}
+
+#' @rdname cwl-requirements
 #' @param rscript An R script to run.
 #' @return A requirement list with Rscript as manifest entry.
 #' @export
@@ -225,3 +234,51 @@ requireResource <- function(coresMin = NULL, coresMax = NULL,
 requireShellCommand <- function(){
     list(class = "ShellCommandRequirement")
 }
+
+#' @rdname cwl-requirements
+#' @description requireShellScript: create shell script to work dir.
+#' @param script Shell script.
+#' @return requireShellScript: Initial directory with shell script.
+#' @export
+requireShellScript <- function(script){
+    entry <- Dirent(entryname = "script.sh", entry = script)
+    requireInitialWorkDir(listing = list(entry))
+}
+
+#' @rdname cwl-requirements
+#' @param script script.sh
+#' @return baseCommand for shell script
+#' @export
+ShellScript <- function(script = "script.sh"){
+    c("bash", script)
+}
+
+#' @rdname cwl-requirements
+#' @description CondaTool: create dockerfile for tools.
+#' @param tools A character vector for tools to install by conda.
+#' @return CondaTool: Dockerfile
+#' @export
+CondaTool <- function(tools){
+    dockerfile <- paste0("
+FROM continuumio/miniconda3
+
+RUN conda config --add channels r
+RUN conda config --add channels bioconda
+RUN conda config --add channels conda-forge
+
+RUN conda install -y ", paste(tools, collapse = " "),
+"\n")
+    return(dockerfile)
+}
+
+#' @rdname cwl-requirements
+#' @description requireNetwork: Whether a process requires network
+#'     access.
+#' @param networkAccess TRUE or FALSE.
+#' @return requireNetwork: a list of NetworkAccess requirement.
+#' @export
+requireNetwork <- function(networkAccess = TRUE){
+    list(class = "NetworkAccess",
+         networkAccess = networkAccess)
+}
+
