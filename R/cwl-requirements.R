@@ -177,6 +177,15 @@ requireStepInputExpression <- function(){
 }
 
 #' @rdname cwl-requirements
+#' @param envlist A list of environment variables.
+#' @return requireEnvVar: A EnvVarRequirementlist.
+#' @export
+requireEnvVar <- function(envlist){
+    list(class = "EnvVarRequirement",
+         envDef = envlist)
+}
+
+#' @rdname cwl-requirements
 #' @param rscript An R script to run.
 #' @return A requirement list with Rscript as manifest entry.
 #' @export
@@ -186,4 +195,89 @@ requireRscript <- function(rscript){
         list(Dirent(entryname = basename(rscript),
                     entry = rs)))
     return(req1)
+}
+
+#' @rdname cwl-requirements
+#' @param coresMin Minimum reserved number of CPU cores (default is
+#'     1).
+#' @param coresMax Maximum reserved number of CPU cores.
+#' @param ramMin Minimum reserved RAM in mebibytes (2**20) (default is
+#'     256).
+#' @param ramMax Maximum reserved RAM in mebibytes (2**20)
+#' @param tmpdirMin Minimum reserved filesystem based storage for the
+#'     designated temporary directory, in mebibytes (2**20) (default
+#'     is 1024).
+#' @param tmpdirMax Maximum reserved filesystem based storage for the
+#'     designated temporary directory, in mebibytes (2**20).
+#' @param outdirMin Minimum reserved filesystem based storage for the
+#'     designated output directory, in mebibytes (2**20) (default is
+#'     1024).
+#' @param outdirMax Maximum reserved filesystem based storage for the
+#'     designated output directory, in mebibytes (2**20).
+#' @return ResourceRequirement: A ResourceRequirement list.
+#' @export
+requireResource <- function(coresMin = NULL, coresMax = NULL,
+                            ramMin = NULL, ramMax = NULL,
+                            tmpdirMin = NULL, tmpdirMax = NULL,
+                            outdirMin = NULL, outdirMax = NULL){
+    req1 <- list(class = "ResourceRequirement",
+                 coresMin = coresMin, coresMax = coresMax,
+                 ramMin = ramMin, ramMax = ramMax,
+                 tmpdirMin = tmpdirMin, tmpdirMax = tmpdirMax,
+                 outdirMin = outdirMin, outdirMax = outdirMax)
+    .removeEmpty(req1)
+}
+
+#' @rdname cwl-requirements
+#' @return ShellCommandRequirement: A ShellCommandRequirement list.
+#' @export
+requireShellCommand <- function(){
+    list(class = "ShellCommandRequirement")
+}
+
+#' @rdname cwl-requirements
+#' @description requireShellScript: create shell script to work dir.
+#' @param script Shell script.
+#' @return requireShellScript: Initial directory with shell script.
+#' @export
+requireShellScript <- function(script){
+    entry <- Dirent(entryname = "script.sh", entry = script)
+    requireInitialWorkDir(listing = list(entry))
+}
+
+#' @rdname cwl-requirements
+#' @param script script.sh
+#' @return baseCommand for shell script
+#' @export
+ShellScript <- function(script = "script.sh"){
+    c("bash", script)
+}
+
+#' @rdname cwl-requirements
+#' @description CondaTool: create dockerfile for tools.
+#' @param tools A character vector for tools to install by conda.
+#' @return CondaTool: Dockerfile
+#' @export
+CondaTool <- function(tools){
+    dockerfile <- paste0("
+FROM continuumio/miniconda3
+
+RUN conda config --add channels r
+RUN conda config --add channels bioconda
+RUN conda config --add channels conda-forge
+
+RUN conda install -y ", paste(tools, collapse = " "),
+"\n")
+    return(dockerfile)
+}
+
+#' @rdname cwl-requirements
+#' @description requireNetwork: Whether a process requires network
+#'     access.
+#' @param networkAccess TRUE or FALSE.
+#' @return requireNetwork: a list of NetworkAccess requirement.
+#' @export
+requireNetwork <- function(networkAccess = TRUE){
+    list(class = "NetworkAccess",
+         networkAccess = networkAccess)
 }

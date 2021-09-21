@@ -27,6 +27,8 @@
 \usage{
 InputArrayParam(
   label = "",
+  doc = character(),
+  name = character(),
   type = "array",
   items = character(),
   prefix = "",
@@ -59,11 +61,10 @@ InputParamList(...)
 
 OutputArrayParam(
   label = character(),
+  doc = character(),
+  name = character(),
   type = "array",
-  items = character(),
-  glob = character(),
-  loadContents = logical(),
-  outputEval = character()
+  items = character()
 )
 
 OutputParam(
@@ -76,6 +77,7 @@ OutputParam(
   streamable = logical(),
   glob = character(),
   loadContents = logical(),
+  loadListing = character(),
   outputEval = character(),
   outputSource = character()
 )
@@ -97,6 +99,11 @@ cwlStepList(...)
 \arguments{
 \item{label}{A short, human-readable label of this object.}
 
+\item{doc}{A documentation string for this object, or an array of
+strings which should be concatenated.}
+
+\item{name}{The identifier for this type.}
+
 \item{type}{Specify valid types of data that may be assigned to
 this parameter.}
 
@@ -115,9 +122,6 @@ with the elements separated by by itemSeparator.}
 \item{valueFrom}{value from string or expression.}
 
 \item{id}{A unique identifier for this workflow input parameter.}
-
-\item{doc}{A documentation string for this object, or an array of
-strings which should be concatenated.}
 
 \item{secondaryFiles}{Provides a pattern or expression specifying
 files or directories. Only valid when type: File or is an array
