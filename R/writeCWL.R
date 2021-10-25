@@ -35,7 +35,8 @@ writeFun <- function(cwl, prefix, outdir, libPaths = TRUE){
     ## add user libPaths
     if(libPaths){
         libs <- .libPaths()
-        comArg <- c(paste0(".libPaths('", libs, "')"), comArg)
+        libs <- paste0("c('", paste(libs, collapse = "','"), "')")
+        comArg <- c(paste0(".libPaths(", libs, ")"), comArg)
     }
     write(comArg, file = file)
 
@@ -80,6 +81,7 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
                label = cwl@label,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
+               stdin = cwl@stdin,
                stdout = cwl@stdout,
                expression = cwl@expression)
     CL <- c(CL, cwl@extensions)
@@ -90,6 +92,9 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
         ## remove inputBinding
         for(i in seq(CL$inputs)){
             CL$inputs[[i]]$inputBinding <- NULL
+            if("inputBinding" %in% names(CL$inputs[[i]]$type)){
+                CL$inputs[[i]]$type$inputBinding <- NULL
+            }
         }
     }else if (cwlClass(cwl) == "ExpressionTool") {
         for(i in seq(CL$inputs)){
@@ -217,9 +222,9 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         }else{
             Type <- x@type
         }        
-        if(is(v, "character") && Type == "int"){
+        if(is(v, "character") && any(Type == "int")){
             v <- as.integer(v)
-        }else if(is(v, "character") && Type == "boolean"){
+        }else if(is(v, "character") && any(Type == "boolean")){
             v <- as.logical(v)
         }
         if(length(x@format)!=0){

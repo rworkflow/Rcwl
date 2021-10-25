@@ -19,7 +19,8 @@ jobs:
           ln -s /opt/conda/bin/conda /usr/local/bin/
       - name: Install dependencies
         run: |
-          BiocManager::install(c("remotes", "rcmdcheck", "basilisk"))
+          BiocManager::install("AnVIL")
+          AnVIL::install(c("remotes", "rcmdcheck", "utils", "stats", "BiocParallel", "batchtools", "DiagrammeR", "shiny", "R.utils", "codetools", "basilisk"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check

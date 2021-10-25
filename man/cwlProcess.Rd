@@ -16,6 +16,7 @@ cwlProcess(
   inputs = InputParamList(),
   outputs = OutputParamList(),
   stdout = character(),
+  stdin = character(),
   expression = character(),
   extensions = list(),
   intent = list()
@@ -28,9 +29,9 @@ cwlProcess(
 
 \item{baseCommand}{Specifies the program or R function to execute}
 
-\item{requirements}{A list of requirements that apply to either
-the runtime environment or the workflow engine that must be met
-in order to execute this process.}
+\item{requirements}{A list of requirements that apply to either the
+runtime environment or the workflow engine that must be met in
+order to execute this process.}
 
 \item{hints}{Any or a list for the workflow engine.}
 
@@ -47,6 +48,9 @@ associated with input parameters.}
 
 \item{stdout}{Capture the command's standard output stream to a
 file written to the designated output directory.}
+
+\item{stdin}{A path to a file whose contents must be piped into the
+command's standard input stream.}
 
 \item{expression}{Javascripts for ExpressionTool class.}
 

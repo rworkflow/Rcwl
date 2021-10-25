@@ -6,12 +6,16 @@ setClassUnion("characterORlist", c("character", "list"))
 setClass("InputArrayParam",
          slots = c(
              label = "character",
+             doc = "character",
+             name = "character",
              type = "character",
              items = "characterORlist",
              inputBinding = "list"
          ),
          prototype = list(
              label = character(),
+             doc = character(),
+             name = character(),
              type = character(),
              items = character(),
              inputBinding = list(prefix = character(),
@@ -26,6 +30,8 @@ setClass("InputArrayParam",
 #'     under the type field with 'type: array' and items defining the
 #'     valid data types that may appear in the array. 
 #' @param label A short description for the `InputArrayParam` object.
+#' @param doc A documentation string for this object.
+#' @param name The identifier for this type.
 #' @param type Must be "array".
 #' @param items Defines the type of the array elements.
 #' @param prefix Command line prefix to add before the value.
@@ -42,12 +48,14 @@ setClass("InputArrayParam",
 #' @export
 #' @examples
 #' InputArrayParam(items = "string", prefix="-B=", separate = FALSE)
-InputArrayParam <- function(label = "", type = "array",
-                            items = character(), prefix = "",
+InputArrayParam <- function(label = "", doc = character(), name = character(),
+                            type = "array", items = character(), prefix = "",
                             separate = TRUE, itemSeparator = character(),
                             valueFrom = character()){
     new("InputArrayParam",
         label = label,
+        doc = doc,
+        name = name,
         type = type,
         items = items,
         inputBinding = list(prefix = prefix,
@@ -259,23 +267,25 @@ setMethod(show, "InputParamList", function(object) {
 setClass("OutputArrayParam",
          slots = c(
              label = "character",
+             doc = "character",
+             name = "character",
              type = "character",
-             items = "character",
-             outputBinding = "list"
+             items = "characterORlist"
          ),
          prototype = list(
              label = character(),
+             doc = character(),
+             name = character(),
              type = character(),
-             items = character(),
-             outputBinding = list(glob = character(),
-                                  loadContents = logical(),
-                                  outputEval = character()))
+             items = character())
          )
 
 #' @rdname AllClasses
 #' @description OutputArrayParam: Parameters for array outputs.
 #' @param label A short, human-readable label of this object.
 #' @param type Must be "array".
+#' @param doc A documentation string for this object.
+#' @param name The identifier for this type.
 #' @param items Defines the type of the array elements.
 #' @param glob Pattern to find files relative to the output directory.
 #' @param loadContents Read text from globbed file.
@@ -287,17 +297,15 @@ setClass("OutputArrayParam",
 #' @export
 #' @examples
 #' OutputParam(id = "b", type = OutputArrayParam(items = "File"), glob = "*.txt")
-OutputArrayParam <- function(label= character(), type = "array",
-                             items = character(), glob = character(),
-                             loadContents = logical(),
-                             outputEval = character()){
+OutputArrayParam <- function(label= character(), doc = character(),
+                             name = character(), type = "array",
+                             items = character()){
     new("OutputArrayParam",
         label = label,
+        doc = doc,
+        name = name,
         type = type,
-        items = items,
-        outputBinding = list(glob = glob,
-                            localContents = loadContents,
-                            outputEval = outputEval))
+        items = items)
 }
 
 setClassUnion("characterOROutputArrayParamORlist", c("character", "OutputArrayParam", "list"))
@@ -325,6 +333,7 @@ setClass("OutputParam",
                           streamable = logical(),
                           outputBinding = list(glob = character(),
                                                loadContents = logical(),
+                                               loadListing = character(),
                                                outputEval = character()),
                           outputSource = character())
          )
@@ -365,7 +374,7 @@ OutputParam <- function(id = "output", label = character(), doc = character(),
                         type = "stdout",  format = character(),
                         secondaryFiles = character(), streamable = logical(),
                         glob = character(), loadContents = logical(),
-                        outputEval = character(),
+                        loadListing = character(), outputEval = character(),
                         outputSource = character()){
     new("OutputParam",
         id = id,
@@ -377,6 +386,7 @@ OutputParam <- function(id = "output", label = character(), doc = character(),
         streamable = streamable,
         outputBinding = list(glob = glob,
                              loadContents = loadContents,
+                             loadListing = loadListing,
                              outputEval = outputEval),
         outputSource = outputSource)
 }
@@ -431,6 +441,8 @@ setClass("cwlProcess",
              inputs = "InputParamList",
              outputs = "OutputParamListORlist",
              stdout = "character",
+             stderr = "character",
+             stdin = "character",
              expression = "character",
              extensions = "list",
              intent = "list"
@@ -447,6 +459,8 @@ setClass("cwlProcess",
                           inputs = InputParamList(),
                           outputs = OutputParamList(),
                           stdout = character(),
+                          stderr = character(),
+                          stdin = character(),
                           expression = character(),
                           extensions = list(),
                           intent = list()
@@ -475,7 +489,9 @@ setMethod(show, "cwlProcess", function(object){
     }
     show(object@inputs)
     show(object@outputs)
+    if(length(object@stdin) > 0) cat("stdin:", object@stdin, "\n")
     if(length(object@stdout) > 0) cat("stdout:", object@stdout, "\n")
+    if(length(object@stderr) > 0) cat("stderr:", object@stderr, "\n")
 })
 
 #' @rdname AllClasses
