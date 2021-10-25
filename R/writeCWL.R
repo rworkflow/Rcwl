@@ -35,7 +35,8 @@ writeFun <- function(cwl, prefix, outdir, libPaths = TRUE){
     ## add user libPaths
     if(libPaths){
         libs <- .libPaths()
-        comArg <- c(paste0(".libPaths('", libs, "')"), comArg)
+        libs <- paste0("c('", paste(libs, collapse = "','"), "')")
+        comArg <- c(paste0(".libPaths(", libs, ")"), comArg)
     }
     write(comArg, file = file)
 
