@@ -250,7 +250,7 @@ requireShellScript <- function(script){
 #' @return baseCommand for shell script
 #' @export
 ShellScript <- function(script = "script.sh"){
-    c("bash", script)
+    c("sh", script)
 }
 
 #' @rdname cwl-requirements
