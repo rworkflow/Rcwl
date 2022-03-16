@@ -76,14 +76,14 @@
 
 .readSteps <- function(cwl.origin, cwl){
     Steps <- cwl.origin$steps
-    for(i in seq_along(Steps)){
-        if(is.null(Steps[[i]]$id)){
-            id <- names(Steps)[i]
-            sList <- c(id = id, Steps[[i]])
+    for(s in seq_along(Steps)){
+        if(is.null(Steps[[s]]$id)){
+            id <- names(Steps)[s]
+            sList <- c(id = id, Steps[[s]])
         }else{
-            sList <- Steps[[i]]
+            sList <- Steps[[s]]
         }
-        run <- Steps[[i]]$run
+        run <- Steps[[s]]$run
         if(!grepl("^/", run)){
             sList$run <- run #file.path(pwd, run)
         }
@@ -96,19 +96,19 @@
             }else{
                 id <- names(In)[i]
             }
-            if(is.list(In[[i]])) {
-                si <- stepInParam(id = id)
-                for(j in seq(In[[i]])){
-                    slot(si, names(In[[i]])[j]) <- In[[i]][[j]]
-                }
-            }else{
-                si <- stepInParam(id = id,
-                                  source = In[[i]])
-            }
-            slist[[i]] <- si
+            ## if(is.list(In[[i]])) {
+            ##     si <- stepInParam(id = id)
+            ##     for(j in seq(In[[i]])){
+            ##         slot(si, names(In[[i]])[j]) <- In[[i]][[j]]
+            ##     }
+            ## }else{
+            ##     si <- stepInParam(id = id,
+            ##                       source = In[[i]])
+            ## }
+            slist[[i]] <- list(id = id, source = In[[i]])
         }
         names(slist) <- names(In)
-        sList$In <- do.call(stepInParamList, slist)
+        sList$In <- slist # do.call(stepInParamList, slist)
         sList$Out <- as.list(sList$out)
         sList$"in" <- NULL
         sList$"out" <- NULL

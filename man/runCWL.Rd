@@ -8,6 +8,7 @@ runCWL(
   cwl,
   cwlRunner = "cwltool",
   outdir = ".",
+  cachedir = NULL,
   cwlTemp = NULL,
   cwlArgs = character(),
   stdout = TRUE,
@@ -27,6 +28,9 @@ exists, the cwltool package will be installed by `reticulate`.}
 
 \item{outdir}{Output directory, default is current working
 directory.}
+
+\item{cachedir}{Directory to cache intermediate workflow outputs to
+avoid recomputing steps.}
 
 \item{cwlTemp}{File path to keep intermediate files. If a directory
 path is given, the intermediate files will be kept in the

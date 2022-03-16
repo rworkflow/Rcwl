@@ -79,7 +79,9 @@ OutputParam(
   loadContents = logical(),
   loadListing = character(),
   outputEval = character(),
-  outputSource = character()
+  outputSource = character(),
+  linkMerge = character(),
+  pickValue = character()
 )
 
 OutputParamList(out = OutputParam(), ...)
@@ -88,6 +90,9 @@ stepInParam(
   id,
   source = character(),
   linkMerge = character(),
+  pickValue = character(),
+  loadContents = logical(),
+  loadListing = character(),
   default = character(),
   valueFrom = character()
 )
@@ -136,9 +141,11 @@ File. This is the file format that will be assigned to the
 output File object.}
 
 \item{loadListing}{Only valid when type: Directory or is an array
-of items: Directory.}
+of items: Directory. "no_listing", "shallow_listing" or
+"deep_listing".}
 
-\item{loadContents}{Read text from globbed file.}
+\item{loadContents}{Only valid when type: File or is an array of
+items: File.}
 
 \item{position}{The position for this parameter.}
 
@@ -162,13 +169,17 @@ value.}
 \item{outputSource}{Specifies one or more workflow parameters that
 supply the value of to the output parameter.}
 
+\item{linkMerge}{The method to use to merge multiple inbound links
+into a single array.}
+
+\item{pickValue}{The method to use to choose non-null elements
+among multiple sources. "first_non_null", "the_only_non_null",
+or "all_non_null".}
+
 \item{out}{The default stdout parameter.}
 
 \item{source}{Specifies one or more workflow parameters that will
 provide input to the underlying step parameter.}
-
-\item{linkMerge}{The method to use to merge multiple inbound links
-into a single array.}
 }
 \value{
 InputArrayParam: An object of class `InputArrayParam`.

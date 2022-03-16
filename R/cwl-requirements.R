@@ -141,7 +141,7 @@ requireManifest <- function(inputID, sep = "\\n"){
     js <- paste0("${var x='';for(var i=0;i<inputs.", inputID,
                  ".length;i++){x+=inputs.", inputID, "[i].path+'",
                  sep, "'}return(x)}")
-    
+
     req1 <- requireInitialWorkDir(
         list(Dirent(entryname = inputID,
                     entry = js)))

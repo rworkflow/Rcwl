@@ -184,6 +184,9 @@ inputs <- function(cwl) cwl@inputs
         if(inputs(x)[[name]]@type@items == "File"){
             v <- lapply(value, function(x)list(class="File",
                                                path=normalizePath(x)))
+        }else if(inputs(x)[[name]]@type@items == "Directory"){
+            v <- lapply(value, function(x)list(class="File",
+                                               path=normalizePath(x)))
         }else{
             v <- value
         }
@@ -202,6 +205,9 @@ inputs <- function(cwl) cwl@inputs
             v <- list(class = itype, path = normalizePath(value))
         }else if(itype == "File[]"){
             v <- lapply(value, function(x)list(class="File",
+                                               path=normalizePath(x)))
+        }else if(itype == "Directory[]"){
+            v <- lapply(value, function(x)list(class="Directory",
                                                path=normalizePath(x)))
         }else{
             v <- value

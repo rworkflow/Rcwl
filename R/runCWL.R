@@ -6,6 +6,8 @@
 #'     exists, the cwltool package will be installed by `reticulate`.
 #' @param outdir Output directory, default is current working
 #'     directory.
+#' @param cachedir Directory to cache intermediate workflow outputs to
+#'     avoid recomputing steps.
 #' @param cwlTemp File path to keep intermediate files. If a directory
 #'     path is given, the intermediate files will be kept in the
 #'     directory. Default is NULL to remove all intermediate files.
@@ -33,8 +35,8 @@
 #'                  inputs = InputParamList(input1))
 #' echo$sth <- "Hello World!"
 #' ## res <- runCWL(echo)
-runCWL <- function(cwl, cwlRunner = "cwltool",
-                   outdir = ".", cwlTemp = NULL, cwlArgs = character(),
+runCWL <- function(cwl, cwlRunner = "cwltool", outdir = ".",
+                   cachedir = NULL, cwlTemp = NULL, cwlArgs = character(),
                    stdout = TRUE, stderr = TRUE, showLog = FALSE,
                    docker = TRUE,
                    yml_prefix = deparse(substitute(cwl)),
@@ -78,6 +80,9 @@ runCWL <- function(cwl, cwlRunner = "cwltool",
     }
     if(!is.null(cwlTemp)){
         cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
+    }
+    if(!is.null(cachedir)){
+        cwlArgs <- paste("--cachedir", cachedir, cwlArgs)
     }
     if(showLog){
         stderr <- ""

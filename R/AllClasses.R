@@ -322,7 +322,9 @@ setClass("OutputParam",
              secondaryFiles = "characterORlist",
              streamable = "logical",
              outputBinding = "list",
-             outputSource = "character"
+             outputSource = "character",
+             linkMerge = "character",
+             pickValue = "character"
          ),
          prototype = list(id = character(),
                           label = character(),
@@ -335,7 +337,9 @@ setClass("OutputParam",
                                                loadContents = logical(),
                                                loadListing = character(),
                                                outputEval = character()),
-                          outputSource = character())
+                          outputSource = character(),
+                          linkMerge = character(),
+                          pickValue = character())
          )
 
 #' @rdname AllClasses
@@ -362,6 +366,11 @@ setClass("OutputParam",
 #'     value.
 #' @param outputSource Specifies one or more workflow parameters that
 #'     supply the value of to the output parameter.
+#' @param linkMerge The method to use to merge multiple sources into a
+#'     single array. If not specified, the default method is
+#'     "merge_nested".
+#' @param pickValue The method to use to choose non-null elements
+#'     among multiple sources.
 #' @details More details for `OutputParam`, see:
 #'     https://www.commonwl.org/v1.0/CommandLineTool.html#CommandOutputParameter
 #' @return OutputParam: An object of class `OutputParam`.
@@ -375,7 +384,9 @@ OutputParam <- function(id = "output", label = character(), doc = character(),
                         secondaryFiles = character(), streamable = logical(),
                         glob = character(), loadContents = logical(),
                         loadListing = character(), outputEval = character(),
-                        outputSource = character()){
+                        outputSource = character(),
+                        linkMerge = character(),
+                        pickValue = character()){
     new("OutputParam",
         id = id,
         label = label,
@@ -388,7 +399,9 @@ OutputParam <- function(id = "output", label = character(), doc = character(),
                              loadContents = loadContents,
                              loadListing = loadListing,
                              outputEval = outputEval),
-        outputSource = outputSource)
+        outputSource = outputSource,
+        linkMerge = linkMerge,
+        pickValue = pickValue)
 }
 
 setMethod(show, "OutputParam", function(object){
@@ -500,6 +513,10 @@ setClass("stepInParam",
          slots = c(id = "character",
                    source = "characterORlist",
                    linkMerge = "character",
+                   pickValue = "character",
+                   loadContents = "logical",
+                   loadListing = "character",
+                   label = "character",
                    default = "ANY",
                    valueFrom = "character"))
 
@@ -510,6 +527,14 @@ setClass("stepInParam",
 #'     provide input to the underlying step parameter.
 #' @param linkMerge The method to use to merge multiple inbound links
 #'     into a single array.
+#' @param pickValue The method to use to choose non-null elements
+#'     among multiple sources. "first_non_null", "the_only_non_null",
+#'     or "all_non_null".
+#' @param loadContents Only valid when type: File or is an array of
+#'     items: File.
+#' @param loadListing Only valid when type: Directory or is an array
+#'     of items: Directory. "no_listing", "shallow_listing" or
+#'     "deep_listing".
 #' @param default The default value for this parameter to use if
 #'     either there is no source field, or the value produced by the
 #'     source is null.
@@ -522,10 +547,17 @@ setClass("stepInParam",
 #' s1 <- stepInParam(id = "s1")
 #' 
 stepInParam <- function(id, source = character(),
-                        linkMerge = character(), default = character(),
+                        linkMerge = character(),
+                        pickValue = character(),
+                        loadContents = logical(),
+                        loadListing = character(),
+                        default = character(),
                         valueFrom = character()){
     new("stepInParam",
         id = id, source = source, linkMerge = linkMerge,
+        pickValue = pickValue,
+        loadContents = loadContents,
+        loadListing = loadListing,
         default = default, valueFrom = valueFrom)
 }
 
