@@ -68,7 +68,7 @@ requireShellCommand()
 
 requireShellScript(script)
 
-ShellScript(script = "script.sh")
+ShellScript(shell = "bash", script = "script.sh")
 
 CondaTool(tools)
 
@@ -153,6 +153,8 @@ designated output directory, in mebibytes (2**20) (default is
 designated output directory, in mebibytes (2**20).}
 
 \item{script}{script.sh}
+
+\item{shell}{Default shell.}
 
 \item{tools}{A character vector for tools to install by conda.}
 
