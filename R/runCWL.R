@@ -79,7 +79,7 @@ runCWL <- function(cwl, cwlRunner = "cwltool", outdir = ".",
         basiliskStop(cl)
     }
     if(!is.null(cwlTemp)){
-        cwlArgs <- paste("--tmp-outdir-prefix", cwlTemp, cwlArgs)
+        cwlArgs <- paste("--tmpdir-prefix", cwlTemp, cwlArgs)
     }
     if(!is.null(cachedir)){
         cwlArgs <- paste("--cachedir", cachedir, cwlArgs)
@@ -119,7 +119,7 @@ runCWL <- function(cwl, cwlRunner = "cwltool", outdir = ".",
 }
 
 
-runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
+runFun <- function(idx, cwl, outdir, inputList, paramList = list(), cachedir = NULL, ...){
     library(Rcwl)
     iidx <- names(inputList) %in% names(inputs(cwl))
     if(!all(iidx)){
@@ -140,7 +140,10 @@ runFun <- function(idx, cwl, outdir, inputList, paramList = list(), ...){
             cwl <- .assignInput(cwl, names(paramList)[j], paramList[[j]])
         }
     }
-    runCWL(cwl, outdir = outdir, ...)
+    if(!is.null(cachedir)){
+        cachedir <- file.path(cachedir, sname[idx])
+    }
+    runCWL(cwl, outdir = outdir, cachedir = cachedir, ...)
 }
 
 #' run CWL with batchtools
@@ -169,4 +172,22 @@ runCWLBatch <- function(cwl, outdir = getwd(), inputList, paramList = list(),
                    cwl = cwl, outdir = normalizePath(outdir),
                    inputList = inputList,
                    paramList = paramList, ...))
+}
+
+#' run CWL with BiocParallel
+#'
+#' Submit one CWL object with assigned values with BiocParallel.
+#' @param cwl cwl A `cwlProcess` or `cwlWorkflow` object.
+#' @param outdir Directory for output results
+#' @param BPPARM The options for `BiocParallelParam`.
+#' @param ... The other options from runCWL.
+#' @export
+#' @return Results from computing nodes and logs from cwltool.
+runCWLBP <- function(cwl, outdir, BPPARAM, ...){
+    runOne <- function(idx, cwl, outdir, ...){
+        library(Rcwl)    
+        runCWL(cwl, outdir = outdir, ...)
+    }
+    bptry(bplapply(1, runOne, cwl, BPPARAM = BPPARAM,
+                   outdir=outdir, ...))
 }
