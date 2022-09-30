@@ -4,7 +4,10 @@
 \alias{install_udocker}
 \title{install udocker}
 \usage{
-install_udocker()
+install_udocker(version = "1.3.4")
+}
+\arguments{
+\item{version}{The version of udocker.}
 }
 \description{
 To download and install udocker for python3.

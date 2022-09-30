@@ -179,7 +179,7 @@ runCWLBatch <- function(cwl, outdir = getwd(), inputList, paramList = list(),
 #' Submit one CWL object with assigned values with BiocParallel.
 #' @param cwl cwl A `cwlProcess` or `cwlWorkflow` object.
 #' @param outdir Directory for output results
-#' @param BPPARM The options for `BiocParallelParam`.
+#' @param BPPARAM The options for `BiocParallelParam`.
 #' @param ... The other options from runCWL.
 #' @export
 #' @return Results from computing nodes and logs from cwltool.
