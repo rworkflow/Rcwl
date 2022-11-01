@@ -13,6 +13,7 @@ cwlProcess(
   arguments = list(),
   id = character(),
   label = character(),
+  doc = character(),
   inputs = InputParamList(),
   outputs = OutputParamList(),
   stdout = character(),
@@ -41,6 +42,9 @@ associated with input parameters.}
 \item{id}{The unique identifier for this process object.}
 
 \item{label}{A short, human-readable label of this process object.}
+
+\item{doc}{A documentation string for this object, or an array of
+strings which should be concatenated.}
 
 \item{inputs}{A object of `InputParamList`.}
 

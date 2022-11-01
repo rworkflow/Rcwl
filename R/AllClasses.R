@@ -262,6 +262,16 @@ setMethod(show, "InputParamList", function(object) {
     })
 })
 
+setClassUnion("InputParamListORlist", c("InputParamList", "list"))
+setMethod(show, "InputParamListORlist", function(object) {
+    if(!length(object)) {
+        cat("input:\n")
+        cat(as.yaml(object))
+    } else {
+        object
+    }
+})
+
 #' @rdname AllClasses
 #' @export
 setClass("OutputArrayParam",
@@ -451,7 +461,7 @@ setClass("cwlProcess",
              id = "character",
              label = "character",
              doc = "characterORlist",
-             inputs = "InputParamList",
+             inputs = "InputParamListORlist",
              outputs = "OutputParamListORlist",
              stdout = "character",
              stderr = "character",

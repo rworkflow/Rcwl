@@ -13,7 +13,7 @@ cwlWorkflow(
   requirements = list(),
   id = character(),
   label = character(),
-  doc = list(),
+  doc = character(),
   intent = list(),
   hints = list(),
   arguments = list(),
