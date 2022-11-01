@@ -88,6 +88,11 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
     CL <- c(CL, cwl@extensions)
     ## CL$requirements <- .removeEmpty(CL$requirements)
     CL <- .removeEmpty(CL)
+    if (!"inputs" %in% names(CL) ) {  ## if no input parameters, add space holder with an empty list before "outputs".
+        CL$inputs <- list()
+        pos <- grep("outputs", names(CL)) 
+        CL <- c(CL[seq(pos-1)], CL["inputs"], CL[seq(pos, length(CL)-1)])
+    }
     if(cwlClass(cwl) == "Workflow"){
         CL <- c(CL, list(steps = as.listSteps(cwl@steps)))
         ## remove inputBinding
@@ -200,11 +205,14 @@ writeCWL <- function(cwl, prefix = deparse(substitute(cwl)),
         cwl <- .R2cwl(cwl, prefix, outdir)
     }
     cList <- cwlToList(cwl, docker, prefix, outdir)
-    
     cwlout <- file.path(outdir, paste0(prefix, ".cwl"))
     ymlout <- file.path(outdir, paste0(prefix, ".yml"))
     write_yaml(cList, file = cwlout, handlers = handlers, ...)
-    write_yaml(yml, file = ymlout, handlers = handlers, ...)
+    if (!length(yml)) {
+        writeLines("{}", con = ymlout)
+    } else {
+        write_yaml(yml, file = ymlout, handlers = handlers, ...)
+    }
     return(c(cwlout = cwlout, ymlout = ymlout))
 }
 
