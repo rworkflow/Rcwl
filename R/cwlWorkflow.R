@@ -38,7 +38,7 @@
 #' wf <- wf + s1 + s2
 cwlWorkflow <- function(cwlVersion = "v1.0", cwlClass = "Workflow",
                          requirements = list(), id = character(),
-                         label = character(), doc = list(), intent = list(),
+                         label = character(), doc = character(), intent = list(),
                          hints = list(), arguments = list(), extensions = list(),
                          inputs = InputParamList(), outputs = OutputParamList(),
                          steps = cwlStepList()){

@@ -79,6 +79,7 @@ cwlToList <- function(cwl, docker = TRUE, prefix, outdir){
                arguments = cwl@arguments,
                id = cwl@id,
                label = cwl@label,
+               doc = cwl@doc,
                inputs = as.listInputs(inputs(cwl)),
                outputs = as.listOutputs(outputs(cwl)),
                stdin = cwl@stdin,

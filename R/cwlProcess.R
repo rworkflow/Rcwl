@@ -18,6 +18,8 @@
 #'     associated with input parameters.
 #' @param id The unique identifier for this process object.
 #' @param label A short, human-readable label of this process object.
+#' @param doc A documentation string for this object, or an array of
+#'     strings which should be concatenated.
 #' @param inputs A object of `InputParamList`.
 #' @param outputs A object of `OutputParamList`.
 #' @param stdout Capture the command's standard output stream to a
@@ -35,24 +37,20 @@
 #' input1 <- InputParam(id = "sth")
 #' echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 cwlProcess <- function(cwlVersion = "v1.0",
-                     cwlClass = "CommandLineTool",
-                     baseCommand = character(), requirements = list(),
-                     hints = list(), arguments = list(),
-                     id = character(), label = character(),
-                     inputs = InputParamList(),
-                     outputs = OutputParamList(),
-                     stdout = character(), stdin = character(),
-                     expression = character(),
-                     extensions = list(), intent = list()){
-    new("cwlProcess", cwlVersion = cwlVersion,
-        cwlClass = cwlClass, id = id, label = label,
-        baseCommand = baseCommand,
-        requirements = requirements, hints = hints,
-        arguments = arguments, inputs = inputs,
-        outputs = outputs,
-        stdout = stdout,
-        stdin = stdin,
-        expression = expression,
-        extensions = extensions,
-        intent = intent)
+                       cwlClass = "CommandLineTool",
+                       baseCommand = character(),
+                       requirements = list(), hints = list(),
+                       arguments = list(), id = character(),
+                       label = character(), doc = character(),
+                       inputs = InputParamList(),
+                       outputs = OutputParamList(),
+                       stdout = character(), stdin = character(),
+                       expression = character(), extensions = list(),
+                       intent = list()){
+    new("cwlProcess", cwlVersion = cwlVersion, cwlClass = cwlClass,
+        id = id, label = label, baseCommand = baseCommand,
+        requirements = requirements, hints = hints, doc = doc,
+        arguments = arguments, inputs = inputs, outputs = outputs,
+        stdout = stdout, stdin = stdin, expression = expression,
+        extensions = extensions, intent = intent)
 }
