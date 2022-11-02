@@ -1,6 +1,6 @@
 Package: Rcwl
 Title: An R interface to the Common Workflow Language
-Version: 1.13.3
+Version: 1.15.1
 Authors@R: c(person("Qiang", "Hu", email = "qiang.hu@roswellpark.org", role = c("aut", "cre")),
 	     person("Qian", "Liu", email = "qian.liu@roswellpark.org", role = c("aut")))
 Description: The Common Workflow Language (CWL) is an open standard for development of data analysis workflows that is portable and scalable across different tools and working environments. Rcwl provides a simple way to wrap command line tools and build CWL data analysis pipelines programmatically within R. It increases the ease of usage, development, and maintenance of CWL pipelines.
