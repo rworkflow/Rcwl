@@ -5,6 +5,7 @@
 \alias{requireDocker}
 \alias{requireJS}
 \alias{requireSoftware}
+\alias{condaPackage}
 \alias{requireInitialWorkDir}
 \alias{Dirent}
 \alias{requireManifest}
@@ -34,6 +35,8 @@ requireDocker(
 requireJS(expressionLib = list())
 
 requireSoftware(packages = list())
+
+condaPackage(package, source = "bioconda", version = NULL)
 
 requireInitialWorkDir(listing = list())
 
@@ -102,6 +105,13 @@ CWL expressions.}
 
 \item{packages}{The list of software to be configured.}
 
+\item{package}{The software name.}
+
+\item{source}{The source of software in anaconda. `bioconda` is
+used by default.}
+
+\item{version}{The version of software.}
+
 \item{listing}{The list of files or subdirectories that must be
 placed in the designated output directory prior to executing
 the command line tool.}
@@ -168,6 +178,8 @@ requireJS: A list of inline Javascript requirement.
 
 requireSoftware: A list of software requirements.
 
+A list of software package.
+
 requireInitialWorkDir: A list of initial work directory requirements.
 
 Dirent: A list.
@@ -209,6 +221,8 @@ requireJS: Indicates that the workflow platform must
 requireSoftware: A list of software packages that
     should be configured in the environment of the defined process.
 
+SoftwarePackage from anaconda.
+
 InitialWorkDirRequirement: Define a list of files and
     subdirectories that must be created by the workflow platform in
     the designated output directory prior to executing the command
@@ -238,6 +252,9 @@ More details about `requireJS`, see:
 
 More details about `requireSoftware`, see:
     https://www.commonwl.org/v1.0/CommandLineTool.html#SoftwareRequirement
+
+More details about `requireSoftware`, see:
+    https://www.commonwl.org/v1.0/CommandLineTool.html#SoftwarePackage
 
 More details about `requireInitialWorkDir`, See:
     https://www.commonwl.org/v1.0/CommandLineTool.html#InitialWorkDirRequirement

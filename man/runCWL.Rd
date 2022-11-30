@@ -15,6 +15,7 @@ runCWL(
   stderr = TRUE,
   showLog = FALSE,
   docker = TRUE,
+  conda = FALSE,
   yml_prefix = deparse(substitute(cwl)),
   yml_outdir = tempfile(),
   ...
@@ -50,6 +51,9 @@ out. i.e. stderr = "".}
 
 \item{docker}{Whether to use docker, or "sigularity" if use
 Singularity runtime to run container.}
+
+\item{conda}{Whether to install packages using conda if
+`SoftwareRequirement` is defined.}
 
 \item{yml_prefix}{The prefix of `.cwl` and `.yml` files that are to
 be internally executed.}

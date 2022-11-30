@@ -77,6 +77,26 @@ requireSoftware <- function(packages = list()){
 }
 
 #' @rdname cwl-requirements
+#' @description SoftwarePackage from anaconda.
+#' @param package The software name.
+#' @param source The source of software in anaconda. `bioconda` is
+#'     used by default.
+#' @param version The version of software.
+#' @details More details about `requireSoftware`, see:
+#'     https://www.commonwl.org/v1.0/CommandLineTool.html#SoftwarePackage
+#' @return A list of software package.
+#' @export
+condaPackage <- function(package, source="bioconda", version=NULL){
+    sp <- list(package = package,
+               version = version,
+               specs = list(paste0("https://anaconda.org/", source, "/", package)))
+    sp <- sp[lengths(sp)>0]
+    ## sp <- list(sp)
+    ## names(sp) <- package
+    return(sp)
+}
+
+#' @rdname cwl-requirements
 #' @description InitialWorkDirRequirement: Define a list of files and
 #'     subdirectories that must be created by the workflow platform in
 #'     the designated output directory prior to executing the command

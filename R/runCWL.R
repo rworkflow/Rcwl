@@ -21,6 +21,8 @@
 #'     out. i.e. stderr = "".
 #' @param docker Whether to use docker, or "sigularity" if use
 #'     Singularity runtime to run container.
+#' @param conda Whether to install packages using conda if
+#'     `SoftwareRequirement` is defined.
 #' @param yml_prefix The prefix of `.cwl` and `.yml` files that are to
 #'     be internally executed.
 #' @param yml_outdir The output directory for the `.cwl` and `.yml`
@@ -38,7 +40,7 @@
 runCWL <- function(cwl, cwlRunner = "cwltool", outdir = ".",
                    cachedir = NULL, cwlTemp = NULL, cwlArgs = character(),
                    stdout = TRUE, stderr = TRUE, showLog = FALSE,
-                   docker = TRUE,
+                   docker = TRUE, conda = FALSE,
                    yml_prefix = deparse(substitute(cwl)),
                    yml_outdir = tempfile(), ...){
     ## check missing inputs
@@ -87,6 +89,24 @@ runCWL <- function(cwl, cwlRunner = "cwltool", outdir = ".",
     if(showLog){
         stderr <- ""
     }
+
+    if(conda){
+        cl <- basiliskStart(env_Rcwl)
+        basiliskStop(cl)
+        if("SoftwareRequirement" %in% unlist(hints(cwl))){
+            req_s <- lapply(hints(cwl),
+                            function(x)x[x$class=="SoftwareRequirement"])[[1]]
+            pkgs <- lapply(req_s$packages, function(x){
+                if(!is.null(x$version)){
+                    paste(x$package, x$version, sep="==")
+                }else{
+                    x$package
+                }
+            })
+            system(paste("conda install -y", paste(pkgs, collapse=" ")))
+        }
+    }
+    
     res <- system2(cwlRunner,
                    args = paste0("--outdir ", outdir, " ", cwlArgs, " ",
                                  file.path(yml_outdir, paste0(yml_prefix, ".cwl ")),
