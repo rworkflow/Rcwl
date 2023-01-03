@@ -21,7 +21,7 @@
 #' @importFrom codetools findGlobals
 #' 
 writeFun <- function(cwl, prefix, outdir, libPaths = TRUE){
-    Fname <- ifelse(is.null(prefix), basename(tempfile()), prefix)
+    Fname <- ifelse(is.null(prefix) | prefix=="cwl", basename(tempfile()), prefix)
     if(length(cwl@id) > 0){
         file <- file.path(outdir, paste0(cwl@id, ".R"))
     }else{        

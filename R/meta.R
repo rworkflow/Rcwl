@@ -25,6 +25,7 @@ meta <- function(cwl){
 }
 
 #' @rdname addMeta
+#' @param value A list of meta information to add to `cwl`.
 #' @export
 "meta<-" <- function(cwl, value){
     if(!is.null(value$label))
@@ -98,32 +99,36 @@ meta <- function(cwl){
 #' library(RcwlPipelines)
 #' cwlSearch(c("bwa", "align"))
 #' bwaAlign <- RcwlPipelines::cwlLoad("pl_bwaAlign")
-#' bwaAlign <- addMeta(cwl = bwaAlign,
-#'                     label = "align",
-#'                     doc = "align reads to reference genome",
-#'                     inputLabels = c("threads", "readgroup", "reference", "read1", "read2"),
-#'                     inputDocs = c("number of threads", "read groups", "reference genome", "read pair1", "read pair2"),
-#'                     outputLabels = c("Bam", "Idx"),
-#'                     outputDocs = c("outputbam file", "index file"),
-#'                     stepLabels = c(bwa = "bwa"),
-#'                     stepDocs = c(bwa = "bwa alignment"))
+#' bwaAlign <- addMeta(
+#'   cwl = bwaAlign,
+#'   label = "align",
+#'   doc = "align reads to reference genome",
+#'   inputLabels = c("threads", "readgroup", "reference", "read1", "read2"),
+#'   inputDocs = c("number of threads", "read groups",
+#'                 "reference genome", "read pair1", "read pair2"),
+#'   outputLabels = c("Bam", "Idx"),
+#'   outputDocs = c("outputbam file", "index file"),
+#'   stepLabels = c(bwa = "bwa"),
+#'   stepDocs = c(bwa = "bwa alignment"))
 #' cat(meta2md(bwaAlign))
 #' }
 #'
 #' \dontrun{
 #' rcp <- ReUseData::recipeLoad("gencode_annotation")
 #' meta(rcp)
-#' rcp1 <- addMeta(cwl = rcp,
-#'                 label = "",
-#'                 doc = "An empty description line", 
-#'                 inputLabels = c("input label1", "input label2"),
-#'                 inputDocs = c("input description 1", "input description 2"), 
-#'                 outputLabels = c("output label1"),
-#'                 outputDocs = c("output description 1"), 
-#'                 extensions = list(author = "recipe author's name",
-#'                                   url = "http://ftp.ebi.ac.uk/pub/databases/gencode/",
-#'                                   date = as.character(Sys.Date()),
-#'                                   example = "An example chunk of code that was coverted into md format"))
+#' rcp1 <- addMeta(
+#'   cwl = rcp,
+#'   label = "",
+#'   doc = "An empty description line", 
+#'   inputLabels = c("input label1", "input label2"),
+#'   inputDocs = c("input description 1", "input description 2"), 
+#'   outputLabels = c("output label1"),
+#'   outputDocs = c("output description 1"), 
+#'   extensions = list(
+#'     author = "recipe author's name",
+#'     url = "http://ftp.ebi.ac.uk/pub/databases/gencode/",
+#'     date = as.character(Sys.Date()),
+#'     example = "An example"))
 #' meta(rcp1)
 #' cat(meta2md(rcp1))
 #' }
@@ -145,11 +150,13 @@ addMeta <- function(cwl, label = character(), doc = character(),
     for(i in seq(inputLabels)){
         ilist[[i]] <- list(label = inputLabels[i], doc = inputDocs[i])
     }
-    
-    if (all(!is.null(names(inputLabels)))){
-        names(ilist) <- names(inputLabels)
-    }else if (length(inputLabels) == length(inputs(cwl))){
-        names(ilist) <- names(inputs(cwl))
+
+    if(length(inputs(cwl)) > 0){
+        if (all(!is.null(names(inputLabels)))){
+            names(ilist) <- names(inputLabels)
+        }else if (length(inputLabels) == length(inputs(cwl))){
+            names(ilist) <- names(inputs(cwl))
+        }
     }
     ## outputs
     olist <- list()
