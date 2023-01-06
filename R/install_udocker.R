@@ -14,7 +14,7 @@ install_udocker <- function(version = "1.3.4"){
     }
     binPath <- Sys.which("cwltool")
     
-    download.file(paste0("https://github.com/indigo-dc/udocker/releases/download/v", version, "/udocker-", version, ".tar.gz"),
+    download.file(paste0("https://github.com/indigo-dc/udocker/releases/download/", version, "/udocker-", version, ".tar.gz"),
                   file.path(dirname(binPath), "udocker.tar.gz"))
     untar(file.path(dirname(binPath), "udocker.tar.gz"), exdir = dirname(dirname(binPath)))
     system(paste0(dirname(dirname(binPath)), "/udocker/udocker install"))
