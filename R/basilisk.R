@@ -4,4 +4,5 @@
 #' @importFrom basilisk BasiliskEnvironment
 #' @export
 env_Rcwl <- basilisk::BasiliskEnvironment("env_Rcwl", pkgname="Rcwl",
-                                          packages = c("cwltool==3.1"))
+                                          packages = "python==3.11",
+                                          pip = "cwltool==3.1.20230719185429")

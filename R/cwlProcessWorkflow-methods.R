@@ -213,12 +213,24 @@ inputs <- function(cwl) cwl@inputs
             v <- value
         }
     }else if(is(itype, "list")){
-        if(file_test("-d", value)) {
-            v <- list(class = "Directory", path = normalizePath(value))
-        }else if(file_test("-f", value)){
-            v <- list(class = "File", path = normalizePath(value))
+        if(is(value, "list")){
+            if(file_test("-d", value[[1]])){
+                v <- lapply(value, function(x)list(class="Directory",
+                                                   path=normalizePath(x)))
+            }else if(file_test("-f", value[[1]])){
+                v <- lapply(value, function(x)list(class="File",
+                                                   path=normalizePath(x)))
+            }else{
+                v <- value
+            }
         }else{
-            v <- value
+            if(file_test("-d", value)) {
+                v <- list(class = "Directory", path = normalizePath(value))
+            }else if(file_test("-f", value)){
+                v <- list(class = "File", path = normalizePath(value))
+            }else{
+                v <- value
+            }
         }
     }
     x@inputs[[name]]@value <- v

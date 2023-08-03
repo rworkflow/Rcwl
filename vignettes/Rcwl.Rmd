@@ -113,6 +113,12 @@ inputs(echo)
 Now this _R_ version of command line tool `echo` is ready to be
 executed. 
 
+We can install `cwltool` first to make sure a `cwl-runner` is
+available.
+```{r}
+invisible(install_cwltool())
+```
+
 The function `runCWL` runs the tools in _R_ and returns a list of: 1)
 actual command line that was executed, 2) filepath to the output, and
 3) running logs. The output directory by default takes the working
