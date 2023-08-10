@@ -3,6 +3,7 @@
 input1 <- InputParam(id = "sth")
 echo <- cwlProcess(baseCommand = "echo", inputs = InputParamList(input1))
 echo$sth <- "Hello World!"
+install_cwltool()
 r1 <- runCWL(echo)
 test_that("simple echo", {
     expect_match(tail(r1$logs, 1), "success")})
